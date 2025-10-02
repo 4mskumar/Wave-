@@ -1,0 +1,5 @@
+.app-layout {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 60px); /* subtract navbar height */
+}
