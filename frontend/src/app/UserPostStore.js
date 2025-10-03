@@ -1,15 +1,14 @@
-// src/store/postStore.js
 import { create } from "zustand";
-import axios from "../api/axiosConfig.js"; // remove curly braces, default export
+import axios from "../api/axiosConfig.js";
 
-const useUserPostStore = create((set) => ({
+const useUserPostStore = create((set, get) => ({
   posts: [],
-  loading : false,
-  error : false,
+  loading: false,
+  error: false,
 
   addPost: async (userId, caption, image) => {
-    loading : true
-    error : false
+    set({ loading: true, error: false });
+
     try {
       const formData = new FormData();
       formData.append("userId", userId);
@@ -20,16 +19,18 @@ const useUserPostStore = create((set) => ({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      loading : false
-
       // update local state
       set((state) => ({
-        posts: [...state.posts, res.data.post], // assuming backend returns the created post
+        posts: [...state.posts, res.data.post],
+        loading: false,
       }));
+
+      // ✅ correct way to log posts inside store
+      console.log(get().posts);
+
     } catch (error) {
       console.error("Error in addPost:", error.response?.data || error.message);
-      loading : false
-      error : true
+      set({ loading: false, error: true });
       throw error;
     }
   },
@@ -45,6 +46,30 @@ const useUserPostStore = create((set) => ({
     set((state) => ({
       posts: state.posts.filter((post) => post._id !== id),
     })),
+
+  fetchPosts: async (userId) => {
+    set({ loading: true, error: false });
+
+    try {
+      const res = await axios.get("/post/getpost", {
+        headers: { "Content-Type": "multipart/form-data" },
+        params: { userId },
+      });
+
+      if (res.data.success) {
+        set({
+          posts: res.data.userPosts, // replace current posts
+          loading: false,
+        });
+      } else {
+        set({ loading: false });
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error.response?.data || error.message);
+      set({ loading: false, error: true });
+    }
+  }
+
 }));
 
 export default useUserPostStore;

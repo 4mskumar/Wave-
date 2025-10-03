@@ -34,7 +34,7 @@ export const postImage = async (req, res) => {
         .json({ success: false, message: "Image is required" });
     }
 
-    await postSchema.create({
+    const newPost = await postSchema.create({
       userId,
       caption,
       imageUrl: cloudUrl,
@@ -44,7 +44,7 @@ export const postImage = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Your post has been uploaded" });
+      .json({ success: true, message: "Your post has been uploaded", post : newPost});
   } catch (error) {
     console.error(error);
     return res
@@ -52,3 +52,21 @@ export const postImage = async (req, res) => {
       .json({ success: false, message: "Server error, please try again" + error.message });
   }
 };
+
+export const getPosts = async (req, res) => {
+  try {
+    const {userId} = req.query
+
+    if(!userId) return res.status(404).json({success : false})
+
+      const allPosts = await postSchema.find({userId})
+
+      if(!allPosts) return res.status(400).json({message : "No post found"})
+
+      return res.status(201).json({success : true, message : 'Post found', userPosts : allPosts})
+
+  } catch (error) {
+    console.log(error.message);
+    
+  }
+}

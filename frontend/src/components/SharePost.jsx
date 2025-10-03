@@ -111,9 +111,7 @@ const SharePost = () => {
           ) : (
             <span className="text-gray-500">No image selected</span>
           )}
-          4mskumar iamcinsrusher@gmail.com 
-            git config --global user.email "iamcinsrusher@gmail.com"
-            git config --global user.name "4mskumar"
+
         </div>
 
         <DialogFooter className="col-span-2">
