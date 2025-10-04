@@ -44,7 +44,7 @@ export const postImage = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Your post has been uploaded", post : newPost});
+      .json({ success: true, message: "Your post has been uploaded", post: newPost });
   } catch (error) {
     console.error(error);
     return res
@@ -55,18 +55,87 @@ export const postImage = async (req, res) => {
 
 export const getPosts = async (req, res) => {
   try {
-    const {userId} = req.query
+    const userId = req.query.userId || req.body.userId
 
-    if(!userId) return res.status(404).json({success : false})
+    if (!userId) return res.status(404).json({ success: false, message: 'userid not found', e: req.query })
 
-      const allPosts = await postSchema.find({userId})
+    const allPosts = await postSchema.find({ userId })
 
-      if(!allPosts) return res.status(400).json({message : "No post found"})
+    if (!allPosts) return res.status(400).json({ message: "No post found" })
 
-      return res.status(201).json({success : true, message : 'Post found', userPosts : allPosts})
+    return res.status(201).json({ success: true, message: 'Post found', userPosts: allPosts })
 
   } catch (error) {
     console.log(error.message);
-    
+
   }
 }
+
+export const toggleLike = async (req, res) => {
+  try {
+    const { userId, postId } = req.body
+    if (!userId || !postId) {
+      return res.status(404).json({ success: false, message: 'UserId or PostId required' })
+    }
+
+    let updatedPost;
+    const post = await postSchema.findById(postId)
+    if (!post) {
+      return res.status(404).json({ success: false, message: 'Post not found' })
+    }
+
+    if (post.likes.includes(userId)) {
+      updatedPost = await postSchema.findByIdAndUpdate(postId, {
+        $pull: { likes: userId }
+      },
+        { new: true }
+      )
+    } else {
+      updatedPost = await postSchema.findByIdAndUpdate(postId, {
+        $push: { likes: userId }
+      },
+        { new: true }
+      )
+    }
+
+    return res.status(200).json({ success: true, message: 'U just liked a post yayy!', post: updatedPost })
+
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ success: false, message: error.message })
+
+  }
+}
+
+export const commentToPost = async (req, res) => {
+  try {
+    const { text, userId, postId } = req.body;
+
+    if (!userId || !postId) {
+      return res.status(400).json({ success: false, message: "UserId or PostId required" });
+    }
+
+    if (!text) {
+      return res.status(400).json({ success: false, message: "Text is required" });
+    }
+
+    let post = await postSchema.findById(postId);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found" });
+    }
+
+    const updatedPost = await postSchema.findByIdAndUpdate(
+      postId,
+      { $push: { comments: { text, userId } } },
+      { new: true } // ✅ returns updated post with new comment
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "You just commented on a post yayy!",
+      post: updatedPost,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};

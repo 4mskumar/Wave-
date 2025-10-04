@@ -47,26 +47,34 @@ const useUserPostStore = create((set, get) => ({
       posts: state.posts.filter((post) => post._id !== id),
     })),
 
-  fetchPosts: async (userId) => {
-    set({ loading: true, error: false });
-
-    try {
-      const res = await axios.get("/post/getpost", {
-        headers: { "Content-Type": "multipart/form-data" },
-        params: { userId },
-      });
-
-      if (res.data.success) {
-        set({
-          posts: res.data.userPosts, // replace current posts
-          loading: false,
+    fetchPosts: async (userId) => {
+      set({ loading: true, error: false });
+    
+      try {
+        const res = await axios.get("/post/getpost", {
+          params: { userId },  
         });
-      } else {
-        set({ loading: false });
+    
+        if (res.data.success) {
+          set({
+            posts: res.data.userPosts,
+            loading: false,
+          });
+        } else {
+          set({ loading: false });
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error.response?.data || error.message);
+        set({ loading: false, error: true });
       }
+    },
+    
+
+  toggleLike: async (userId, postId) => {
+    try {
+      
     } catch (error) {
-      console.error("Error fetching posts:", error.response?.data || error.message);
-      set({ loading: false, error: true });
+      
     }
   }
 
