@@ -3,6 +3,7 @@ import Navbar from "./shared/Navbar";
 import { GoArrowLeft } from "react-icons/go";
 import { RxDotsHorizontal } from "react-icons/rx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
 
 const Chat = () => {
   return (
@@ -12,9 +13,13 @@ const Chat = () => {
         {/* MESSAGES SECTION */}
         <div className="w-1/3 border-r border-gray-300 flex flex-col">
           <div className="flex items-center justify-between p-4 border-b">
-            <GoArrowLeft className="cursor-pointer" size={25}/>
-            <h2 className="font-semibold tracking-tighter text-2xl">Messages</h2>
-            <RxDotsHorizontal className="cursor-pointer" size={20}/>
+            <Link to={"/"}>
+              <GoArrowLeft className="cursor-pointer" size={25} />
+            </Link>
+            <h2 className="font-semibold tracking-tighter text-2xl">
+              Messages
+            </h2>
+            <RxDotsHorizontal className="cursor-pointer" size={20} />
           </div>
           <div className="px-4 py-2">
             <div className="flex items-center bg-gray-200 rounded-full px-4 py-2">
@@ -108,7 +113,9 @@ const Chat = () => {
             <div className="flex justify-center">
               <div className="bg-gray-100 p-4 rounded-full text-3xl">💬</div>
             </div>
-            <h2 className="font-semibold tracking-tighter text-2xl">Your Messages</h2>
+            <h2 className="font-semibold tracking-tighter text-2xl">
+              Your Messages
+            </h2>
             <p className="text-gray-500 text-sm">
               Send private photos and messages to a friend or group.
             </p>

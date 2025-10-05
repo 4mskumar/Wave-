@@ -1,6 +1,7 @@
 import { BiMessageRounded } from "react-icons/bi";
 import { FiUser, FiSettings } from "react-icons/fi";
 import { HiOutlineHome } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
@@ -39,10 +40,15 @@ const Sidebar = () => {
             <HiOutlineHome size={20} />
             Feed
           </button>
-          <button className="flex items-center gap-3 py-2 rounded-md text-gray-700 hover:bg-gray-100" id="chat">
-            <BiMessageRounded size={20} />
-            Messages
-          </button>
+          <Link to={"/chat"}>
+            <button
+              className="flex items-center gap-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"
+              id="chat"
+            >
+              <BiMessageRounded size={20} />
+              Messages
+            </button>
+          </Link>
           <button className="flex items-center gap-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
             <FiUser size={20} />
             Profile
