@@ -13,7 +13,7 @@ const Home = () => {
   const [posts] = useState([
     {
       id: 1,
-      name: "Cameron Williamson",
+      name: "Khusboo Gupta",
       avatar: "https://randomuser.me/api/portraits/women/1.jpg",
       time: "10 Aug at 4:41 PM",
       text: "Exploring some cool digital art today! 🎨",
@@ -25,7 +25,7 @@ const Home = () => {
     },
     {
       id: 2,
-      name: "Courtney Henry",
+      name: "Raju Shrivastav",
       avatar: "https://randomuser.me/api/portraits/men/2.jpg",
       time: "8 Aug at 2:15 PM",
       text: "Had an amazing hike yesterday ⛰️",
@@ -37,7 +37,7 @@ const Home = () => {
     },
     {
       id: 3,
-      name: "Courtney Henry",
+      name: "Raju Shrivastav",
       avatar: "https://randomuser.me/api/portraits/men/2.jpg",
       time: "8 Aug at 2:15 PM",
       text: "Had an amazing hike yesterday ⛰️",
@@ -94,11 +94,11 @@ const Home = () => {
                     className="w-10 h-10 rounded-full"
                   />
                   <div>
-                    <p className="font-semibold">{post.name}</p>
-                    <p className="text-xs text-gray-500">{post.time}</p>
+                    <p className="font-semibold text-[18px]">{post.name}</p>
+                    <p className="text-[13px] text-gray-500">{post.time}</p>
                   </div>
                 </div>
-                {post.text && <p className="text-gray-700">{post.text}</p>}
+                {post.text && <p className="text-gray-700 mt-4">{post.text}</p>}
                 {post.image && (
                   <>
                     <img

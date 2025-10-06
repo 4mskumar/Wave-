@@ -34,7 +34,7 @@ const Navbar = () => {
         >
           AK
         </Badge>
-          <h2 className="font-medium text-lg tracking-wide">Aditya Kr</h2>
+            <h2 className="font-semibold text-[19px] tracking-tight">Aditya Kr</h2>
         </div>
       </div>
     </nav>
