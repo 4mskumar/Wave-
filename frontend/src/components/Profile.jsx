@@ -10,7 +10,7 @@ const Profile = () => {
       <Navbar />
       <div className="flex">
         <Sidebar />
-        <div className="flex-1 ml-100 px-10 pt-24 mb-10">
+        <div className="flex-1 ml-85 px-10 pt-24 mb-10">
           <div className="flex items-center gap-16 ml-20">
             <img
               src="https://images.unsplash.com/photo-1527980965255-d3b416303d12"
@@ -21,7 +21,7 @@ const Profile = () => {
               {/* USER */}
               <div className="flex items-center gap-6 mb-4">
                 <h2 className="text-2xl font-semibold">adityakr</h2>
-                <button className="border px-4 py-1 text-sm rounded-md hover:bg-gray-100 transition">
+                <button className="border px-4 py-1 text-sm rounded-md hover:bg-gray-300 transition">
                   Edit profile
                 </button>
               </div>
@@ -56,64 +56,22 @@ const Profile = () => {
           </div>
 
           <div className="flex justify-center border-t border-gray-300 mt-4">
-            <div className="flex gap-12 text-sm font-semibold text-gray-500 mt-4">
-              <button
-                onClick={() => setActiveTab("posts")}
-                className={`pb-2 border-t-2 ${
-                  activeTab === "posts"
-                    ? "border-black text-black"
-                    : "border-transparent"
-                }`}
-              >
-                POSTS
-              </button>
-              <button
-                onClick={() => setActiveTab("saved")}
-                className={`pb-2 border-t-2 ${
-                  activeTab === "saved"
-                    ? "border-black text-black"
-                    : "border-transparent"
-                }`}
-              >
-                SAVED
-              </button>
-              <button
-                onClick={() => setActiveTab("tagged")}
-                className={`pb-2 border-t-2 ${
-                  activeTab === "tagged"
-                    ? "border-black text-black"
-                    : "border-transparent"
-                }`}
-              >
-                TAGGED
-              </button>
-            </div>
+            <p className="font-semibold text-black text-lg mt-5 tracking-tighter">
+              My <span className="font-style: italic text-blue-500">WAVES</span>
+            </p>
           </div>
 
           <div className="grid grid-cols-3 gap-1 mt-6">
-            {activeTab === "posts" &&
-              Array.from({ length: 9 }).map((_, i) => (
-                <img
-                  key={i}
-                  src={`https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80${
-                    i + 10
-                  }`}
-                  alt={`post-${i}`}
-                  className="w-full h-80 object-cover"
-                />
-              ))}
-
-            {activeTab === "saved" && (
-              <div className="col-span-3 flex flex-col items-center justify-center py-20 text-gray-500">
-                <p className="text-lg font-semibold">No Saved Posts Yet</p>
-              </div>
-            )}
-
-            {activeTab === "tagged" && (
-              <div className="col-span-3 flex flex-col items-center justify-center py-20 text-gray-500">
-                <p className="text-lg font-semibold">No Tagged Photos Yet</p>
-              </div>
-            )}
+            {Array.from({ length: 9 }).map((_, i) => (
+              <img
+                key={i}
+                src={`https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80${
+                  i + 10
+                }`}
+                alt={`post-${i}`}
+                className="w-full h-80 object-cover"
+              />
+            ))}
           </div>
         </div>
       </div>

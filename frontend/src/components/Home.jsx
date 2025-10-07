@@ -72,12 +72,12 @@ const Home = () => {
                 onChange={(e) => setNewPost(e.target.value)}
                 className="flex-1 text-sm bg-gray-200 rounded-full px-4 py-2 outline-none"
               />
-              <Dialog>
+              {/* <Dialog>
                 <DialogTrigger asChild>
                   <Button className="rounded-full text-[14px] px-2.5">+ Share Post</Button>
                 </DialogTrigger>
+              </Dialog> */}
                 <SharePost />
-              </Dialog>
             </div>
           </div>
           {/* posts */}

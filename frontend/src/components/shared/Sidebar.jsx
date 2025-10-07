@@ -12,7 +12,7 @@ const Sidebar = () => {
       <div>
         <div className="flex items-center gap-4 mb-8">
           <Badge
-            className="border-gray-300 bg-gray-200 h-9 min-w-9 rounded-full px-1 font-mono tabular-nums text-md cursor-pointer hover:bg-blue-500"
+            className="border-gray-300 bg-gray-200 h-9 min-w-9 rounded-full px-1 font-mono tabular-nums text-md cursor-auto hover:bg-gray-300"
             variant="secondary"
           >
             AK
@@ -48,7 +48,7 @@ const Sidebar = () => {
               }`}
             >
               <HiOutlineHome size={22} />
-              <span className="text-[18px] tracking-wide">Feed</span>
+              <span className="text-[18px] tracking-wide cursor-pointer">Feed</span>
             </button>
           </Link>
 

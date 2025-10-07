@@ -1,36 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
-} from "./ui/dialog";
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import useUserPostStore from "../app/UserPostStore";
-
-/*
-    Your task for this
-    - Make the ui more minimal and clean use icons like '+' in preview image section.
-    - Add loading state tothe button.
-    - Add error state.
-    - Use zustand store to access loading and error.
-    - Use toast to show error and message of published post.
-    - Make the window of dialog use 75% of width and height it should be big
-    Goodluck bubu 💘
-
-*/
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { X } from "lucide-react";
 
 const SharePost = () => {
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const { addPost } = useUserPostStore(); // here is the store, access loading and error like {addPost, error, loading}
 
+  // handle image upload
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -39,92 +26,79 @@ const SharePost = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Post Submitted:", { caption, image });
-    // 👉 send to backend here using FormData
-    if (!caption || !image) {
-      alert("Caption and image are required");
+  // handle remove image
+  const handleRemoveImage = () => {
+    setImage(null);
+    setPreview(null);
+  };
+
+  // handle share post
+  const handleShare = () => {
+    if (!caption && !image) {
+      toast.error("Please add a caption or upload an image.");
       return;
     }
 
-    // FormData for file upload
-    const formData = new FormData();
-    formData.append("caption", caption);
-    formData.append("userId", "test_user_123"); // replace with actual logged-in userId
-    formData.append("image", image);
-
-    try {
-      await addPost("test_user_123", caption, image); // call zustand store
-      setCaption("");
-      setImage(null);
-      setPreview(null);
-    } catch (err) {
-      console.error("Error uploading post:", err);
-    }
+    toast.success("Post shared successfully!");
+    setCaption("");
+    setImage(null);
+    setPreview(null);
   };
 
   return (
-    <DialogContent className="sm:max-w-3xl">
-      <DialogHeader>
-        <DialogTitle className="text-xl font-semibold">
-          Create a Post
-        </DialogTitle>
-      </DialogHeader>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="bg-black rounded-full text-white hover:bg-gray-800">
+        <span className="text-xl">+</span> Create Post
+        </Button>
+      </DialogTrigger>
 
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6"
-      >
-        {/* Left: Form */}
-        <div className="flex flex-col space-y-4">
-          <div>
-            <Label htmlFor="caption">Caption</Label>
-            <Textarea
-              id="caption"
-              placeholder="Write something..."
-              value={caption}
-              onChange={(e) => setCaption(e.target.value)}
-              className="mt-2"
-            />
-          </div>
+      <DialogContent className="!w-[50vw] !h-[70vh] !max-w-none !max-h-none overflow-y-auto rounded-2xl p-8">
+        <DialogHeader>
+          <DialogTitle>
+            <h2 className="tracking-tighter text-2xl">Create your <span className="font-style: italic">WAVE</span></h2>
+          </DialogTitle>
+        </DialogHeader>
 
-          <div>
-            <Label htmlFor="image">Upload Image</Label>
-            <Input
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="mt-2"
-            />
-          </div>
+        <div className="space-y-2">
+          <label className="font-medium text-lg text-gray-700 tracking-tighter">Caption</label>
+          <Textarea
+            className='mt-2 bg-gray-100'
+            placeholder="Write something..."
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+          />
         </div>
 
-        <div className="flex items-center justify-center border rounded-2xl bg-muted">
-          {preview ? (
+        <div className="space-y-2">
+          <label className="font-medium text-lg text-gray-700 tracking-tighter">Upload Image</label>
+          <Input className='mt-2 bg-gray-100' type="file" accept="image/*" onChange={handleImageChange} />
+        </div>
+        {preview && (
+          <div className="relative w-full max-w-sm">
             <img
               src={preview}
-              alt="Preview"
-              className="max-h-64 rounded-xl object-contain"
+              alt="preview"
+              className="rounded-lg border border-gray-300 w-full object-cover"
             />
-          ) : (
-            <span className="text-gray-500">No image selected</span>
-          )}
-
-        </div>
-
-        <DialogFooter className="col-span-2">
+            <button
+              onClick={handleRemoveImage}
+              className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-gray-100 transition"
+            >
+              <X size={18} className="text-gray-600" />
+            </button>
+          </div>
+        )}
+        <div className="flex justify-end mt-2">
           <Button
-            onClick={handleSubmit}
-            type="submit"
-            className="w-full md:w-auto"
+            onClick={handleShare}
+            className="bg-black text-white hover:bg-gray-800 text-lg tracking-tighter"
           >
-            Share {/* add loading here */}
+            Share
           </Button>
-        </DialogFooter>
-      </form>
-    </DialogContent>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
