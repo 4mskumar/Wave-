@@ -5,6 +5,7 @@ import Profile from './components/Profile'
 import Settings from './components/Settings'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import LandingPage from './pages/LandingPage'
 
 
 const appRouter=createBrowserRouter([
@@ -23,6 +24,10 @@ const appRouter=createBrowserRouter([
   {
     path:'/settings',
     element:<Settings/>
+  },
+  {
+    path:'/landing',
+    element:<LandingPage/>
   }
 ])
 

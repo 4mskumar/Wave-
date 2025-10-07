@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+} from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
 import { X } from "lucide-react";
 
 const SharePost = () => {
@@ -35,11 +34,11 @@ const SharePost = () => {
   // handle share post
   const handleShare = () => {
     if (!caption && !image) {
-      toast.error("Please add a caption or upload an image.");
+      // toast.error("Please add a caption or upload an image.");
       return;
     }
 
-    toast.success("Post shared successfully!");
+    // toast.success("Post shared successfully!");
     setCaption("");
     setImage(null);
     setPreview(null);
