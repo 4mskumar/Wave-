@@ -36,12 +36,10 @@ const NavBar = () => {
   const navItems = ["Features", "Contact", "Dev"];
   return (
     <div className="flex px-5 py-3 justify-between items-center">
-      {/* Logo */}
       <div>
         <img src="/images/wave-logo.png" className="w-20" alt="Wave logo" />
       </div>
 
-      {/* Nav Items */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-6">
           {navItems.map((item, index) => (
@@ -55,7 +53,6 @@ const NavBar = () => {
           ))}
         </div>
 
-        {/* Login Button */}
         <div>
           <SignedOut>
             <SignInButton forceRedirectUrl={"/home"}>

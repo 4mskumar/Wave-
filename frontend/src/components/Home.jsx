@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { Dialog, DialogTrigger } from "./ui/dialog";
-import { Button } from "./ui/button";
-import SharePost from "./SharePost";
+import { Badge } from "../components/ui/badge";
+import { FaRegComment } from "react-icons/fa";
 import Navbar from "./shared/Navbar";
 import Sidebar from "./shared/Sidebar";
-import { FaRegComment } from "react-icons/fa";
-import { Badge } from "@/components/ui/badge";
 import { IoMdShare } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa";
-import { UserButton, useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
+import SharePost from "./SharePost";
 
 const Home = () => {
   const [posts] = useState([
@@ -22,7 +20,6 @@ const Home = () => {
         "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80",
       Likes: 120,
       Comments: 45,
-      Shares: 10,
     },
     {
       id: 2,
@@ -34,7 +31,6 @@ const Home = () => {
         "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80",
       Likes: 120,
       Comments: 45,
-      Shares: 10,
     },
     {
       id: 3,
@@ -46,7 +42,6 @@ const Home = () => {
         "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80",
       Likes: 120,
       Comments: 45,
-      Shares: 10,
     },
   ]);
 
@@ -62,7 +57,8 @@ const Home = () => {
         <div className="max-w-2xl mx-auto py-6">
           <div className="bg-gray-100 shadow rounded-2xl p-6 mb-6 border-1 border-gray-200">
             <div className="flex items-center gap-3">
-              <Badge               
+              <Badge
+                className="border-gray-300 bg-gray-200 h-9 min-w-9 rounded-full px-1 font-mono tabular-nums text-lg cursor-pointer hover:bg-blue-500"
                 variant="secondary"
               >
                 <img 
@@ -75,49 +71,56 @@ const Home = () => {
                 placeholder="What's on your mind?"
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
-                className="flex-1 text-sm bg-gray-200 rounded-full px-4 py-2 outline-none"
+                className="flex-1 text-sm bg-gray-200 rounded-full px-4 py-2 outline-none w-full sm:w-auto"
               />
-              {/* <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="rounded-full text-[14px] px-2.5">+ Share Post</Button>
-                </DialogTrigger>
-              </Dialog> */}
-                <SharePost />
+              <SharePost />
             </div>
           </div>
-          {/* posts */}
+
+          {/* Posts Section */}
           <div className="space-y-6">
             {posts.map((post) => (
               <div
                 key={post.id}
-                className="bg-white shadow rounded-2xl p-4 flex flex-col gap-3"
+                className="bg-white shadow rounded-2xl p-4 sm:p-6 flex flex-col gap-3"
               >
                 <div className="flex items-center gap-3">
                   <img
                     src={post.avatar}
                     alt={post.name}
-                    className="w-10 h-10 rounded-full"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                   <div>
-                    <p className="font-semibold text-[18px]">{post.name}</p>
-                    <p className="text-[13px] text-gray-500">{post.time}</p>
+                    <p className="font-semibold text-[16px] sm:text-[18px]">
+                      {post.name}
+                    </p>
+                    <p className="text-[12px] sm:text-[13px] text-gray-500">
+                      {post.time}
+                    </p>
                   </div>
                 </div>
-                {post.text && <p className="text-gray-700 mt-4">{post.text}</p>}
+
+                {post.text && (
+                  <p className="text-gray-700 text-[14px] sm:text-[15px] mt-2">
+                    {post.text}
+                  </p>
+                )}
+
                 {post.image && (
                   <>
                     <img
                       src={post.image}
                       alt="post"
-                      className="w-full rounded-lg"
+                      className="w-full rounded-lg object-cover max-h-[450px]"
                     />
-                    {(post.Likes !== undefined ||
-                      post.Comments !== undefined ||
-                      post.Shares !== undefined) && (
-                      <div className="flex items-center gap-6 text-gray-600 text-sm mt-4 justify-between px-4">
-                        <span className="flex gap-2 items-center"><FaRegHeart /> {post.Likes ?? 0} Likes</span>
-                        <span className="flex gap-2 items-center"><FaRegComment /> {post.Comments ?? 0} Comments</span>
-                        <span className="flex gap-2 items-center"><IoMdShare />{post.Shares ?? 0} Share</span>
+                    {(post.Likes || post.Comments || post.Shares) && (
+                      <div className="flex flex-wrap sm:justify-start justify-between items-center text-gray-600 text-sm mt-4 sm:gap-10 px-2 sm:px-4">
+                        <span className="flex items-center gap-2">
+                          <FaRegHeart /> {post.Likes ?? 0} Likes
+                        </span>
+                        <span className="flex items-center gap-2">
+                          <FaRegComment /> {post.Comments ?? 0} Comments
+                        </span>
                       </div>
                     )}
                   </>
