@@ -7,14 +7,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../components/ui/dialog";
+import { toast } from "sonner";
+
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
+import useUserPostStore from "../app/UserPostStore";
+import { useAuth } from "@clerk/clerk-react";
 
-const SharePost = () => {
+const SharePost = ({onSuccess}) => {
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
+  const [open, setOpen] = useState(false)
   const [preview, setPreview] = useState(null);
+  const {userId} = useAuth()
+
+  const {addPost, posts, loading} = useUserPostStore()
 
   // handle image upload
   const handleImageChange = (e) => {
@@ -32,10 +40,20 @@ const SharePost = () => {
   };
 
   // handle share post
-  const handleShare = () => {
+  const handleShare = async () => {
     if (!caption && !image) {
       // toast.error("Please add a caption or upload an image.");
       return;
+    }
+
+    const res = await addPost(userId, caption, image)
+
+    if(res.success){
+      toast(res.message, {
+        className:
+          "animate-bounce bg-green-100 text-green-700 font-semibold shadow-md rounded-xl",
+      });
+        setOpen(false)
     }
 
     // toast.success("Post shared successfully!");
@@ -45,7 +63,7 @@ const SharePost = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-black rounded-full text-white hover:bg-gray-800">
         <span className="text-xl">+</span> Create Post
@@ -91,9 +109,9 @@ const SharePost = () => {
         <div className="flex justify-end mt-2">
           <Button
             onClick={handleShare}
-            className="bg-black text-white hover:bg-gray-800 text-lg tracking-tighter"
+            className="bg-black cursor-pointer text-white hover:bg-gray-800 text-lg tracking-tighter"
           >
-            Share
+            {loading ? <Loader2 /> : 'Share Now'}
           </Button>
         </div>
       </DialogContent>

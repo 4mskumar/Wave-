@@ -8,6 +8,7 @@ import { FaRegComment } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 import { IoMdShare } from "react-icons/io";
 import { FaRegHeart } from "react-icons/fa";
+import { UserButton, useUser } from "@clerk/clerk-react";
 
 const Home = () => {
   const [posts] = useState([
@@ -51,6 +52,8 @@ const Home = () => {
 
   const [newPost, setNewPost] = useState("");
 
+  const {user} = useUser()
+
   return (
     <>
       <Navbar />
@@ -59,11 +62,13 @@ const Home = () => {
         <div className="max-w-2xl mx-auto py-6">
           <div className="bg-gray-100 shadow rounded-2xl p-6 mb-6 border-1 border-gray-200">
             <div className="flex items-center gap-3">
-              <Badge
-                className="border-gray-300 bg-gray-200 h-9 min-w-9 rounded-full px-1 font-mono tabular-nums text-lg cursor-pointer hover:bg-blue-500"
+              <Badge               
                 variant="secondary"
               >
-                AK
+                <img 
+                className="border-gray-300 bg-gray-200 h-9 w-9 rounded-full font-mono tabular-nums text-lg cursor-pointer hover:bg-blue-500"
+                
+                src={user.imageUrl} />
               </Badge>
               <input
                 type="text"

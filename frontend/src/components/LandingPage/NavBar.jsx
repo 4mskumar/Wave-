@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import { gsap } from "gsap";
+import { SignedOut, SignInButton } from "@clerk/clerk-react";
 
 const NavBar = () => {
   const navRefs = useRef([]);
@@ -56,15 +57,19 @@ const NavBar = () => {
 
         {/* Login Button */}
         <div>
-          <Button
-            variant=""
-            className="rounded-full font-semibold tracking-tight"
-          >
-            Login{" "}
-            <span>
-              <ArrowRight className="-rotate-45 ml-1" size={18} />
-            </span>
-          </Button>
+          <SignedOut>
+            <SignInButton forceRedirectUrl={"/home"}>
+              <Button
+                variant=""
+                className="rounded-full font-semibold tracking-tight"
+              >
+                Login{" "}
+                <span>
+                  <ArrowRight className="-rotate-45 ml-1" size={18} />
+                </span>
+              </Button>
+            </SignInButton>
+          </SignedOut>
         </div>
       </div>
     </div>

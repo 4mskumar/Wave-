@@ -1,9 +1,11 @@
+import useUserPostStore from "../app/UserPostStore";
 import Navbar from "./shared/Navbar";
 import Sidebar from "./shared/Sidebar";
 import { useState } from "react";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
+  const { posts } = useUserPostStore();
 
   return (
     <>
@@ -61,16 +63,20 @@ const Profile = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-1 mt-6">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <img
-                key={i}
-                src={`https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80${
-                  i + 10
-                }`}
-                alt={`post-${i}`}
-                className="w-full h-80 object-cover"
-              />
+          <div className="grid grid-cols-3 gap-1 px-40 mt-6">
+            {posts.map((val, ind) => (
+              <div
+                key={ind}
+                className="relative w-full aspect-square overflow-hidden group cursor-pointer"
+              >
+                <img
+                  src={val.imageUrl}
+                  alt={val.caption || "post"}
+                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                />
+                {/* Optional: overlay effect like Instagram */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
             ))}
           </div>
         </div>

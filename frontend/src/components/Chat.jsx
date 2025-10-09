@@ -60,7 +60,7 @@ const Chat = () => {
         {/* CHATTING LIST */}
         <div className="w-[28%] border-r border-gray-300 flex flex-col">
           <div className="flex items-center justify-between p-4 border-b">
-            <Link to={"/"}>
+            <Link to={"/home"}>
               <GoArrowLeft className="cursor-pointer" size={25} />
             </Link>
             <h2 className="font-semibold tracking-tighter text-2xl">

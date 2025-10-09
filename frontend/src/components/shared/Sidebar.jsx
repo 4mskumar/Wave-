@@ -39,7 +39,7 @@ const Sidebar = () => {
         </div>
 
         <nav className="flex flex-col gap-2 text-lg">
-          <Link to="/">
+          <Link to="/home">
             <button
               className={`flex items-center gap-4 py-2 rounded-md w-full text-left ${
                 location.pathname === "/"
