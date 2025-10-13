@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import { gsap } from "gsap";
 import { SignedOut, SignInButton } from "@clerk/clerk-react";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const navRefs = useRef([]);
@@ -52,22 +53,22 @@ const NavBar = () => {
             </div>
           ))}
         </div>
-
-        <div>
-          <SignedOut>
-            <SignInButton forceRedirectUrl={"/home"}>
-              <Button
-                variant=""
-                className="rounded-full font-semibold tracking-tight"
-              >
-                Login{" "}
-                <span>
-                  <ArrowRight className="-rotate-45 ml-1" size={18} />
-                </span>
-              </Button>
-            </SignInButton>
-          </SignedOut>
-        </div>
+        
+          <div>
+            <SignedOut>
+              <SignInButton forceRedirectUrl={"/home"}>
+                <Button
+                  variant=""
+                  className="rounded-full font-semibold tracking-tight"
+                >
+                  Login{" "}
+                  <span>
+                    <ArrowRight className="-rotate-45 ml-1" size={18} />
+                  </span>
+                </Button>
+              </SignInButton>
+            </SignedOut>
+          </div>        
       </div>
     </div>
   );

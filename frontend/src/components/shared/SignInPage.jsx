@@ -3,7 +3,7 @@ import React from 'react'
 
 const SignInPage = () => {
   return (
-    <div className='w-[115%] h-screen flex justify-center items-center'><SignIn path='/signin' routing='path' signInUrl='/signup'/></div>
+    <div className='w-[100%] h-screen flex justify-center items-center'><SignIn path='/sign-in' routing='path' signInUrl='/sign-in'/></div>
   )
 }
 
