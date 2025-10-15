@@ -20,7 +20,8 @@ function App() {
               <Route path={"/"} element={<LandingPage />}/>
               <Route path={"/sign-in"} element={<SignInPage />}/>
               <Route path={"/sign-in/factor-one"} element={<SignInPage />}/>
-              <Route path="/sign-in/*" element={<Navigate to="/sign-in" replace />} />
+              <Route path={"/sign-in/create"} element={<SignInPage />}/>
+              <Route path="/sign-in/*" element={<SignInPage />} />
 
             </>
           ) : (
