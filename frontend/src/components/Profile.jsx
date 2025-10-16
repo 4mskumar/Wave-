@@ -6,6 +6,7 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import { Grid3X3 } from "lucide-react";
 
 const Profile = () => {
+  const [selectedPost, setSelectedPost] = useState(null);
   const [activeTab, setActiveTab] = useState("posts");
   const { posts, fetchPosts } = useUserPostStore();
   const { userId } = useAuth();
@@ -52,7 +53,7 @@ const Profile = () => {
               {/* STATS */}
               <div className="flex justify-center sm:justify-start gap-10 mb-5">
                 <div className="text-center gap-1 flex items-end sm:text-left">
-                <p className="font-semibold text-lg sm:text-xl">
+                  <p className="font-semibold text-lg sm:text-xl">
                     80
                     <span className="text-[15px] ml-1 text-zinc-800 font-light tracking-tight">
                       followers
@@ -60,7 +61,7 @@ const Profile = () => {
                   </p>
                 </div>
                 <div className="text-center gap-1 flex items-end sm:text-left">
-                <p className="font-semibold text-lg sm:text-xl">
+                  <p className="font-semibold text-lg sm:text-xl">
                     80
                     <span className="text-[15px] ml-1 text-zinc-800 font-light tracking-tight">
                       following
@@ -99,11 +100,15 @@ const Profile = () => {
             <span className="h-[3px] w-16 bg-zinc-800"></span>
           </div>
 
-          <div className="grid grid-cols-3  gap-[2px] px-72 relative mt-6">
+          {/* POSTS */}
+          {/* Post Grid */}
+          <div className="grid grid-cols-3 gap-[2px] px-72 relative mt-6">
             <span className="w-[61.7%] left-72 border bg-zinc-900 h-[0.9px] absolute top-0"></span>
+
             {posts.map((val, ind) => (
               <div
                 key={ind}
+                onClick={() => setSelectedPost(val)} // 👈 open modal
                 className="relative w-full aspect-[2/3] overflow-hidden group cursor-pointer"
               >
                 <img
@@ -111,11 +116,92 @@ const Profile = () => {
                   alt={val.caption || "post"}
                   className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                 />
-                {/* Optional: overlay effect like Instagram */}
+                {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             ))}
           </div>
+
+          {/* Instagram-style Post Modal */}
+          {selectedPost && (
+            <div
+              className="fixed inset-0 bg-black/70 flex justify-center items-center z-50"
+              onClick={() => setSelectedPost(null)} // close when clicking outside
+            >
+              <div
+                className="bg-white rounded-xl overflow-hidden flex flex-col md:flex-row w-[90%] md:w-[70%] max-h-[90vh] relative"
+                onClick={(e) => e.stopPropagation()} // prevent close when clicking inside
+              >
+                {/* Close button */}
+                <button
+                  onClick={() => setSelectedPost(null)}
+                  className="absolute top-3 right-4 text-gray-200 hover:text-white text-3xl font-bold z-50"
+                >
+                  ×
+                </button>
+
+                {/* Left: Post Image */}
+                <div className="flex-1 bg-black flex justify-center items-center">
+                  <img
+                    src={selectedPost.imageUrl}
+                    alt={selectedPost.caption || "post"}
+                    className="object-contain max-h-[85vh] w-auto"
+                  />
+                </div>
+
+                {/* Right: Details Section */}
+                <div className="w-full md:w-[45%] flex flex-col justify-between p-4">
+                  {/* Header */}
+                  <div className="flex items-center gap-3 border-b pb-3">
+                    <img
+                      src={user.imageUrl}
+                      alt="profile"
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <p className="font-semibold text-sm">{user.username}</p>
+                  </div>
+
+                  {/* Caption */}
+                  <div className="mt-3 flex-1 overflow-y-auto">
+                    <p className="text-sm">
+                      <span className="font-semibold mr-1">
+                        {user.username}
+                      </span>
+                      {selectedPost.caption || "No caption"}
+                    </p>
+
+                    {/* Example comments (you can fetch real ones later) */}
+                    <div className="mt-4">
+                      <p className="text-sm">
+                        <span className="font-semibold mr-1">aditya</span>🔥🔥
+                      </p>
+                      <p className="text-sm">
+                        <span className="font-semibold mr-1">muskan_k</span>Love
+                        this!
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Likes + Comment input */}
+                  <div className="border-t pt-3">
+                    <p className="text-sm font-semibold">
+                      {selectedPost.likes || 120} likes
+                    </p>
+                    <div className="flex items-center mt-2">
+                      <input
+                        type="text"
+                        placeholder="Add a comment..."
+                        className="flex-1 border-none outline-none text-sm"
+                      />
+                      <button className="text-blue-500 font-semibold text-sm">
+                        Post
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { ClerkProvider } from "@clerk/clerk-react";
-import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "./components/ui/sonner.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -18,10 +17,8 @@ createRoot(document.getElementById("root")).render(
       signInUrl={import.meta.env.VITE_CLERK_SIGN_IN_URL}
       publishableKey={PUBLISHABLE_KEY}
     >
-      <BrowserRouter>
-        <App />
-        <Toaster />
-      </BrowserRouter>
+      <App />
+      <Toaster />
     </ClerkProvider>
   </StrictMode>
 );
