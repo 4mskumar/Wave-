@@ -8,7 +8,7 @@ const useUserPostStore = create((set, get) => ({
   error: false,
 
   // ✅ Add Post
-  addPost: async (userId, caption, image) => {
+  addPost: async (userId, caption, image, userImageUrl, username) => {
     set({ loading: true, error: false });
 
     try {
@@ -16,6 +16,8 @@ const useUserPostStore = create((set, get) => ({
       formData.append("userId", userId);
       formData.append("caption", caption);
       formData.append("image", image);
+      formData.append("userImageUrl", userImageUrl);
+      formData.append("username", username)
 
       const res = await axios.post("/post/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },

@@ -13,8 +13,10 @@ const PostSchema = new mongoose.Schema(
     userId: { type: String, required: true }, // Clerk userId
     caption: { type: String, default: "" },
     imageUrl: { type: String },
+    userImageUrl: { type: String },
     likes: [{ type: String }], 
     comments: [CommentSchema],
+    username : {type : String}
   },
   { timestamps: true }
 );

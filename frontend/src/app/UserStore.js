@@ -4,39 +4,60 @@ import axios from "../api/axiosConfig.js";
 export const useUserStore = create((set, get) => ({
     followers: [],
     following: [],
+    feed: [],
     loading: false,
     error: false,
 
     setUserData: async (userId, username, fullName, imageurl = '', bio = '') => {
         try {
-            console.log('in user store');
-            console.log(userId);        
+            // console.log('in user store');
+            // console.log(userId);        
 
             const res = await axios.post("/set-user", {
                 userId, username, fullName
             });
 
-            if(res.data.success){
+            if (res.data.success) {
                 set({ loading: true });
 
                 set((state) => ({
-                    followers : [...state.followers, res.data.followers],
-                    following : [...state.following, res.data.following],
+                    followers: [...state.followers, res.data.followers],
+                    following: [...state.following, res.data.following],
                 }))
-                console.log('succes');
-                
+                // console.log('succes');
+
                 set({ loading: false });
                 return { success: true };
-                
-            }else{
-                set({ loading: false, error : true });
-        return { success: true, message: res.data.message };
-        
+
+            } else {
+                set({ loading: false, error: true });
+                return { success: true, message: res.data.message };
+
 
             }
         } catch (error) {
             console.log(error.message);
-            
+
         }
-    }
+    },
+
+    getUserFeed: async (userId) => {
+        try {
+            const res = await axios.get('/feed', { params: { userId } });
+
+            if (res.data.success) {
+                // Access previous state if you want
+                // const prevFeed = get().feed;
+
+                // const newFeed = [...prevFeed, ...res.data.feedData]; // append properly
+
+                set({ feed: res.data.feedData });
+
+
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+
 }))

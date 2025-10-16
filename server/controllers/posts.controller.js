@@ -1,9 +1,10 @@
 import cloud from "../utils/cloud.js";
 import postSchema from '../models/postModel.js'
+import { User } from "../models/User.js";
 
 export const postImage = async (req, res) => {
   try {
-    const { userId, caption } = req.body;
+    const { userId, caption, userImageUrl, username } = req.body;
 
     if (!userId) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
@@ -40,11 +41,14 @@ export const postImage = async (req, res) => {
       imageUrl: cloudUrl,
       likes: [],
       comments: [],
+      userImageUrl : userImageUrl,
+      username
     });
+
 
     return res
       .status(200)
-      .json({ success: true, message: "Your post has been uploaded", post: newPost });
+      .json({ success: true, message: "Your post has been uploaded", post: newPost  });
   } catch (error) {
     console.error(error);
     return res

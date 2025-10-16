@@ -1,3 +1,4 @@
+import postSchema from "../models/postModel.js"
 import { User } from "../models/User.js"
 
 export const setUserData = async (req, res) => {
@@ -131,3 +132,16 @@ export const getFollowing = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const getFeedData = async (req, res) => {
+  try {
+    const {userId} = req.query
+    const feedData = await postSchema.find({userId : {$ne : userId}}).sort({createdAt : -1})
+    const username = await User.findOne({clerkId : userId})
+
+
+    res.status(201).json({feedData : feedData, success:true, username})
+  } catch (error) {
+    res.status(500).json({message : error.message})
+  }
+}

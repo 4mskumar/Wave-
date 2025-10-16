@@ -13,7 +13,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Loader2, X } from "lucide-react";
 import useUserPostStore from "../app/UserPostStore";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 const SharePost = ({onSuccess}) => {
   const [caption, setCaption] = useState("");
@@ -21,6 +21,7 @@ const SharePost = ({onSuccess}) => {
   const [open, setOpen] = useState(false)
   const [preview, setPreview] = useState(null);
   const {userId} = useAuth()
+  const {user} = useUser()
 
   const {addPost, posts, loading} = useUserPostStore()
 
@@ -46,7 +47,10 @@ const SharePost = ({onSuccess}) => {
       return;
     }
 
-    const res = await addPost(userId, caption, image)
+    let userImage = user.imageUrl
+    let username = user.username
+
+    const res = await addPost(userId, caption, image, userImage, username)
 
     if(res.success){
       toast(res.message, {
