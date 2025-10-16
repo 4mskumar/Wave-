@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "../components/ui/badge";
 import { FaRegComment, FaRegHeart } from "react-icons/fa";
-import { IoMdShare } from "react-icons/io";
 import Navbar from "./shared/Navbar";
 import Sidebar from "./shared/Sidebar";
-import { useUser } from "@clerk/clerk-react";
-import SharePost from "./SharePost";
+//import { useUser } from "@clerk/clerk-react";
+import { IoMdShare } from "react-icons/io";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import SharePost from "./SharePost"
+import { useUserStore } from "../app/UserStore";
 
 const Home = () => {
   const [posts] = useState([
@@ -43,9 +45,17 @@ const Home = () => {
       Comments: 30,
     },
   ]);
-
   const [newPost, setNewPost] = useState("");
   const { user } = useUser();
+  const {setUserData} = useUserStore()
+  const {userId} = useAuth()
+
+  useEffect(() => {
+    setUserData(userId, user.fullName, user.username)
+    console.log('called');
+    
+  }, [])
+
 
   return (
     <>

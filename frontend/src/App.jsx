@@ -15,7 +15,8 @@ function App() {
     !isSignedIn
       ? [
           { path: "/", element: <LandingPage /> },
-          { path: "/signin", element: <SignInPage /> },
+          { path: "/sign-in", element: <SignInPage /> },
+          { path: "/sign-in/*", element: <SignInPage /> },
         ]
       : [
           { path: "/", element: <Home /> },
@@ -23,7 +24,6 @@ function App() {
           { path: "/settings", element: <Settings /> },
           { path: "/profile", element: <Profile /> },
           { path: "/chat", element: <Chat /> },
-          
         ]
   );
 
