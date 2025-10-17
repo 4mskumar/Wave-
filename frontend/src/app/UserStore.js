@@ -8,13 +8,15 @@ export const useUserStore = create((set, get) => ({
     loading: false,
     error: false,
 
-    setUserData: async (userId, username, fullName, imageurl = '', bio = '') => {
+    setUserData: async (userId, username, fullName, imageurl, bio = '') => {
         try {
             // console.log('in user store');
             // console.log(userId);        
+            // console.log(imageurl);
+            
 
             const res = await axios.post("/set-user", {
-                userId, username, fullName
+                userId, username, fullName, imageUrl:imageurl
             });
 
             if (res.data.success) {
@@ -70,6 +72,6 @@ export const useUserStore = create((set, get) => ({
             console.log(error.message);
             
         }
-    }
+    },
 
 }))

@@ -8,10 +8,14 @@ import { UserButton, useUser } from "@clerk/clerk-react";
 import { useRef } from "react";
 import { Settings } from "lucide-react";
 import { Button } from "../ui/button";
+import { useUserStore } from "../../app/UserStore";
 
 const Navbar = () => {
   const { user } = useUser();
+  const {setUserData} = useUserStore()
   const hiddenButtonUserSettings = useRef();
+  // console.log(user);
+  
 
   const userName =
     user?.username
@@ -40,6 +44,10 @@ const Navbar = () => {
           className="ml-2 bg-transparent outline-none w-full text-sm sm:text-base"
         />
       </div>
+      {/* temp btn */}
+      <Button onClick={() => setUserData(user.clerkId, user.username, user.fullName, user.imageUrl)}>
+        Refresh info
+      </Button>
 
       {/* Right side */}
       <div className="flex items-center gap-6">

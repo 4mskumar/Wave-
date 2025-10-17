@@ -52,14 +52,17 @@ const Home = () => {
   const {user} = useUser()
   const {userId} = useAuth()
 
+  // console.log(user);
+  
+
 
     useEffect(() => {
       if (userId && user) {
-        setUserData(userId, user.fullName, user.username);
+        setUserData(userId, user.fullName, user.username, user.imageUrl);
         getUserFeed(userId);
         getFollowers(userId)
       }
-      console.log("called in home" + followers);
+      // console.log("called in home" + followers);
     }, [userId, user]);
     
   const handleLikeToggle = (postId) => {

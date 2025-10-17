@@ -7,8 +7,8 @@ import { BiMessageRounded } from "react-icons/bi";
 import { FiUser, FiSettings } from "react-icons/fi";
 import { HiOutlineHome } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
-import { useRef } from "react";
-import { UserButton, useUser } from "@clerk/clerk-react";
+import { useEffect, useRef } from "react";
+import { useAuth, UserButton, useUser } from "@clerk/clerk-react";
 import useUserPostStore from "../../app/UserPostStore";
 import { useUserStore } from "../../app/UserStore";
 
@@ -17,7 +17,18 @@ const Sidebar = () => {
   const hiddenUserButtonRef = useRef(null);
   const { posts } = useUserPostStore();
   const { user } = useUser();
-  const {following, followers} = useUserStore()
+  const {userId} = useAuth()
+  const {following, followers, getFollowers} = useUserStore()
+  console.log(followers);
+
+  useEffect(() => {
+    if(userId && user){
+      getFollowers(userId)
+    }
+  }, [userId, user])
+
+  let sideBarUsers = [...followers, followers]
+  
 
   const navItems = [
     { label: "Feed", icon: HiOutlineHome, path: "/home" },

@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import Navbar from "./shared/Navbar";
 import { GoArrowLeft } from "react-icons/go";
 import { RxDotsHorizontal } from "react-icons/rx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import { useUserStore } from "../app/UserStore";
 
 const Chat = () => {
   const [selectedChat, setSelectedChat] = useState(null);
+  const {userId} = useAuth()
+  const {user} = useUser()
+  const {followers, getFollowers} = useUserStore()
+
+  useEffect(() => {
+    if(userId && user){
+      getFollowers(userId)
+    }
+  }, [userId, user])
 
   const chats = [
     {
@@ -96,36 +107,36 @@ const Chat = () => {
 
           {/* Chat List */}
           <div className="flex-1 overflow-y-auto ml-2">
-            {chats.map((chat, i) => (
+            {followers.map((chat, i) => (
               <div
                 key={i}
                 onClick={() => setSelectedChat(chat)}
                 className={`flex items-center justify-between p-3 sm:p-4 border-b cursor-pointer 
                   transition-colors duration-200 ${
-                    selectedChat?.name === chat.name
+                    selectedChat?.username === chat.username
                       ? "bg-blue-100"
                       : "hover:bg-gray-100"
                   }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <Avatar>
-                    {chat.img ? (
-                      <AvatarImage src={chat.img} />
+                    {chat.imageUrl ? (
+                      <AvatarImage src={chat.imageUrl} />
                     ) : (
                       <AvatarFallback>{chat.name.charAt(0)}</AvatarFallback>
                     )}
                   </Avatar>
                   <div className="min-w-0">
                     <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">
-                      {chat.name}
+                      {chat.username}
                     </p>
                     <p className="text-xs sm:text-sm text-gray-500 truncate">
-                      {chat.msg}
+                      {'Hello'}
                     </p>
                   </div>
                 </div>
                 <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap">
-                  {chat.time}
+                  {'04:22'}
                 </span>
               </div>
             ))}
@@ -161,8 +172,8 @@ const Chat = () => {
                   <GoArrowLeft size={22} />
                 </button>
                 <Avatar>
-                  {selectedChat.img ? (
-                    <AvatarImage src={selectedChat.img} />
+                  {selectedChat.imageUrl ? (
+                    <AvatarImage src={selectedChat.imageUrl} />
                   ) : (
                     <AvatarFallback>
                       {selectedChat.name.charAt(0)}
@@ -171,7 +182,7 @@ const Chat = () => {
                 </Avatar>
                 <div>
                   <p className="font-semibold text-base sm:text-lg">
-                    {selectedChat.name}
+                    {selectedChat.username}
                   </p>
                   <p className="text-xs text-gray-500">Active now</p>
                 </div>
@@ -181,7 +192,7 @@ const Chat = () => {
               <div className="flex-1 p-4 overflow-y-auto">
                 <p className="text-sm text-gray-700 text-center ">
                   This is the start of your chat with{" "}
-                  <span className="font-semibold">{selectedChat.name}</span>.
+                  <span className="font-semibold">{selectedChat.username}</span>.
                 </p>
               </div>
 

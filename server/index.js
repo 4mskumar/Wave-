@@ -6,6 +6,8 @@ import { connectDb } from "./utils/db.js";
 import { router as postRouter } from "./routes/posts.route.js";
 import { router as userRouter } from "./routes/user.route.js";
 import { Server } from "socket.io";
+import router from "./routes/messages.route.js";
+
 
 config();
 
@@ -46,6 +48,7 @@ io.on("connection", (socket) => {
 // Routes
 app.use("/api/post", postRouter);
 app.use("/api", userRouter);
+app.use("/api", router)
 
 server.listen(PORT, () => {
   console.log(`Server is live at ${PORT}`);

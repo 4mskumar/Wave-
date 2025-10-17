@@ -2,30 +2,37 @@ import postSchema from "../models/postModel.js"
 import { User } from "../models/User.js"
 
 export const setUserData = async (req, res) => {
-    try {
-        const {userId, bio, fullName, username} = req.body
+  try {
+    const { userId, imageUrl, fullName, username } = req.body
 
-        if(!userId){
-            return res.status(402).json({success : false, message : 'UnAuth'})
-        }
-
-        const user = await User.findOne({clerkId : userId})
-        if(user){
-            return
-        }
-        
-        const newUser = await User.create({
-            clerkId : userId,
-            bio : '',
-            username,
-            fullName
-        })
-
-        return res.status(200).json({success : true, user : newUser})
-    } catch (error) {
-        return res.status(500).json({success : false, message : error.message})
-        
+    if (!userId) {
+      return res.status(402).json({ success: false, message: 'UnAuth' })
     }
+
+    const user = await User.findOneAndUpdate({ clerkId: userId }, {
+      clerkId: userId,
+      bio: '',
+      username,
+      fullName,
+      imageUrl
+    }, {new : true})
+    if (user) {
+      return
+    }
+    
+    const newUser = await User.create({
+      clerkId: userId,
+      bio: '',
+      username,
+      fullName,
+      imageUrl
+    })
+
+    return res.status(200).json({ success: true, user: newUser })
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message })
+
+  }
 }
 /**
  * @desc Follow a user
@@ -33,44 +40,63 @@ export const setUserData = async (req, res) => {
  */
 export const followUser = async (req, res) => {
   try {
-    const {myId} = req.body       
-    const targetId = req.params.id; 
+    const { myId } = req.body; // follower Clerk ID
+    const targetId = req.params.id; // target Clerk ID
 
-    // if (myId.toString() === targetId) {
-    //   return res.status(400).json({ success: false, message: "You cannot follow yourself" });
-    // }
+    if (!myId || !targetId) {
+      return res.status(400).json({ success: false, message: "Missing IDs" });
+    }
+
+    const user = await User.findOne({ clerkId: myId });
+    const targetUser = await User.findOne({ clerkId: targetId });
+
+    // console.log(user);
     
-    const user = await User.findOne({clerkId : myId});
-    const targetUser = await User.findOne({clerkId : targetId});
 
-    if (!targetUser) {
+    if (!user || !targetUser) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Check if already following
-    if (user.following.includes(targetId)) {
-      return res.status(400).json({ success: false, message: "Already following this user" });
+    if (myId === targetId) {
+      return res.status(400).json({ success: false, message: "You cannot follow yourself" });
     }
 
-    // Add follow
-    user.following.push(targetId);
-    targetUser.followers.push(myId);
+    const alreadyFollowing = user.following.some(f => f.userId === targetId);
+    console.log(alreadyFollowing);
+    
+    if (alreadyFollowing) {
+      return res.status(400).json({ success: false, message: "Already following" });
+    }
+
+    // ✅ Push correctly structured objects
+    user.following.push({
+      userId: targetUser.clerkId,
+      username: targetUser.username,
+      imageUrl: targetUser.imageUrl || "",
+    });
+
+    targetUser.followers.push({
+      userId: user.clerkId,
+      username: user.username,
+      imageUrl: user.imageUrl || "",
+    });
 
     await user.save();
     await targetUser.save();
 
-    res.status(200).json({ success: true, message: "User followed successfully" });
+    res.status(200).json({ success: true, message: "Followed successfully" });
   } catch (error) {
+    console.error("Follow error:", error);
     res.status(500).json({ success: false, message: error.message });
-    console.log(error.message);
-    
   }
 };
 
 
+
+
 export const unfollowUser = async (req, res) => {
   try {
-    const {myId} = req.body
+    const { myId } = req.body
     const targetId = req.params.id;
 
     const user = await User.findById(myId);
@@ -104,18 +130,18 @@ export const unfollowUser = async (req, res) => {
 export const getFollowers = async (req, res) => {
   try {
     // console.log(req.query);
-    
-    const {userId} = req.query
+
+    const { userId } = req.query
     // console.log();
-    
-    const user = await User.findOne({clerkId : userId});
-    console.log(user);
-    
+
+    const user = await User.findOne({ clerkId: userId });
+    // console.log(user);
+
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found 12" + req.userId, body: req.userId });
     }
     console.log(user.followers);
-    
+
     res.status(200).json({ success: true, followers: user.followers });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -143,14 +169,14 @@ export const getFollowing = async (req, res) => {
 
 export const getFeedData = async (req, res) => {
   try {
-    
-    const {userId} = req.query
-    // console.log(userId);
-    
-    const feedData = await postSchema.find({userId : {$ne : userId}}).sort({createdAt : -1})
 
-    res.status(201).json({feedData : feedData, success:true})
+    const { userId } = req.query
+    // console.log(userId);
+
+    const feedData = await postSchema.find({ userId: { $ne: userId } }).sort({ createdAt: -1 })
+
+    res.status(201).json({ feedData: feedData, success: true })
   } catch (error) {
-    res.status(500).json({message : error.message})
+    res.status(500).json({ message: error.message })
   }
 }
