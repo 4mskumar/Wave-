@@ -7,8 +7,8 @@ const userSchema = new mongoose.Schema({
   imageUrl: { type: String }, // profile image from Clerk
   bio: { type: String, default: "" },
   location: { type: String, default: "" },
-  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", default : [] }],
-  following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", default : [] }],
+  followers: [{ type: String, default : [] }],
+  following: [{ type: String, default : [] }],
 }, { timestamps: true });
 
 export const User = mongoose.model("User", userSchema);

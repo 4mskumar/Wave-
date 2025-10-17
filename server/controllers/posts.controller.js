@@ -154,7 +154,8 @@ export const deletePost = async (req, res) => {
       return res.status(401).json({success : false, message : "postId not found"})
     }
 
-    const updatedPost = await postSchema.findByIdAndDelete(postId)
+    await postSchema.findByIdAndDelete(postId)
+    
 
     return res.status(200).json({success : true, message : "You just deleted a post yayyy!"})
     

@@ -36,12 +36,12 @@ export const followUser = async (req, res) => {
     const {myId} = req.body       
     const targetId = req.params.id; 
 
-    if (myId.toString() === targetId) {
-      return res.status(400).json({ success: false, message: "You cannot follow yourself" });
-    }
-
-    const user = await User.findById(myId);
-    const targetUser = await User.findById(targetId);
+    // if (myId.toString() === targetId) {
+    //   return res.status(400).json({ success: false, message: "You cannot follow yourself" });
+    // }
+    
+    const user = await User.findOne({clerkId : myId});
+    const targetUser = await User.findOne({clerkId : targetId});
 
     if (!targetUser) {
       return res.status(404).json({ success: false, message: "User not found" });
@@ -62,6 +62,8 @@ export const followUser = async (req, res) => {
     res.status(200).json({ success: true, message: "User followed successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+    console.log(error.message);
+    
   }
 };
 
@@ -101,13 +103,19 @@ export const unfollowUser = async (req, res) => {
  */
 export const getFollowers = async (req, res) => {
   try {
-    const { id } = req.params;
-    const user = await User.findById(id).populate("followers", "username fullName imageUrl");
-
+    // console.log(req.query);
+    
+    const {userId} = req.query
+    // console.log();
+    
+    const user = await User.findOne({clerkId : userId});
+    console.log(user);
+    
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: "User not found 12" + req.userId, body: req.userId });
     }
-
+    console.log(user.followers);
+    
     res.status(200).json({ success: true, followers: user.followers });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -120,7 +128,7 @@ export const getFollowers = async (req, res) => {
  */
 export const getFollowing = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.query;
     const user = await User.findById(id).populate("following", "username fullName imageUrl");
 
     if (!user) {
@@ -135,12 +143,13 @@ export const getFollowing = async (req, res) => {
 
 export const getFeedData = async (req, res) => {
   try {
+    
     const {userId} = req.query
+    // console.log(userId);
+    
     const feedData = await postSchema.find({userId : {$ne : userId}}).sort({createdAt : -1})
-    const username = await User.findOne({clerkId : userId})
 
-
-    res.status(201).json({feedData : feedData, success:true, username})
+    res.status(201).json({feedData : feedData, success:true})
   } catch (error) {
     res.status(500).json({message : error.message})
   }

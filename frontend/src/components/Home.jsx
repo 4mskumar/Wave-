@@ -47,7 +47,7 @@ const Home = () => {
     },
   ]);
 
-  const {setUserData, feed, getUserFeed} = useUserStore()
+  const {setUserData, feed, getUserFeed, getFollowers, followers} = useUserStore()
   const {toggleLike} = useUserPostStore()
   const {user} = useUser()
   const {userId} = useAuth()
@@ -57,8 +57,9 @@ const Home = () => {
       if (userId && user) {
         setUserData(userId, user.fullName, user.username);
         getUserFeed(userId);
+        getFollowers(userId)
       }
-      console.log("called in home" + feed);
+      console.log("called in home" + followers);
     }, [userId, user]);
     
   const handleLikeToggle = (postId) => {

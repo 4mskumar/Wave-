@@ -79,10 +79,25 @@ const useUserPostStore = create((set, get) => ({
     })),
 
   // ✅ Delete Post
-  deletePost: (id) =>
-    set((state) => ({
-      posts: state.posts.filter((post) => post._id !== id),
-    })),
+  deletePost: async (userId, id) => {
+    try {
+      const res = await axios.post('/post/delete', { userId, postId: id });
+      if (res.data.success) {
+        const updatedPosts = get().posts.filter((post) => post._id !== id);
+        set({ posts: updatedPosts });
+        return { success: true, message: res.data.message };
+      } else {
+        return { success: false, message: res.data.message || "Failed to delete post" };
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error.message);
+      set((state) => ({
+        posts: state.posts.filter((post) => post._id !== id),
+      }));
+      return { success: false, message: "Error deleting post" };
+    }
+  },
+
 
   // ✅ Toggle Like (template)
   toggleLike: async (userId, postId) => {

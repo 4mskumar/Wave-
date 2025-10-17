@@ -8,7 +8,7 @@ router.post('/set-user', setUserData)
 router.post("/follow/:id", followUser);
 router.post("/unfollow/:id", unfollowUser);
 
-router.get("/followers/:id", getFollowers);
+router.get("/followers", getFollowers);
 router.get("/following/:id", getFollowing);
 
 router.get("/feed", getFeedData);

@@ -60,4 +60,16 @@ export const useUserStore = create((set, get) => ({
         }
     },
 
+    getFollowers  :async (userId) => {
+        try {
+            const res = await axios.get('/followers', {params : {userId}})
+            if(res.data.success){
+                set({followers : res.data.followers})
+            }
+        } catch (error) {
+            console.log(error.message);
+            
+        }
+    }
+
 }))

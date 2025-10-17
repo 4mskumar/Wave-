@@ -2,19 +2,43 @@ import { useEffect, useState } from "react";
 import useUserPostStore from "../app/UserPostStore";
 import Navbar from "./shared/Navbar";
 import Sidebar from "./shared/Sidebar";
+import { toast } from "sonner";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { Grid3X3 } from "lucide-react";
-import { RxCross2 } from "react-icons/rx";
+import { Grid3X3, MoreHorizontalIcon, Trash2 } from "lucide-react";
+import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
+import { useUserStore } from "../app/UserStore";
 
 const Profile = () => {
   const [selectedPost, setSelectedPost] = useState(null);
-  const { posts, fetchPosts } = useUserPostStore();
+  const { posts, fetchPosts, deletePost } = useUserPostStore();
   const { userId } = useAuth();
   const { user } = useUser();
+  const {followers, following} = useUserStore()
+  // console.log(selectedPost);
 
   useEffect(() => {
     fetchPosts(userId);
   }, []);
+
+  const handleDeletePost = async (id) => {
+    const res = await deletePost(userId, id);
+    setSelectedPost(null);
+    toast(res.message);
+    await fetchPosts(userId);
+  };
 
   return (
     <>
@@ -59,7 +83,8 @@ const Profile = () => {
               <div className="flex justify-center sm:justify-start gap-6 sm:gap-10 mb-5">
                 <div className="text-center flex items-end sm:text-left">
                   <p className="font-semibold text-base sm:text-lg">
-                    80
+                  {Array.isArray(followers) ? followers.length : 0}
+                    
                     <span className="text-[13px] sm:text-[15px] ml-1 text-zinc-800 font-light tracking-tight">
                       followers
                     </span>
@@ -67,7 +92,8 @@ const Profile = () => {
                 </div>
                 <div className="text-center flex items-end sm:text-left">
                   <p className="font-semibold text-base sm:text-lg">
-                    80
+                  {Array.isArray(following) ? following.length : 0}
+
                     <span className="text-[13px] sm:text-[15px] ml-1 text-zinc-800 font-light tracking-tight">
                       following
                     </span>
@@ -75,7 +101,7 @@ const Profile = () => {
                 </div>
                 <div className="text-center flex items-end sm:text-left">
                   <p className="font-semibold text-base sm:text-lg">
-                    {posts.length}
+                    {Array.isArray(posts) ? posts.length : 0}
                     <span className="text-[13px] sm:text-[15px] ml-1 text-zinc-800 font-light tracking-tight">
                       posts
                     </span>
@@ -85,9 +111,7 @@ const Profile = () => {
 
               {/* Bio */}
               <div className="text-center sm:text-left leading-tight">
-                <p className="font-semibold sm:text-base">
-                  {user.fullName}
-                </p>
+                <p className="font-semibold sm:text-base">{user.fullName}</p>
                 <p className="text-gray-600 text-sm sm:text-sm">Developer</p>
                 <p className="text-gray-500 text-sm sm:text-sm">
                   📍 India, Delhi
@@ -129,23 +153,63 @@ const Profile = () => {
               onClick={() => setSelectedPost(null)}
             >
               <div
-                className="bg-white rounded-xl overflow-hidden flex flex-col md:flex-row w-full sm:w-[90%] md:w-[80%] lg:w-[70%] h-[85vh] max-h-[90vh] relative"
+                className="bg-white rounded-sm overflow-hidden flex flex-col md:flex-row w-full sm:w-[90%] md:w-[80%] lg:w-[70%] h-[85vh] max-h-[90vh] relative"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Close Button */}
-                <button
-                  onClick={() => setSelectedPost(null)}
-                  className="absolute top-3 right-4 cursor-pointer text-gray-800 hover:text-gray-950"
-                >
-                  <RxCross2 />
-                </button>
+                <div className="absolute top-3 right-4">
+                  <Popover className={"relative"}>
+                    <PopoverTrigger asChild>
+                      <MoreHorizontalIcon className="cursor-pointer" />
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className={
+                        "bg-transparent border-none p-0 absolute -top-10 left-10 w-fit "
+                      }
+                    >
+                      <AlertDialog>
+                        <AlertDialogTrigger>
+                          <Button
+                            className={
+                              "cursor-pointer hover:bg-red-500/90 hover:text-white border-none"
+                            }
+                            variant={"outline"}
+                          >
+                            <Trash2 />
+                            Delete
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete your account and remove your
+                              data from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeletePost(selectedPost._id)}
+                            >
+                              Continue
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </PopoverContent>
+                  </Popover>
+                </div>
 
                 {/* Left: Image */}
-                <div className="flex-1 bg-black flex justify-center items-center p-2 sm:p-4">
+                <div className="flex-1 bg-black flex justify-center items-center">
                   <img
                     src={selectedPost.imageUrl}
                     alt={selectedPost.caption || "post"}
-                    className="object-contain max-h-[70vh] sm:max-h-[85vh] w-auto"
+                    className="object-cover w-full h-full"
                   />
                 </div>
 

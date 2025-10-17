@@ -103,10 +103,10 @@ const Hero = () => {
       </div>
       
       {/* IMAGE */}
-      <div id="pixar" className="mt-28.5 sm:-mt-56">
+      <div id="pixar" className="mt-28 sm:-mt-56">
         <img
           src="/images/friends.jpg"
-          className="h-58 sm:h-150 sm:w-500 w-auto object-cover"
+          className="sm:w-500 w-auto object-cover"
         />
       </div>
     </div>

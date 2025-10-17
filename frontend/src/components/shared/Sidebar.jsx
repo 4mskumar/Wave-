@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "../ui/card";
+import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
@@ -15,12 +10,14 @@ import { Link, useLocation } from "react-router-dom";
 import { useRef } from "react";
 import { UserButton, useUser } from "@clerk/clerk-react";
 import useUserPostStore from "../../app/UserPostStore";
+import { useUserStore } from "../../app/UserStore";
 
 const Sidebar = () => {
   const location = useLocation();
   const hiddenUserButtonRef = useRef(null);
   const { posts } = useUserPostStore();
   const { user } = useUser();
+  const {following, followers} = useUserStore()
 
   const navItems = [
     { label: "Feed", icon: HiOutlineHome, path: "/home" },
@@ -35,7 +32,11 @@ const Sidebar = () => {
         <Card className="border-none shadow-none">
           <CardHeader className="flex flex-row items-center gap-3 p-0 mb-6">
             <Avatar className="h-12 w-12">
-              <AvatarImage src={user?.imageUrl} className="w-full h-full object-cover" alt={user?.fullName} />
+              <AvatarImage
+                src={user?.imageUrl}
+                className="w-full h-full object-cover"
+                alt={user?.fullName}
+              />
               <AvatarFallback>
                 {user?.firstName?.[0]}
                 {user?.lastName?.[0]}
@@ -54,12 +55,23 @@ const Sidebar = () => {
           <CardContent className="space-y-5 -mt-3 p-0">
             <div className="flex justify-between items-center text-left">
               {[
-                { label: "Following", value: 80 },
-                { label: "Followers", value: 80 },
-                { label: "Posts", value: posts?.length || 0 },
+                {
+                  label: "Following",
+                  value: Array.isArray(following) ? following.length : 0,
+                },
+                {
+                  label: "Followers",
+                  value: Array.isArray(followers) ? followers.length : 0,
+                },
+                {
+                  label: "Posts",
+                  value: Array.isArray(posts) ? posts.length : 0 || 0,
+                },
               ].map((stat, i) => (
                 <div key={i}>
-                  <p className="font-bold text-xl tracking-tight">{stat.value}</p>
+                  <p className="font-bold text-xl tracking-tight">
+                    {stat.value}
+                  </p>
                   <p className="text-xs text-muted-foreground tracking-wide">
                     {stat.label}
                   </p>
@@ -73,9 +85,7 @@ const Sidebar = () => {
               {navItems.map(({ label, icon: Icon, path }, index) => (
                 <Link key={index} to={path}>
                   <Button
-                    variant={
-                      location.pathname === path ? "secondary" : "ghost"
-                    }
+                    variant={location.pathname === path ? "secondary" : "ghost"}
                     className={`mb-2 w-full cursor-pointer justify-start gap-3 text-[18px] tracking-tight font-medium ${
                       location.pathname === path
                         ? "bg-zinc-200 text-zinc-900"
@@ -121,7 +131,11 @@ const Sidebar = () => {
       {/* Mobile Bottom Nav */}
       <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-sm flex justify-around items-center py-3 z-50">
         {navItems.map(({ icon: Icon, path, label }, index) => (
-          <Link key={index} to={path} className="flex flex-col items-center gap-1">
+          <Link
+            key={index}
+            to={path}
+            className="flex flex-col items-center gap-1"
+          >
             <Icon
               size={22}
               className={`${
