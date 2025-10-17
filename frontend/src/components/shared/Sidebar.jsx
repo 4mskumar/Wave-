@@ -31,7 +31,7 @@ const Sidebar = () => {
   return (
     <>
       {/* Desktop and medium screen Sidebar */}
-      <aside className="hidden md:flex fixed top-16 left-0 w-80 h-full border-r bg-white shadow-sm px-6 py-8 flex-col justify-between z-40 ml-4">
+      <aside className=" hidden md:flex fixed top-16 left-0 w-80 h-full border-r  shadow-sm px-6 py-8 flex-col justify-between z-40">
         <Card className="border-none shadow-none">
           <CardHeader className="flex flex-row items-center gap-3 p-0 mb-6">
             <Avatar className="h-12 w-12">

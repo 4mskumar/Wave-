@@ -69,7 +69,7 @@ const Chat = () => {
             }`}
         >
           {/* Header */}
-          <div className="flex sm:mt-20 items-center justify-between p-4 border-b">
+          <div className="flex sm:mt-16 mt-1 items-center justify-between p-2 sm:p-4 border-b">
             <Link to="/home" className="">
               <GoArrowLeft className="cursor-pointer" size={24} />
             </Link>
@@ -95,7 +95,7 @@ const Chat = () => {
           </div>
 
           {/* Chat List */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto ml-2">
             {chats.map((chat, i) => (
               <div
                 key={i}
@@ -134,12 +134,12 @@ const Chat = () => {
 
         {/* CHAT AREA */}
         <div
-          className={`flex-1 flex flex-col transition-all duration-300 ${
+          className={`sm:mt-17 mt-14 fixed top-0 right-0 bottom-0 flex flex-col w-full md:w-[70%] transition-all duration-300 ${
             selectedChat ? "flex" : "hidden md:flex"
           }`}
         >
           {!selectedChat ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-6 bg-gray-50">
+            <div className=" flex-1 flex flex-col items-center justify-center text-center p-6 bg-gray-50">
               <div className="bg-gray-100 p-4 rounded-full text-3xl mb-4">
                 💬
               </div>
@@ -153,7 +153,7 @@ const Chat = () => {
           ) : (
             <div className="flex flex-col h-full bg-gray-50">
               {/* Header */}
-              <div className="flex items-center gap-4 border-b bg-white p-3 sm:p-4">
+              <div className="flex items-center gap-4 border-b bg-gray-200 p-3 sm:p-2 ">
                 <button
                   onClick={() => setSelectedChat(null)}
                   className="md:hidden text-gray-600"
@@ -179,7 +179,7 @@ const Chat = () => {
 
               {/* Messages */}
               <div className="flex-1 p-4 overflow-y-auto">
-                <p className="text-sm text-gray-700 text-center mt-10">
+                <p className="text-sm text-gray-700 text-center ">
                   This is the start of your chat with{" "}
                   <span className="font-semibold">{selectedChat.name}</span>.
                 </p>
