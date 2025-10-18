@@ -26,7 +26,7 @@ const Profile = () => {
   const { posts, fetchPosts, deletePost } = useUserPostStore();
   const { userId } = useAuth();
   const { user } = useUser();
-  const {followers, following} = useUserStore()
+  const { followers, following } = useUserStore();
   // console.log(selectedPost);
 
   useEffect(() => {
@@ -83,8 +83,8 @@ const Profile = () => {
               <div className="flex justify-center sm:justify-start gap-6 sm:gap-10 mb-5">
                 <div className="text-center flex items-end sm:text-left">
                   <p className="font-semibold text-base sm:text-lg">
-                  {Array.isArray(followers) ? followers.length : 0}
-                    
+                    {Array.isArray(followers) ? followers.length : 0}
+
                     <span className="text-[13px] sm:text-[15px] ml-1 text-zinc-800 font-light tracking-tight">
                       followers
                     </span>
@@ -92,7 +92,7 @@ const Profile = () => {
                 </div>
                 <div className="text-center flex items-end sm:text-left">
                   <p className="font-semibold text-base sm:text-lg">
-                  {Array.isArray(following) ? following.length : 0}
+                    {Array.isArray(following) ? following.length : 0}
 
                     <span className="text-[13px] sm:text-[15px] ml-1 text-zinc-800 font-light tracking-tight">
                       following
@@ -130,20 +130,34 @@ const Profile = () => {
 
           {/* Posts Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4 mt-6 px-2 sm:px-6">
-            {posts.map((val, ind) => (
-              <div
-                key={ind}
-                onClick={() => setSelectedPost(val)}
-                className="relative w-full aspect-[1/1] sm:aspect-[2/3] overflow-hidden group cursor-pointer border border-gray-300 rounded-lg"
-              >
-                <img
-                  src={val.imageUrl}
-                  alt={val.caption || "post"}
-                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            {posts.length === 0 ? (
+              <div className="flex justify-center mt-10 flex-col ml-[34rem] items-center w-full">
+                <h1 className="text-2xl text-zinc-800 font-semibold tracking-tight">
+                  Create your first post
+                </h1>
+                <p className="text-md text-zinc-600 tracking-tight">
+                  Make people know you
+                </p>
+
+                <img src="/images/profile.png" className="w-[20rem] aspect-square object-cover -mt-3"/>
+                <Button className={'mt-8 w-24 text-md tracking-tight'} >Create</Button>
               </div>
-            ))}
+            ) : (
+              posts.map((val, ind) => (
+                <div
+                  key={ind}
+                  onClick={() => setSelectedPost(val)}
+                  className="relative w-full aspect-[1/1] sm:aspect-[2/3] overflow-hidden group cursor-pointer border border-gray-300 rounded-lg"
+                >
+                  <img
+                    src={val.imageUrl}
+                    alt={val.caption || "post"}
+                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              ))
+            )}
           </div>
 
           {/* Post Modal */}

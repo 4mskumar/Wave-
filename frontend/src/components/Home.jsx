@@ -64,8 +64,10 @@ const Home = () => {
       // console.log("called in home" + followers);
     }, [userId, user]);
     
-  const handleLikeToggle = (postId) => {
-    toggleLike(userId, postId)
+    
+  const handleLikeToggle = async (postId) => {
+    await toggleLike(userId, postId)
+    getUserFeed(userId)
   }
 
   return (

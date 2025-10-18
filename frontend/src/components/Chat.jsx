@@ -20,52 +20,6 @@ const Chat = () => {
     }
   }, [userId, user])
 
-  const chats = [
-    {
-      name: "Kanika Bhandari",
-      msg: "That's awesome!",
-      img: "https://github.com/shadcn.png",
-      time: "10:45 AM",
-    },
-    {
-      name: "Prabal",
-      msg: "Thanks for the feedback!",
-      img: "https://github.com/shadcn.png",
-      time: "9:12 AM",
-    },
-    {
-      name: "Harsh",
-      msg: "See you tomorrow 👋",
-      img: "https://github.com/shadcn.png",
-      time: "Yesterday",
-    },
-    { name: "Krishna", msg: "See you tomorrow 👋", time: "Mon" },
-    {
-      name: "Naira",
-      msg: "Thanks for the feedback!",
-      img: "https://github.com/shadcn.png",
-      time: "9:12 AM",
-    },
-    {
-      name: "Sara",
-      msg: "Thanks for the feedback!",
-      img: "https://github.com/shadcn.png",
-      time: "9:12 AM",
-    },
-    {
-      name: "Aditya",
-      msg: "Thanks for the feedback!",
-      img: "https://github.com/shadcn.png",
-      time: "9:12 AM",
-    },
-    {
-      name: "Kanika Bhandari",
-      msg: "That's awesome!",
-      img: "https://github.com/shadcn.png",
-      time: "10:45 AM",
-    },
-  ];
-
   return (
     <>
       <Navbar />
