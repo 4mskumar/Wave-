@@ -7,6 +7,7 @@ export const useUserStore = create((set, get) => ({
     feed: [],
     loading: false,
     error: false,
+    globalUsers : [],
 
     setUserData: async (userId, username, fullName, imageurl, bio = '') => {
         try {
@@ -73,5 +74,17 @@ export const useUserStore = create((set, get) => ({
             
         }
     },
+
+    getGlobalUsers : async (userId) => {
+        try {
+            const res = axios.get('/g/users', {params : {userId}})
+
+            if(res.data.success){
+                set({globalUsers : res.data.gUsers})
+            }
+        } catch (error) {
+            console.log(error.message);            
+        }
+    }
 
 }))

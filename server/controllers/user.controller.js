@@ -15,11 +15,11 @@ export const setUserData = async (req, res) => {
       username,
       fullName,
       imageUrl
-    }, {new : true})
+    }, { new: true })
     if (user) {
       return
     }
-    
+
     const newUser = await User.create({
       clerkId: userId,
       bio: '',
@@ -51,7 +51,7 @@ export const followUser = async (req, res) => {
     const targetUser = await User.findOne({ clerkId: targetId });
 
     // console.log(user);
-    
+
 
     if (!user || !targetUser) {
       return res.status(404).json({ success: false, message: "User not found" });
@@ -63,7 +63,7 @@ export const followUser = async (req, res) => {
 
     const alreadyFollowing = user.following.some(f => f.userId === targetId);
     console.log(alreadyFollowing);
-    
+
     if (alreadyFollowing) {
       return res.status(400).json({ success: false, message: "Already following" });
     }
@@ -140,7 +140,7 @@ export const getFollowers = async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found 12" + req.userId, body: req.userId });
     }
-    console.log(user.followers);
+    // console.log(user.followers);
 
     res.status(200).json({ success: true, followers: user.followers });
   } catch (error) {
@@ -178,5 +178,49 @@ export const getFeedData = async (req, res) => {
     res.status(201).json({ feedData: feedData, success: true })
   } catch (error) {
     res.status(500).json({ message: error.message })
+  }
+}
+
+export const getGlobalUsers = async (req, res) => {
+  try {
+    const { userId } = req.query
+    if (!userId)
+      return res.status(404).json({ message: 'unauth', success: false })
+
+    const gUsers = await User.find({ clerkId: { $ne: userId } }).sort({ createdAt: -1 })
+
+    return res.status(201).json({ gUsers, success: true })
+
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false })
+  }
+}
+
+export const removeFollower = async (req, res) => {
+  try {
+    const { myId, targetId } = req.body
+
+    const user = await User.findOne({ clerkId: myId })
+    const target = await User.findOne({ clerkId: targetId })
+    // console.log(user);
+    // console.log(target);
+
+    const alreadyFollower = user.followers.some(f => targetId === f.userId)
+    console.log(alreadyFollower);
+    
+    
+    if (!alreadyFollower) {
+      return res.status(400).json({ success: false, message: "User doesn't follow you" });
+    }
+
+    user.followers = user.followers.filter(f => f.userId !== targetId);
+    target.following = target.following.filter(f => f.userId !== myId);
+
+    await user.save();
+    await target.save();
+
+    res.status(200).json({ success: true, message: "User removed successfully", userF : user.followers });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 }

@@ -1,5 +1,5 @@
 import express from "express"
-import { followUser, getFeedData, getFollowers, getFollowing, setUserData, unfollowUser } from "../controllers/user.controller.js"
+import { followUser, getFeedData, getFollowers, getFollowing, getGlobalUsers, removeFollower, setUserData, unfollowUser } from "../controllers/user.controller.js"
 // import { protectRoute } from "../middleware/auth.js";
 
 export const router = express.Router()
@@ -12,3 +12,5 @@ router.get("/followers", getFollowers);
 router.get("/following/:id", getFollowing);
 
 router.get("/feed", getFeedData);
+router.get("/g/users", getGlobalUsers);
+router.post("/remove", removeFollower);
