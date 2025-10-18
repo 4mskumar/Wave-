@@ -8,6 +8,7 @@ import Profile from "./components/Profile";
 import Settings from "./components/Settings";
 import LandingPage from "./pages/LandingPage";
 import SignInPage from "./components/shared/SignInPage";
+import SharePost from "./components/SharePost";
 
 function App() {
   const { isSignedIn } = useUser();
@@ -33,6 +34,7 @@ function App() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/sharepost" element={<SharePost />} />
               {/* Redirect all unknown routes to home */}
               <Route path="*" element={<Navigate to="/home" />} />
             </>
@@ -42,5 +44,18 @@ function App() {
     </div>
   );
 }
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+const SharePostPage = () => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    if (!open) navigate("/home"); // auto-return when closed
+  }, [open, navigate]);
+
+  return <SharePost open={open} setOpen={setOpen} />;
+};
 
 export default App;

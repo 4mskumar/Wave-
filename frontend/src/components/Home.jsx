@@ -6,9 +6,10 @@ import Sidebar from "./shared/Sidebar";
 //import { useUser } from "@clerk/clerk-react";
 import { IoMdShare } from "react-icons/io";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import SharePost from "./SharePost"
+import SharePost from "./SharePost";
 import { useUserStore } from "../app/UserStore";
 import useUserPostStore from "../app/UserPostStore";
+import Create from "./Create";
 
 const Home = () => {
   const [posts] = useState([
@@ -54,8 +55,6 @@ const Home = () => {
 
   // console.log(user);
   
-
-
     useEffect(() => {
       if (userId && user) {
         setUserData(userId, user.fullName, user.username, user.imageUrl);
@@ -68,8 +67,6 @@ const Home = () => {
   const handleLikeToggle = (postId) => {
     toggleLike(userId, postId)
   }
-
-
 
   return (
     <>
@@ -98,7 +95,7 @@ const Home = () => {
                 className="flex-1 text-sm bg-gray-200 rounded-full px-4 py-2 outline-none w-full sm:w-auto"
               />
               <div className="w-full sm:w-auto mt-2 sm:mt-0 flex justify-end">
-                <SharePost />
+                <Create />
               </div>
             </div>
           </div>

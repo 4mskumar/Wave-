@@ -11,6 +11,10 @@ import { useEffect, useRef } from "react";
 import { useAuth, UserButton, useUser } from "@clerk/clerk-react";
 import useUserPostStore from "../../app/UserPostStore";
 import { useUserStore } from "../../app/UserStore";
+import { MdOutlineAddBox } from "react-icons/md";
+import { IoIosSearch } from "react-icons/io";
+import SharePost from "../SharePost";
+
 
 const Sidebar = () => {
   const location = useLocation();
@@ -29,9 +33,9 @@ const Sidebar = () => {
 
   let sideBarUsers = [...followers, followers]
   
-
   const navItems = [
     { label: "Feed", icon: HiOutlineHome, path: "/home" },
+    { label: "Search", icon: IoIosSearch, path: "/" },
     { label: "Messages", icon: BiMessageRounded, path: "/chat" },
     { label: "Profile", icon: FiUser, path: "/profile" },
   ];
@@ -108,6 +112,15 @@ const Sidebar = () => {
                   </Button>
                 </Link>
               ))}
+              <Button
+                variant="ghost"
+                onClick={() => {<SharePost/>}}
+                className="w-full justify-start gap-3 text-[16px] tracking-tight font-medium text-zinc-600 hover:text-zinc-900"
+              >
+                <div className="w-full sm:w-auto mt-2 sm:mt-0 flex justify-end">
+                <SharePost />
+              </div>
+              </Button>
 
               {/* Settings */}
               <Button
