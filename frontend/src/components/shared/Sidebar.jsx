@@ -23,7 +23,7 @@ const Sidebar = () => {
   const { user } = useUser();
   const {userId} = useAuth()
   const {following, followers, getFollowers} = useUserStore()
-  console.log(followers);
+  // console.log(followers);
 
   useEffect(() => {
     if(userId && user){

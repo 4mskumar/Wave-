@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 import Home from "./components/Home";
 import Chat from "./components/Chat";
@@ -11,7 +11,24 @@ import SignInPage from "./components/shared/SignInPage";
 import SharePost from "./components/SharePost";
 
 function App() {
-  const { isSignedIn } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
+  const { connectSocket, disconnectSocket, setUser } = useUserStore();
+  const {userId} = useAuth()
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn && user?.id) {
+      console.log("User logged in:", user.id);
+      setUser({
+        id: userId,
+        username: user.username,
+        imageUrl: user.imageUrl,
+      });
+
+      connectSocket(user.id); // ✅ only runs when user is signed in
+    } else if (isLoaded && !isSignedIn) {
+      disconnectSocket(); // ✅ auto disconnect when user logs out
+    }
+  }, [isLoaded, isSignedIn, user]);
 
   return (
     <div className="zalando-sans">
@@ -46,6 +63,7 @@ function App() {
 }
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useUserStore } from "./app/UserStore";
 
 const SharePostPage = () => {
   const navigate = useNavigate();

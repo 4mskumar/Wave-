@@ -48,7 +48,7 @@ const Home = () => {
     },
   ]);
 
-  const {setUserData, feed, getUserFeed, getFollowers, followers} = useUserStore()
+  const {setUserData, feed, getUserFeed, getFollowers, connectSocket} = useUserStore()
   const {toggleLike} = useUserPostStore()
   const {user} = useUser()
   const {userId} = useAuth()

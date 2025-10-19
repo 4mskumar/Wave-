@@ -12,7 +12,7 @@ const Chat = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const {userId} = useAuth()
   const {user} = useUser()
-  const {followers, getFollowers} = useUserStore()
+  const {followers, getFollowers, setUserData} = useUserStore()
 
   useEffect(() => {
     if(userId && user){
