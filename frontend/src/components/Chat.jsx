@@ -12,13 +12,13 @@ const Chat = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const {userId} = useAuth()
   const {user} = useUser()
-  const {followers, getFollowers, setUserData} = useUserStore()
+  const {followers, getFollowers} = useUserStore()
 
   useEffect(() => {
-    if(userId && user){
-      getFollowers(userId)
+    if (userId && user) {
+      getFollowers(userId);
     }
-  }, [userId, user])
+  }, [userId, user]);
 
   return (
     <>
@@ -61,39 +61,54 @@ const Chat = () => {
 
           {/* Chat List */}
           <div className="flex-1 overflow-y-auto ml-2">
-            {followers.map((chat, i) => (
-              <div
-                key={i}
-                onClick={() => setSelectedChat(chat)}
-                className={`flex items-center justify-between p-3 sm:p-4 border-b cursor-pointer 
-                  transition-colors duration-200 ${
-                    selectedChat?.username === chat.username
-                      ? "bg-blue-100"
-                      : "hover:bg-gray-100"
-                  }`}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <Avatar>
-                    {chat.imageUrl ? (
-                      <AvatarImage src={chat.imageUrl} />
-                    ) : (
-                      <AvatarFallback>{chat.name.charAt(0)}</AvatarFallback>
-                    )}
-                  </Avatar>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">
-                      {chat.username}
-                    </p>
-                    <p className="text-xs sm:text-sm text-gray-500 truncate">
-                      {'Hello'}
-                    </p>
+            {followers.length > 0 ? (
+              followers.map((chat, i) => (
+                <div
+                  key={i}
+                  onClick={() => setSelectedChat(chat)}
+                  className={`flex items-center justify-between p-3 sm:p-4 border-b cursor-pointer 
+          transition-colors duration-200 ${
+            selectedChat?.username === chat.username
+              ? "bg-blue-100"
+              : "hover:bg-gray-100"
+          }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Avatar>
+                      {chat.imageUrl ? (
+                        <AvatarImage src={chat.imageUrl} />
+                      ) : (
+                        <AvatarFallback>{chat.name.charAt(0)}</AvatarFallback>
+                      )}
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">
+                        {chat.username}
+                      </p>
+                      <p className="text-xs sm:text-sm text-gray-500 truncate">
+                        {"Hello"}
+                      </p>
+                    </div>
                   </div>
+                  <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap">
+                    {"04:22"}
+                  </span>
                 </div>
-                <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap">
-                  {'04:22'}
-                </span>
+              ))
+            ) : (
+              // Empty state section
+              <div className="flex flex-col items-center justify-center h-full py-20 text-center text-gray-500">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+                  alt="No chats"
+                  className="w-32 h-32 opacity-70 mb-4"
+                />
+                <p className="text-sm sm:text-base font-medium">No chats yet</p>
+                <p className="text-xs sm:text-sm text-gray-400 mt-1">
+                  Start following someone to begin chatting!
+                </p>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
@@ -146,7 +161,8 @@ const Chat = () => {
               <div className="flex-1 p-4 overflow-y-auto">
                 <p className="text-sm text-gray-700 text-center ">
                   This is the start of your chat with{" "}
-                  <span className="font-semibold">{selectedChat.username}</span>.
+                  <span className="font-semibold">{selectedChat.username}</span>
+                  .
                 </p>
               </div>
 

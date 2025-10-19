@@ -1,57 +1,55 @@
-import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
+import { Card, CardHeader, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
-import { Badge } from "../ui/badge";
 import { BiMessageRounded } from "react-icons/bi";
 import { FiUser, FiSettings } from "react-icons/fi";
 import { HiOutlineHome } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
-import { useEffect, useRef } from "react";
-import { useAuth, UserButton, useUser } from "@clerk/clerk-react";
+import { useEffect, useState } from "react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import useUserPostStore from "../../app/UserPostStore";
 import { useUserStore } from "../../app/UserStore";
-import { MdOutlineAddBox } from "react-icons/md";
-import { IoIosSearch } from "react-icons/io";
-import SharePost from "../SharePost";
-
+import Create from "../Create";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Search, Plus } from "lucide-react";
 
 const Sidebar = () => {
+  const [open, setOpen] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
   const location = useLocation();
-  const hiddenUserButtonRef = useRef(null);
   const { posts } = useUserPostStore();
   const { user } = useUser();
   const {userId} = useAuth()
   const {following, followers, getFollowers} = useUserStore()
-  // console.log(followers);
+  console.log(followers);
 
   useEffect(() => {
-    if(userId && user){
-      getFollowers(userId)
+    if (userId && user) {
+      getFollowers(userId);
     }
-  }, [userId, user])
+  }, [userId, user]);
 
-  let sideBarUsers = [...followers, followers]
-  
   const navItems = [
     { label: "Feed", icon: HiOutlineHome, path: "/home" },
-    { label: "Search", icon: IoIosSearch, path: "/" },
     { label: "Messages", icon: BiMessageRounded, path: "/chat" },
     { label: "Profile", icon: FiUser, path: "/profile" },
   ];
 
   return (
     <>
-      {/* Desktop and medium screen Sidebar */}
-      <aside className=" hidden md:flex fixed top-16 left-0 w-80 h-full border-r  shadow-sm px-6 py-8 flex-col justify-between z-40">
+      {/* 🖥️ Desktop Sidebar */}
+      <aside className="hidden md:flex fixed top-16 left-0 w-80 h-full border-r shadow-sm px-6 py-8 flex-col justify-between z-40 bg-white">
         <Card className="border-none shadow-none">
+          {/* Profile Header */}
           <CardHeader className="flex flex-row items-center gap-3 p-0 mb-6">
             <Avatar className="h-12 w-12">
-              <AvatarImage
-                src={user?.imageUrl}
-                className="w-full h-full object-cover"
-                alt={user?.fullName}
-              />
+              <AvatarImage src={user?.imageUrl} alt={user?.fullName} />
               <AvatarFallback>
                 {user?.firstName?.[0]}
                 {user?.lastName?.[0]}
@@ -67,41 +65,30 @@ const Sidebar = () => {
             </div>
           </CardHeader>
 
+          {/* Stats + Nav */}
           <CardContent className="space-y-5 -mt-3 p-0">
-            <div className="flex justify-between items-center text-left">
+            <div className="flex justify-between text-left">
               {[
-                {
-                  label: "Following",
-                  value: Array.isArray(following) ? following.length : 0,
-                },
-                {
-                  label: "Followers",
-                  value: Array.isArray(followers) ? followers.length : 0,
-                },
-                {
-                  label: "Posts",
-                  value: Array.isArray(posts) ? posts.length : 0 || 0,
-                },
+                { label: "Following", value: following?.length || 0 },
+                { label: "Followers", value: followers?.length || 0 },
+                { label: "Posts", value: posts?.length || 0 },
               ].map((stat, i) => (
                 <div key={i}>
-                  <p className="font-bold text-xl tracking-tight">
-                    {stat.value}
-                  </p>
-                  <p className="text-xs text-muted-foreground tracking-wide">
-                    {stat.label}
-                  </p>
+                  <p className="font-bold text-xl">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
                 </div>
               ))}
             </div>
 
             <Separator />
 
-            <nav className="space-y-2 ">
+            {/* Navigation Buttons */}
+            <nav className="space-y-2">
               {navItems.map(({ label, icon: Icon, path }, index) => (
                 <Link key={index} to={path}>
                   <Button
                     variant={location.pathname === path ? "secondary" : "ghost"}
-                    className={`mb-2 w-full cursor-pointer justify-start gap-3 text-[18px] tracking-tight font-medium ${
+                    className={`w-full justify-start gap-3 text-[18px] font-medium ${
                       location.pathname === path
                         ? "bg-zinc-200 text-zinc-900"
                         : "text-zinc-600 hover:text-zinc-900"
@@ -112,44 +99,63 @@ const Sidebar = () => {
                   </Button>
                 </Link>
               ))}
-              <Button
-                variant="ghost"
-                onClick={() => {<SharePost/>}}
-                className="w-full justify-start gap-3 text-[16px] tracking-tight font-medium text-zinc-600 hover:text-zinc-900"
-              >
-                <div className="w-full sm:w-auto mt-2 sm:mt-0 flex justify-end">
-                <SharePost />
-              </div>
-              </Button>
 
-              {/* Settings */}
+              {/* Search Button */}
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start gap-3 text-[18px] font-medium ${
+                      open
+                        ? "bg-zinc-200 text-zinc-900"
+                        : "text-zinc-600 hover:text-zinc-900"
+                    }`}
+                  >
+                    <Search className="h-4 w-4" />
+                    Search
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  align="start"
+                  side="right"
+                  className="w-70 mb-5 bg-gray-100 border  ml-1 h-[600px] shadow-2xl"
+                >
+                  <div className="flex justify-between items-center gap-2 mb-3">
+                    <Search className="h-4 w-4" />
+                    <Input
+                      placeholder="Search..."
+                      autoFocus
+                    />
+                    <button
+                      onClick={() => setOpen(false)}
+                      className="text-xs hover:text-gray-700 cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div className="text-sm text-gray-500">Recent</div>
+                  <div className="mt-2 space-y-2">
+                    <div className="p-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                      Result 1
+                    </div>
+                    <div className="p-2 rounded-md hover:bg-gray-50 cursor-pointer">
+                      Result 2
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* CREATE POST */}
               <Button
                 variant="ghost"
-                onClick={() =>
-                  hiddenUserButtonRef.current?.querySelector("button")?.click()
-                }
-                className="w-full justify-start gap-3 text-[16px] tracking-tight font-medium text-zinc-600 hover:text-zinc-900"
+                onClick={() => setShowCreate(true)}
+                className="w-full justify-start gap-3 text-[18px] font-medium text-zinc-600 hover:text-zinc-900 ml-[-18px] mt-[-10px]"
               >
-                <FiSettings size={18} />
-                Settings
+                <Create />
               </Button>
             </nav>
           </CardContent>
         </Card>
-
-        <CardFooter className="flex justify-center p-0">
-          <Badge
-            variant="secondary"
-            className="px-3 py-1 text-xs text-muted-foreground bg-zinc-100 border border-zinc-200"
-          >
-            Wave © {new Date().getFullYear()}
-          </Badge>
-
-          {/* Hidden Clerk UserButton */}
-          <div ref={hiddenUserButtonRef} className="hidden">
-            <UserButton afterSignOutUrl="/" />
-          </div>
-        </CardFooter>
       </aside>
 
       {/* Mobile Bottom Nav */}
@@ -162,38 +168,41 @@ const Sidebar = () => {
           >
             <Icon
               size={22}
-              className={`${
+              className={
                 location.pathname === path
                   ? "text-black"
                   : "text-zinc-500 hover:text-zinc-800"
-              }`}
+              }
             />
             <span
-              className={`text-[11px] ${
+              className={
                 location.pathname === path
-                  ? "text-black font-medium"
-                  : "text-zinc-500"
-              }`}
+                  ? "text-[11px] text-black font-medium"
+                  : "text-[11px] text-zinc-500"
+              }
             >
               {label}
             </span>
           </Link>
         ))}
+
         {/* Settings icon on mobile */}
         <button
-          onClick={() =>
-            hiddenUserButtonRef.current?.querySelector("button")?.click()
-          }
+          onClick={() => setOpen(true)}
           className="flex flex-col items-center gap-1"
         >
-          <FiSettings size={22} className="text-zinc-500 hover:text-zinc-800" />
-          <span className="text-[11px] text-zinc-500">Settings</span>
+          <Search size={22} className="text-zinc-500 hover:text-zinc-800" />
+          <span className="text-[11px] text-zinc-500">Search</span>
         </button>
-
-        {/* Hidden Clerk UserButton */}
-        <div ref={hiddenUserButtonRef} className="hidden">
-          <UserButton afterSignOutUrl="/" />
-        </div>
+        {/* Create */}
+        <button
+          onClick={() => setShowCreate(true)}
+          className="flex flex-col items-center gap-1"
+        >
+          <span className="text-[11px] text-zinc-500">
+            <Create />
+          </span>
+        </button>
       </div>
     </>
   );

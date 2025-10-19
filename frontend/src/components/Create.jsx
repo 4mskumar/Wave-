@@ -56,7 +56,7 @@ const Create = ({ onSuccess }) => {
     setCaption("");
   };
 
-  // Handle share (keeps backend logic)
+  // Handle share
   const handleShare = async () => {
     if (!caption && !image) {
       toast.error("Please add a caption or upload an image.");
@@ -80,13 +80,13 @@ const Create = ({ onSuccess }) => {
         <DialogTrigger asChild>
           <Button
             variant="ghost"
-            className="w-full justify-start gap-3 text-[16px] tracking-tight font-medium text-zinc-600 hover:text-zinc-900"
+            className="w-full justify-start gap-3 text-[18px] font-medium"
           >
             <span className="text-xl">+</span> Create
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="max-w-xl w-[90vw] rounded-2xl p-0 overflow-hidden [&>button]:hidden">
+        <DialogContent className="max-w-2xl w-[95vw] sm:w-[90vw] rounded-2xl p-0 overflow-hidden [&>button]:hidden">
           {/* Close button */}
           <div className="absolute top-3 right-3">
             <Button
@@ -95,35 +95,48 @@ const Create = ({ onSuccess }) => {
               onClick={() => setDiscardOpen(true)}
               className="rounded-full hover:bg-gray-100"
             >
-              <X className="h-5 w-5 text-gray-600" />
+              <X className="h-6 w-6 text-gray-600" />
             </Button>
           </div>
 
           {/* Step 1: Select image */}
           {step === 1 && (
-            <div className="flex flex-col items-center justify-center p-10 text-center">
+            <div className="flex flex-col items-center justify-center p-6 text-center w-full">
               <DialogHeader>
-                <DialogTitle className="text-xl font-semibold mb-4">
+                <DialogTitle className="text-2xl sm:text-3xl text-zinc-800 font-semibold tracking-tight mb-2">
                   Create new post
                 </DialogTitle>
               </DialogHeader>
-              <p className="text-gray-500 mb-4">
-                Drag photos and videos here
-              </p>
-              
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                id="file-upload"
-              />
-              <Button
-                onClick={() => document.getElementById("file-upload").click()}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-              >
-                Select From Computer
-              </Button>
+
+              <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+                <p className="text-sm sm:text-md text-zinc-500 tracking-tight mb-4">
+                  Make people know you
+                </p>
+                <img
+                  src="/images/profile.png"
+                  alt="Create post illustration"
+                  className="w-48 sm:w-64 object-contain drop-shadow-sm mb-6"
+                />
+                <Button
+                  onClick={() => document.getElementById("file-upload").click()}
+                  className="bg-black hover:bg-gray-900 text-white px-4 py-2 rounded-md"
+                >
+                  Select From Computer
+                </Button>
+
+                <p className="text-gray-500 mt-3 text-sm">or</p>
+                <p className="text-gray-500 mt-1 text-sm">
+                  Drag photos and videos here
+                </p>
+
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  id="file-upload"
+                />
+              </div>
             </div>
           )}
 
@@ -133,7 +146,7 @@ const Create = ({ onSuccess }) => {
               <img
                 src={preview}
                 alt="Preview"
-                className="max-h-[70vh] object-contain"
+                className="max-h-[60vh] object-contain w-full"
               />
               <div className="flex justify-between w-full p-4">
                 <Button
@@ -155,15 +168,18 @@ const Create = ({ onSuccess }) => {
 
           {/* Step 3: Caption + Share */}
           {step === 3 && (
-            <div className="flex flex-col sm:flex-row h-[70vh]">
-              <div className="sm:w-1/2 flex items-center justify-center bg-black">
+            <div className="flex flex-col sm:flex-row h-auto sm:h-[70vh]">
+              {/* Left side: image */}
+              <div className="sm:w-1/2 w-full flex items-center justify-center bg-black">
                 <img
                   src={preview}
                   alt="Preview"
-                  className="object-contain max-h-full"
+                  className="object-contain max-h-[60vh] w-full"
                 />
               </div>
-              <div className="sm:w-1/2 flex flex-col justify-between p-4">
+
+              {/* Right side: caption */}
+              <div className="sm:w-1/2 w-full flex flex-col justify-between p-4">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
                     <img
@@ -171,7 +187,7 @@ const Create = ({ onSuccess }) => {
                       alt="profile"
                       className="h-10 w-10 rounded-full"
                     />
-                    <p className="font-semibold text-gray-800">
+                    <p className="font-semibold text-gray-800 text-sm sm:text-base">
                       {user?.fullName}
                     </p>
                   </div>
@@ -179,7 +195,7 @@ const Create = ({ onSuccess }) => {
                     placeholder="Write a caption..."
                     value={caption}
                     onChange={(e) => setCaption(e.target.value)}
-                    className="bg-gray-100 resize-none"
+                    className="bg-gray-100 resize-none h-24 sm:h-32 text-sm"
                   />
                 </div>
                 <div className="flex justify-end mt-4">
