@@ -21,19 +21,27 @@ import { Search, Plus } from "lucide-react";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
+  const [searchedUser, setSearchedUser] = useState('')
   const [showCreate, setShowCreate] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([])
   const location = useLocation();
   const { posts } = useUserPostStore();
   const { user } = useUser();
   const {userId} = useAuth()
-  const {following, followers, getFollowers} = useUserStore()
-  console.log(followers);
+  const {following, followers, getFollowers, getGlobalUsers, globalUsers} = useUserStore()
 
   useEffect(() => {
     if (userId && user) {
       getFollowers(userId);
-    }
+    }    
   }, [userId, user]);
+
+  useEffect(() => {
+
+  }, [])
+
+  console.log(globalUsers);
+  
 
   const navItems = [
     { label: "Feed", icon: HiOutlineHome, path: "/home" },
@@ -125,6 +133,9 @@ const Sidebar = () => {
                     <Input
                       placeholder="Search..."
                       autoFocus
+                      value={searchedUser}
+                      onChange={(e) => setSearchedUser(e.target.value)}
+                      
                     />
                     <button
                       onClick={() => setOpen(false)}
@@ -135,11 +146,8 @@ const Sidebar = () => {
                   </div>
                   <div className="text-sm text-gray-500">Recent</div>
                   <div className="mt-2 space-y-2">
-                    <div className="p-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                      Result 1
-                    </div>
-                    <div className="p-2 rounded-md hover:bg-gray-50 cursor-pointer">
-                      Result 2
+                    <div className="flex ml-18 h-[40vh] justify-center, items-center">
+                      <p className="text-zinc-600/90 font-light tracking-tight">search here</p>
                     </div>
                   </div>
                 </PopoverContent>

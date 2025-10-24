@@ -43,6 +43,8 @@ io.on("connection", (socket) => {
     delete userSocketMap[userId];
     console.log("User disconnected:", userId);
   });
+  console.log('user-socket-map', userSocketMap);
+  
 });
 
 // Routes

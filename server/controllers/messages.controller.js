@@ -51,6 +51,8 @@ export const sendMessage = async (req, res) => {
     const newMsg = await Message.create({ senderId, receiverId, text });
 
     const receiverSocket = userSocketMap[receiverId];
+    console.log(receiverSocket);
+    
     if (receiverSocket) {
       io.to(receiverSocket).emit("newMessage", newMsg);
     }

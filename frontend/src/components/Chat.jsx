@@ -14,6 +14,9 @@ const Chat = () => {
   const {user} = useUser()
   const {followers, getFollowers} = useUserStore()
 
+  // console.log(selectedChat);
+  
+
   useEffect(() => {
     if (userId && user) {
       getFollowers(userId);

@@ -188,6 +188,7 @@ export const getGlobalUsers = async (req, res) => {
       return res.status(404).json({ message: 'unauth', success: false })
 
     const gUsers = await User.find({ clerkId: { $ne: userId } }).sort({ createdAt: -1 })
+    
 
     return res.status(201).json({ gUsers, success: true })
 

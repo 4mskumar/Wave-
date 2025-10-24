@@ -113,7 +113,11 @@ export const useUserStore = create((set, get) => ({
 
     getGlobalUsers: async (userId) => {
         try {
-            const res = axios.get('/g/users', { params: { userId } })
+            console.log('called');
+            
+            console.log(userId);
+            const res = await axios.get('/g/users', { params: { userId } })
+            
 
             if (res.data.success) {
                 set({ globalUsers: res.data.gUsers })
