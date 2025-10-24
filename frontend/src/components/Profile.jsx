@@ -19,6 +19,13 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { useUserStore } from "../app/UserStore";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 const Profile = () => {
   const [selectedPost, setSelectedPost] = useState(null);
@@ -26,6 +33,13 @@ const Profile = () => {
   const { userId } = useAuth();
   const { user } = useUser();
   const { followers, following } = useUserStore();
+  const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(""); //for stats
+
+  const handleOpen = (type) => {
+    setActiveTab(type);
+    setOpen(true);
+  };
 
   useEffect(() => {
     fetchPosts(userId);
@@ -37,11 +51,9 @@ const Profile = () => {
     toast(res.message);
     await fetchPosts(userId);
   };
-
   return (
     <>
       <Navbar />
-
       <div className="flex flex-col md:flex-row min-h-screen">
         {/* Sidebar */}
         <div className="md:w-1/5 lg:w-1/6 border-r border-gray-200">
@@ -52,6 +64,7 @@ const Profile = () => {
         <div className="flex-1 px-4 sm:px-6 md:px-10 pt-20 md:pt-20 mb-10">
           {/* Profile Header */}
           <div className="flex flex-col sm:flex-row w-full sm:w-4/5 md:w-2/3 mx-auto items-center sm:items-start justify-center sm:justify-start gap-6 sm:gap-12 mt-4 mb-10">
+
             {/* Profile Picture */}
             <div className="flex justify-center sm:justify-start">
               <img
@@ -66,6 +79,7 @@ const Profile = () => {
 
             {/* User Info */}
             <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
                 <h2 className="text-lg sm:text-2xl font-semibold">
                   {user.username}
@@ -73,8 +87,12 @@ const Profile = () => {
               </div>
 
               {/* Stats */}
+              <div>
               <div className="flex justify-center sm:justify-start gap-5 sm:gap-8 mb-5">
-                <div>
+                <div
+                  onClick={() => handleOpen("followers")}
+                  className="cursor-pointer hover:opacity-80 transition"
+                >
                   <p className="font-semibold text-base sm:text-lg">
                     {Array.isArray(followers) ? followers.length : 0}
                     <span className="ml-1 text-sm font-light text-zinc-700">
@@ -82,7 +100,10 @@ const Profile = () => {
                     </span>
                   </p>
                 </div>
-                <div>
+                <div
+                  onClick={() => handleOpen("following")}
+                  className="cursor-pointer hover:opacity-80 transition"
+                >
                   <p className="font-semibold text-base sm:text-lg">
                     {Array.isArray(following) ? following.length : 0}
                     <span className="ml-1 text-sm font-light text-zinc-700">
@@ -99,6 +120,57 @@ const Profile = () => {
                   </p>
                 </div>
               </div>
+              {/* Followers / Following Dialog */}
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="capitalize text-center">
+                      {activeTab}
+                    </DialogTitle>
+                    {/* <DialogDescription>
+                      List of{" "}
+                      {activeTab === "followers"
+                        ? "people who follow you"
+                        : "people you follow"}
+                      .
+                    </DialogDescription> */}
+                  </DialogHeader>
+                  <div className="max-h-60 overflow-y-auto mt-3 space-y-3">
+                    {(activeTab === "followers" ? followers : following)
+                      .length === 0 ? (
+                      <p className="text-sm text-gray-500">
+                        No {activeTab} yet.
+                      </p>
+                    ) : (
+                      (activeTab === "followers" ? followers : following).map(
+                        (user, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 transition"
+                          >
+                            <img
+                              src={
+                                user.avatar || "https://via.placeholder.com/40"
+                              }
+                              alt={user.name}
+                              className="w-8 h-8 rounded-full object-cover"
+                            />
+                            <div>
+                              <p className="font-medium text-sm">{user.name}</p>
+                              {user.username && (
+                                <p className="text-xs text-gray-500">
+                                  @{user.username}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      )
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
+              </div>
 
               {/* Bio */}
               <div>
@@ -108,6 +180,7 @@ const Profile = () => {
                 <p className="text-gray-600 text-sm">Developer</p>
                 <p className="text-gray-500 text-sm">📍 India, Delhi</p>
               </div>
+
             </div>
           </div>
 
