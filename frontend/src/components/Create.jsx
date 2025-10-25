@@ -95,7 +95,7 @@ const Create = ({ onSuccess }) => {
               onClick={() => setDiscardOpen(true)}
               className="rounded-full hover:bg-gray-100"
             >
-              <X className="h-6 w-6 text-gray-600" />
+              <X className="h-6 w-6 text-black" />
             </Button>
           </div>
 
@@ -123,12 +123,6 @@ const Create = ({ onSuccess }) => {
                 >
                   Select From Computer
                 </Button>
-
-                <p className="text-gray-500 mt-3 text-sm">or</p>
-                <p className="text-gray-500 mt-1 text-sm">
-                  Drag photos and videos here
-                </p>
-
                 <Input
                   type="file"
                   accept="image/*"
@@ -148,17 +142,17 @@ const Create = ({ onSuccess }) => {
                 alt="Preview"
                 className="max-h-[60vh] object-contain w-full"
               />
-              <div className="flex justify-between w-full p-4">
+              <div className="flex justify-between items-center w-full p-3">
                 <Button
                   variant="ghost"
                   onClick={() => setStep(1)}
-                  className="text-gray-700"
+                  className="text-gray-800"
                 >
                   Back
                 </Button>
                 <Button
                   onClick={() => setStep(3)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  className="bg-black hover:bg-gray-800 text-white"
                 >
                   Next
                 </Button>

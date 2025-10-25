@@ -26,9 +26,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import Create from "./Create";
 
 const Profile = () => {
   const [selectedPost, setSelectedPost] = useState(null);
+  const [showCreate, setShowCreate] = useState(false);
   const { posts, fetchPosts, deletePost } = useUserPostStore();
   const { userId } = useAuth();
   const { user } = useUser();
@@ -64,7 +66,6 @@ const Profile = () => {
         <div className="flex-1 px-4 sm:px-6 md:px-10 pt-20 md:pt-20 mb-10">
           {/* Profile Header */}
           <div className="flex flex-col sm:flex-row w-full sm:w-4/5 md:w-2/3 mx-auto items-center sm:items-start justify-center sm:justify-start gap-6 sm:gap-12 mt-4 mb-10">
-
             {/* Profile Picture */}
             <div className="flex justify-center sm:justify-start">
               <img
@@ -79,7 +80,6 @@ const Profile = () => {
 
             {/* User Info */}
             <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
                 <h2 className="text-lg sm:text-2xl font-semibold">
                   {user.username}
@@ -88,88 +88,91 @@ const Profile = () => {
 
               {/* Stats */}
               <div>
-              <div className="flex justify-center sm:justify-start gap-5 sm:gap-8 mb-5">
-                <div
-                  onClick={() => handleOpen("followers")}
-                  className="cursor-pointer hover:opacity-80 transition"
-                >
-                  <p className="font-semibold text-base sm:text-lg">
-                    {Array.isArray(followers) ? followers.length : 0}
-                    <span className="ml-1 text-sm font-light text-zinc-700">
-                      followers
-                    </span>
-                  </p>
+                <div className="flex justify-center sm:justify-start gap-5 sm:gap-8 mb-5">
+                  <div
+                    onClick={() => handleOpen("followers")}
+                    className="cursor-pointer hover:opacity-80 transition"
+                  >
+                    <p className="font-semibold text-base sm:text-lg">
+                      {Array.isArray(followers) ? followers.length : 0}
+                      <span className="ml-1 text-sm font-light text-zinc-700">
+                        followers
+                      </span>
+                    </p>
+                  </div>
+                  <div
+                    onClick={() => handleOpen("following")}
+                    className="cursor-pointer hover:opacity-80 transition"
+                  >
+                    <p className="font-semibold text-base sm:text-lg">
+                      {Array.isArray(following) ? following.length : 0}
+                      <span className="ml-1 text-sm font-light text-zinc-700">
+                        following
+                      </span>
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-base sm:text-lg">
+                      {Array.isArray(posts) ? posts.length : 0}
+                      <span className="ml-1 text-sm font-light text-zinc-700">
+                        posts
+                      </span>
+                    </p>
+                  </div>
                 </div>
-                <div
-                  onClick={() => handleOpen("following")}
-                  className="cursor-pointer hover:opacity-80 transition"
-                >
-                  <p className="font-semibold text-base sm:text-lg">
-                    {Array.isArray(following) ? following.length : 0}
-                    <span className="ml-1 text-sm font-light text-zinc-700">
-                      following
-                    </span>
-                  </p>
-                </div>
-                <div>
-                  <p className="font-semibold text-base sm:text-lg">
-                    {Array.isArray(posts) ? posts.length : 0}
-                    <span className="ml-1 text-sm font-light text-zinc-700">
-                      posts
-                    </span>
-                  </p>
-                </div>
-              </div>
-              {/* Followers / Following Dialog */}
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle className="capitalize text-center">
-                      {activeTab}
-                    </DialogTitle>
-                    {/* <DialogDescription>
+                {/* Followers / Following Dialog */}
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle className="capitalize text-center">
+                        {activeTab}
+                      </DialogTitle>
+                      {/* <DialogDescription>
                       List of{" "}
                       {activeTab === "followers"
                         ? "people who follow you"
                         : "people you follow"}
                       .
                     </DialogDescription> */}
-                  </DialogHeader>
-                  <div className="max-h-60 overflow-y-auto mt-3 space-y-3">
-                    {(activeTab === "followers" ? followers : following)
-                      .length === 0 ? (
-                      <p className="text-sm text-gray-500">
-                        No {activeTab} yet.
-                      </p>
-                    ) : (
-                      (activeTab === "followers" ? followers : following).map(
-                        (user, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 transition"
-                          >
-                            <img
-                              src={
-                                user.avatar || "https://via.placeholder.com/40"
-                              }
-                              alt={user.name}
-                              className="w-8 h-8 rounded-full object-cover"
-                            />
-                            <div>
-                              <p className="font-medium text-sm">{user.name}</p>
-                              {user.username && (
-                                <p className="text-xs text-gray-500">
-                                  @{user.username}
+                    </DialogHeader>
+                    <div className="max-h-60 overflow-y-auto mt-3 space-y-3">
+                      {(activeTab === "followers" ? followers : following)
+                        .length === 0 ? (
+                        <p className="text-sm text-gray-500">
+                          No {activeTab} yet.
+                        </p>
+                      ) : (
+                        (activeTab === "followers" ? followers : following).map(
+                          (user, i) => (
+                            <div
+                              key={i}
+                              className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 transition"
+                            >
+                              <img
+                                src={
+                                  user.avatar ||
+                                  "https://via.placeholder.com/40"
+                                }
+                                alt={user.name}
+                                className="w-8 h-8 rounded-full object-cover"
+                              />
+                              <div>
+                                <p className="font-medium text-sm">
+                                  {user.name}
                                 </p>
-                              )}
+                                {user.username && (
+                                  <p className="text-xs text-gray-500">
+                                    @{user.username}
+                                  </p>
+                                )}
+                              </div>
                             </div>
-                          </div>
+                          )
                         )
-                      )
-                    )}
-                  </div>
-                </DialogContent>
-              </Dialog>
+                      )}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               {/* Bio */}
@@ -180,7 +183,6 @@ const Profile = () => {
                 <p className="text-gray-600 text-sm">Developer</p>
                 <p className="text-gray-500 text-sm">📍 India, Delhi</p>
               </div>
-
             </div>
           </div>
 
@@ -194,36 +196,40 @@ const Profile = () => {
           </div>
 
           {/* Posts Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mt-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 sm:gap-6 md:gap-8 mt-10 px-6 sm:px-16 md:px-24 lg:px-32">
             {posts.length === 0 ? (
-              <div className="sm:ml-115 ml-22 flex flex-col justify-center items-center w-full px-3 text-center">
-                <h1 className="text-xl w-50 sm:w-60 sm:text-2xl text-zinc-800 font-semibold tracking-tight mt-4 mb-1">
+              <div className="flex flex-col justify-center items-center w-full text-center px-3">
+                <h1 className="text-lg sm:text-2xl text-zinc-800 font-semibold tracking-tight mt-4 mb-1">
                   Create your first post
                 </h1>
-                <p className="w-60 text-md text-zinc-600 tracking-tight">
+                <p className="text-md text-zinc-600 tracking-tight mb-4">
                   Make people know you
                 </p>
                 <img
                   src="/images/profile.png"
-                  className="w-48 sm:w-60 object-contain"
+                  className="w-40 sm:w-60 object-contain mb-3"
+                  alt="Create your first post"
                 />
-                <Button className="mb-10 w-18 h-7 text-md tracking-tight">
-                  Create
+                <Button
+                  className="mb-10 h-8 text-md tracking-tight"
+                  onClick={() => setShowCreate(true)}
+                >
+                  <Create />
                 </Button>
               </div>
             ) : (
-              posts.map((val, ind) => (
+              [...posts].reverse().map((val, ind) => (
                 <div
                   key={ind}
                   onClick={() => setSelectedPost(val)}
-                  className="relative w-full aspect-square overflow-hidden group cursor-pointer border border-gray-300 rounded-md"
+                  className="relative w-full aspect-[10/15] overflow-hidden group cursor-pointer border border-gray-300 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300"
                 >
                   <img
                     src={val.imageUrl}
                     alt={val.caption || "post"}
-                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               ))
             )}
@@ -232,7 +238,7 @@ const Profile = () => {
           {/* Post Modal */}
           {selectedPost && (
             <div
-              className="fixed inset-0 bg-black/70 flex justify-center items-center z-50 px-2 sm:px-6"
+              className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-2 sm:px-6"
               onClick={() => setSelectedPost(null)}
             >
               <div

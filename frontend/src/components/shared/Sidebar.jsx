@@ -51,7 +51,7 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* 🖥️ Desktop Sidebar */}
+      {/* Desktop Sidebar */}
       <aside className="hidden md:flex fixed top-16 left-0 w-80 h-full border-r shadow-sm px-6 py-8 flex-col justify-between z-40 bg-white">
         <Card className="border-none shadow-none">
           {/* Profile Header */}
