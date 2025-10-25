@@ -1,27 +1,54 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CiSearch } from "react-icons/ci";
-import Navbar from "./shared/Navbar";
 import { GoArrowLeft } from "react-icons/go";
 import { RxDotsHorizontal } from "react-icons/rx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
+import Navbar from "./shared/Navbar";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useUserStore } from "../app/UserStore";
+import { useMessageStore } from "../app/UserMessageStore";
+// import { useMessageStore } from "../app/MessageStore";
 
 const Chat = () => {
-  const [selectedChat, setSelectedChat] = useState(null);
-  const {userId} = useAuth()
-  const {user} = useUser()
-  const {followers, getFollowers} = useUserStore()
+  const [input, setInput] = useState("");
+  const { userId } = useAuth();
+  const { user } = useUser();
+  const { followers, getFollowers } = useUserStore();
+  const {
+    messages,
+    selectedChat,
+    setSelectedChat,
+    fetchMessages,
+    sendMessage,
+  } = useMessageStore();
 
-  // console.log(selectedChat);
-  
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     if (userId && user) {
       getFollowers(userId);
     }
   }, [userId, user]);
+
+  useEffect(() => {
+    if (selectedChat && userId) {
+      fetchMessages(userId, selectedChat.userId);
+    }
+  }, [selectedChat, userId]);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+    sendMessage(input);
+    setInput("");
+  };
+
+  // console.log(userId, selectedChat.userId);
+  
 
   return (
     <>
@@ -71,7 +98,7 @@ const Chat = () => {
                   onClick={() => setSelectedChat(chat)}
                   className={`flex items-center justify-between p-3 sm:p-4 border-b cursor-pointer 
           transition-colors duration-200 ${
-            selectedChat?.username === chat.username
+            selectedChat?._id === chat._id
               ? "bg-blue-100"
               : "hover:bg-gray-100"
           }`}
@@ -81,7 +108,7 @@ const Chat = () => {
                       {chat.imageUrl ? (
                         <AvatarImage src={chat.imageUrl} />
                       ) : (
-                        <AvatarFallback>{chat.name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback>{chat.username?.charAt(0)}</AvatarFallback>
                       )}
                     </Avatar>
                     <div className="min-w-0">
@@ -89,17 +116,16 @@ const Chat = () => {
                         {chat.username}
                       </p>
                       <p className="text-xs sm:text-sm text-gray-500 truncate">
-                        {"Hello"}
+                        Tap to chat
                       </p>
                     </div>
                   </div>
                   <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap">
-                    {"04:22"}
+                    04:22
                   </span>
                 </div>
               ))
             ) : (
-              // Empty state section
               <div className="flex flex-col items-center justify-center h-full py-20 text-center text-gray-500">
                 <img
                   src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
@@ -117,26 +143,24 @@ const Chat = () => {
 
         {/* CHAT AREA */}
         <div
-          className={`sm:mt-17 mt-14 fixed top-0 right-0 bottom-0 flex flex-col w-full md:w-[70%] transition-all duration-300 ${
+          className={`sm:mt-17 mt-14 fixed top-0 right-0 bottom-0 flex flex-col w-full md:w-[70%] transition-all duration-300 bg-gray-50 ${
             selectedChat ? "flex" : "hidden md:flex"
           }`}
         >
           {!selectedChat ? (
-            <div className=" flex-1 flex flex-col items-center justify-center text-center p-6 bg-gray-50">
-              <div className="bg-gray-100 p-4 rounded-full text-3xl mb-4">
-                💬
-              </div>
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+              <div className="bg-gray-100 p-4 rounded-full text-3xl mb-4">💬</div>
               <h2 className="font-semibold tracking-tighter text-xl sm:text-2xl">
                 Your Messages
               </h2>
               <p className="text-gray-500 text-sm sm:text-base mt-1">
-                Send private photos and messages to a friend or group.
+                Send private messages to your followers.
               </p>
             </div>
           ) : (
-            <div className="flex flex-col h-full bg-gray-50">
+            <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center gap-4 border-b bg-gray-200 p-3 sm:p-2 ">
+              <div className="flex items-center gap-4 border-b bg-gray-200 p-3 sm:p-2">
                 <button
                   onClick={() => setSelectedChat(null)}
                   className="md:hidden text-gray-600"
@@ -148,7 +172,7 @@ const Chat = () => {
                     <AvatarImage src={selectedChat.imageUrl} />
                   ) : (
                     <AvatarFallback>
-                      {selectedChat.name.charAt(0)}
+                      {selectedChat.username?.charAt(0)}
                     </AvatarFallback>
                   )}
                 </Avatar>
@@ -161,12 +185,38 @@ const Chat = () => {
               </div>
 
               {/* Messages */}
-              <div className="flex-1 p-4 overflow-y-auto">
-                <p className="text-sm text-gray-700 text-center ">
-                  This is the start of your chat with{" "}
-                  <span className="font-semibold">{selectedChat.username}</span>
-                  .
-                </p>
+              <div className="flex-1 p-4 overflow-y-auto space-y-3">
+                {messages.length > 0 ? (
+                  messages.map((msg, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex ${
+                        msg.senderId === userId
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <div
+                        className={`max-w-xs sm:max-w-sm px-4 py-2 rounded-2xl text-sm ${
+                          msg.senderId === userId
+                            ? "bg-blue-600 text-white rounded-br-none"
+                            : "bg-gray-200 text-gray-800 rounded-bl-none"
+                        }`}
+                      >
+                        {msg.text}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500 text-center">
+                    This is the start of your chat with{" "}
+                    <span className="font-semibold">
+                      {selectedChat.username}
+                    </span>
+                    .
+                  </p>
+                )}
+                <div ref={messageEndRef}></div>
               </div>
 
               {/* Message Input */}
@@ -174,9 +224,14 @@ const Chat = () => {
                 <input
                   type="text"
                   placeholder="Message..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
                   className="flex-1 border rounded-full px-3 sm:px-4 py-2 outline-none text-sm bg-gray-100 focus:ring-1 focus:ring-gray-300"
                 />
-                <button className="bg-black text-white px-4 sm:px-5 py-2 rounded-full text-sm hover:bg-gray-800 transition">
+                <button
+                  onClick={handleSend}
+                  className="bg-black text-white px-4 sm:px-5 py-2 rounded-full text-sm hover:bg-gray-800 transition"
+                >
                   Wave
                 </button>
               </div>

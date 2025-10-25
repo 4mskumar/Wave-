@@ -38,12 +38,12 @@ io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
   if (userId) userSocketMap[userId] = socket.id;
   console.log("User connected:", userId);
+  console.log('user-socket-map', userSocketMap);
 
   socket.on("disconnect", () => {
     delete userSocketMap[userId];
     console.log("User disconnected:", userId);
   });
-  console.log('user-socket-map', userSocketMap);
   
 });
 

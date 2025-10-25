@@ -1,5 +1,7 @@
 // import { io, userSocketMap } from "../index.js";
 // import { Message } from "../models/Message.js";
+import { io, userSocketMap } from "../index.js";
+import { Message } from "../models/Message.js";
 import { User } from "../models/User.js";
 
 export const getUserList = async (req, res) => {
@@ -28,7 +30,9 @@ export const getUserList = async (req, res) => {
 export const getMessages = async (req, res) => {
   try {
     const { id } = req.params;
-    const myId = req.user._id;
+    const {myId} = req.query;
+
+    
 
     const messages = await Message.find({
       $or: [
@@ -51,7 +55,7 @@ export const sendMessage = async (req, res) => {
     const newMsg = await Message.create({ senderId, receiverId, text });
 
     const receiverSocket = userSocketMap[receiverId];
-    console.log(receiverSocket);
+    console.log('In message controller : ' + receiverSocket);
     
     if (receiverSocket) {
       io.to(receiverSocket).emit("newMessage", newMsg);

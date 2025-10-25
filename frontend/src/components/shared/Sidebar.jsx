@@ -21,27 +21,45 @@ import { Search, Plus } from "lucide-react";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
-  const [searchedUser, setSearchedUser] = useState('')
+  const [searchedUser, setSearchedUser] = useState("");
   const [showCreate, setShowCreate] = useState(false);
-  const [filteredUsers, setFilteredUsers] = useState([])
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const location = useLocation();
   const { posts } = useUserPostStore();
   const { user } = useUser();
-  const {userId} = useAuth()
-  const {following, followers, getFollowers, getGlobalUsers, globalUsers} = useUserStore()
+  const { userId } = useAuth();
+  const { following, followers, getFollowers, getGlobalUsers, globalUsers } =
+    useUserStore();
 
   useEffect(() => {
     if (userId && user) {
       getFollowers(userId);
-    }    
+    }
   }, [userId, user]);
 
   useEffect(() => {
-
-  }, [])
-
-  console.log(globalUsers);
+    const handleSearch = (input) => {
+      if (input === '') {
+        setFilteredUsers(globalUsers);
+        return;
+      }
   
+      const lower = input.toLowerCase();
+  
+      const filter = globalUsers.filter((user) => {
+        const username = user?.username?.toLowerCase() || '';
+        const fullName = user?.fullName?.toLowerCase() || '';
+        return username.includes(lower) || fullName.includes(lower);
+      });
+  
+      setFilteredUsers(filter);
+    };
+  
+    handleSearch(searchedUser);
+  }, [searchedUser]);
+  
+
+  // console.log(filteredUsers);
 
   const navItems = [
     { label: "Feed", icon: HiOutlineHome, path: "/home" },
@@ -135,7 +153,6 @@ const Sidebar = () => {
                       autoFocus
                       value={searchedUser}
                       onChange={(e) => setSearchedUser(e.target.value)}
-                      
                     />
                     <button
                       onClick={() => setOpen(false)}
@@ -144,11 +161,23 @@ const Sidebar = () => {
                       ✕
                     </button>
                   </div>
-                  <div className="text-sm text-gray-500">Recent</div>
+                  <div className="text-sm text-1gray-500">Recent</div>
                   <div className="mt-2 space-y-2">
-                    <div className="flex ml-18 h-[40vh] justify-center, items-center">
-                      <p className="text-zinc-600/90 font-light tracking-tight">search here</p>
-                    </div>
+                    {searchedUser ? (
+                      <div>
+                      {
+                        filteredUsers.map((val, ind) => (
+                          <p>{val.username}</p>  
+                        ))
+                      }
+                      </div>
+                    ) : (
+                      <div className="flex ml-18 h-[40vh] justify-center, items-center">
+                        <p className="text-zinc-600/90 font-light tracking-tight">
+                          search here
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </PopoverContent>
               </Popover>
