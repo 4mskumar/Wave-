@@ -3,17 +3,19 @@ import axios from "../api/axiosConfig.js";
 import { io } from "socket.io-client";
 import { useUserStore } from "./UserStore";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
 
 export const useMessageStore = create((set, get) => ({
   socket: null,
   messages: [],
+  followers: [],
+  onlineUsers: [],
   selectedChat: null,
   loading: false,
 
-  // ✅ connect to socket server
+  // ✅ Connect to socket server
   connectSocket: (userId) => {
-    if (get().socket) return; // avoid reconnecting
+    if (get().socket) return; // prevent duplicate connections
     const socket = io(SOCKET_URL, {
       query: { userId },
       transports: ["websocket"],
@@ -22,13 +24,19 @@ export const useMessageStore = create((set, get) => ({
 
     socket.on("connect", () => console.log("✅ Socket connected:", socket.id));
     socket.on("disconnect", () => console.log("❌ Socket disconnected"));
+
+    // ✅ Handle new incoming messages
     socket.on("newMessage", (msg) => {
-      // append new incoming message
       set((state) => ({
         messages: Array.isArray(state.messages)
           ? [...state.messages, msg]
           : [msg],
       }));
+    });
+
+    // ✅ Track online users
+    socket.on("onlineUsers", (userList) => {
+      set({ onlineUsers: userList });
     });
   },
 
@@ -44,11 +52,12 @@ export const useMessageStore = create((set, get) => ({
   fetchMessages: async (userId, targetId) => {
     set({ loading: true });
     try {
-      const res = await axios.get(`/${targetId}`, {
-        params: { userId },
+      const res = await axios.get(`/messages/${userId}`, {
+        params: { myId: targetId },
       });
+
       set({
-        messages: Array.isArray(res.data.messages) ? res.data.messages : [],
+        messages: res.data.messages || [],
         loading: false,
       });
     } catch (err) {
@@ -64,16 +73,19 @@ export const useMessageStore = create((set, get) => ({
     if (!selectedChat || !text.trim()) return;
 
     try {
-      const res = await axios.post(`/send/${selectedChat.userId}`, {
+      const res = await axios.post(`/messages/send/${selectedChat.userId}`, {
         senderId: user.id,
         text,
       });
 
-      const newMsg = res.data.newMsg; // depends on your backend naming
+      const newMsg = res.data.message;
+      if (!newMsg) {
+        console.error("No message returned from server:", res.data);
+        return;
+      }
+
       set((state) => ({
-        messages: Array.isArray(state.messages)
-          ? [...state.messages, newMsg]
-          : [newMsg],
+        messages: [...state.messages, newMsg],
       }));
 
       if (socket) socket.emit("sendMessage", newMsg);
@@ -82,6 +94,21 @@ export const useMessageStore = create((set, get) => ({
     }
   },
 
-  // ✅ Change selected chat
+  // ✅ Fetch followers (for sidebar)
+  getFollowers: async (userId) => {
+    try {
+      const res = await axios.get("/followers", { params: { userId } });
+      if (res.data.success) {
+        const sorted = res.data.followers.sort(
+          (a, b) => new Date(b.lastActive || 0) - new Date(a.lastActive || 0)
+        );
+        set({ followers: sorted });
+      }
+    } catch (error) {
+      console.log("Error fetching followers:", error.message);
+    }
+  },
+
+  // ✅ Select chat
   setSelectedChat: (chat) => set({ selectedChat: chat, messages: [] }),
 }));

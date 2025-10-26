@@ -14,13 +14,16 @@ const Chat = () => {
   const [input, setInput] = useState("");
   const { userId } = useAuth();
   const { user } = useUser();
-  const { followers, getFollowers } = useUserStore();
+
   const {
     messages,
     selectedChat,
     setSelectedChat,
     fetchMessages,
     sendMessage,
+    followers,
+    getFollowers,
+    onlineUsers
   } = useMessageStore();
 
   const messageEndRef = useRef(null);
@@ -37,18 +40,32 @@ const Chat = () => {
     }
   }, [selectedChat, userId]);
 
+  // console.log(messages);
+
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSend = () => {
     if (!input.trim()) return;
-    sendMessage(input);
-    setInput("");
+      sendMessage(input);
+      setInput("");
+
+
+  };
+  const handleSendEnter = (e) => {
+    if (!input.trim()) return;
+    if(e.key === 'Enter'){
+
+      sendMessage(input);
+      setInput("");
+    }
   };
 
-  // console.log(userId, selectedChat.userId);
+  console.log(onlineUsers);
   
+
+  // console.log(userId, selectedChat.userId);
 
   return (
     <>
@@ -92,51 +109,49 @@ const Chat = () => {
           {/* Chat List */}
           <div className="flex-1 overflow-y-auto ml-2">
             {followers.length > 0 ? (
-              followers.map((chat, i) => (
-                <div
-                  key={i}
-                  onClick={() => setSelectedChat(chat)}
-                  className={`flex items-center justify-between p-3 sm:p-4 border-b cursor-pointer 
-          transition-colors duration-200 ${
-            selectedChat?._id === chat._id
-              ? "bg-blue-100"
-              : "hover:bg-gray-100"
-          }`}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <Avatar>
-                      {chat.imageUrl ? (
-                        <AvatarImage src={chat.imageUrl} />
-                      ) : (
-                        <AvatarFallback>{chat.username?.charAt(0)}</AvatarFallback>
-                      )}
-                    </Avatar>
-                    <div className="min-w-0">
-                      <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">
-                        {chat.username}
-                      </p>
-                      <p className="text-xs sm:text-sm text-gray-500 truncate">
-                        Tap to chat
-                      </p>
+              followers.map((f, i) => {
+                const isOnline = onlineUsers.includes(f.userId);
+                return (
+                  <div
+                    key={i}
+                    onClick={() => setSelectedChat(f)}
+                    className={`flex items-center justify-between p-3 sm:p-4 border-b cursor-pointer transition-colors ${
+                      selectedChat?.userId === f.userId
+                        ? "bg-blue-100"
+                        : "hover:bg-gray-100"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          isOnline ? "bg-green-500" : ""
+                        }`}
+                      ></div>
+                      <Avatar>
+                        {f.imageUrl ? (
+                          <AvatarImage src={f.imageUrl} />
+                        ) : (
+                          <AvatarFallback>
+                            {f.username?.charAt(0)}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      <div>
+                        <p className="font-semibold text-sm sm:text-base">
+                          {f.username}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {isOnline ? "Online" : "Offline"}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap">
-                    04:22
-                  </span>
-                </div>
-              ))
+                );
+              })
             ) : (
-              <div className="flex flex-col items-center justify-center h-full py-20 text-center text-gray-500">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
-                  alt="No chats"
-                  className="w-32 h-32 opacity-70 mb-4"
-                />
-                <p className="text-sm sm:text-base font-medium">No chats yet</p>
-                <p className="text-xs sm:text-sm text-gray-400 mt-1">
-                  Start following someone to begin chatting!
-                </p>
-              </div>
+              <p className="text-center text-gray-500 py-20">
+                No followers yet
+              </p>
             )}
           </div>
         </div>
@@ -149,7 +164,9 @@ const Chat = () => {
         >
           {!selectedChat ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-              <div className="bg-gray-100 p-4 rounded-full text-3xl mb-4">💬</div>
+              <div className="bg-gray-100 p-4 rounded-full text-3xl mb-4">
+                💬
+              </div>
               <h2 className="font-semibold tracking-tighter text-xl sm:text-2xl">
                 Your Messages
               </h2>
@@ -180,7 +197,6 @@ const Chat = () => {
                   <p className="font-semibold text-base sm:text-lg">
                     {selectedChat.username}
                   </p>
-                  <p className="text-xs text-gray-500">Active now</p>
                 </div>
               </div>
 
@@ -225,14 +241,16 @@ const Chat = () => {
                   type="text"
                   placeholder="Message..."
                   value={input}
+                  onKeyDown={handleSendEnter}
                   onChange={(e) => setInput(e.target.value)}
                   className="flex-1 border rounded-full px-3 sm:px-4 py-2 outline-none text-sm bg-gray-100 focus:ring-1 focus:ring-gray-300"
-                />
+                  />
                 <button
                   onClick={handleSend}
+                  // onKeyDown={(e) => e.key === "Enter" && handleSend}
                   className="bg-black text-white px-4 sm:px-5 py-2 rounded-full text-sm hover:bg-gray-800 transition"
                 >
-                  Wave
+                  Send
                 </button>
               </div>
             </div>

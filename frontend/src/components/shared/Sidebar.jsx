@@ -18,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Search, Plus } from "lucide-react";
+import { useMessageStore } from "../../app/UserMessageStore";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
@@ -30,6 +31,8 @@ const Sidebar = () => {
   const { userId } = useAuth();
   const { following, followers, getFollowers, getGlobalUsers, globalUsers } =
     useUserStore();
+
+    const {messages} = useMessageStore()
 
   useEffect(() => {
     if (userId && user) {
@@ -60,6 +63,8 @@ const Sidebar = () => {
   
 
   // console.log(filteredUsers);
+
+  const notification = Boolean(messages.length > 0)
 
   const navItems = [
     { label: "Feed", icon: HiOutlineHome, path: "/home" },
@@ -121,7 +126,10 @@ const Sidebar = () => {
                     }`}
                   >
                     <Icon size={18} />
-                    {label}
+                    {label} 
+                    {
+                      label === 'Messages' && notification && <span className="w-1 h-1 rounded-full bg-red-500"></span>
+                    }
                   </Button>
                 </Link>
               ))}

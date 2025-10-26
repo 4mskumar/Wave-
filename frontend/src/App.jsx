@@ -11,12 +11,15 @@ import Settings from "./components/Settings";
 import LandingPage from "./pages/LandingPage";
 import SignInPage from "./components/shared/SignInPage";
 import SharePost from "./components/SharePost";
+import { useMessageStore } from "./app/UserMessageStore";
 
 function App() {
   const { user, isLoaded, isSignedIn } = useUser();
   const {userId} = useAuth()
       
-  const {getGlobalUsers, connectSocket, socket, disconnectSocket, setUser,  } = useUserStore();
+  const {getGlobalUsers, socket, disconnectSocket, setUser} = useUserStore();
+  const {connectSocket} = useMessageStore()
+  
 
   useEffect(() => {
     if (!isLoaded) return; // wait for Clerk

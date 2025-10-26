@@ -5,9 +5,9 @@ import { config } from "dotenv";
 import { connectDb } from "./utils/db.js";
 import { router as postRouter } from "./routes/posts.route.js";
 import { router as userRouter } from "./routes/user.route.js";
+// import { router } from "./routes/messages.route.js";
 import { Server } from "socket.io";
 import router from "./routes/messages.route.js";
-
 
 config();
 
@@ -15,44 +15,50 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const server = http.createServer(app);
 
-// ✅ FIX: Enable CORS here
+// ✅ CORS setup
 app.use(
   cors({
-    origin: "http://localhost:5173", // your frontend
-    credentials: true, // allow cookies/auth if needed
+    origin: "http://localhost:5173",
+    credentials: true,
   })
 );
 
-// Middleware
+// ✅ Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Socket.io setup
+// ✅ Socket.io setup
 export const io = new Server(server, {
   cors: { origin: "http://localhost:5173" },
 });
 
-export const userSocketMap = {};
+export const userSocketMap = new Map(); // userId -> socketId
 
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
-  if (userId) userSocketMap[userId] = socket.id;
-  console.log("User connected:", userId);
-  console.log('user-socket-map', userSocketMap);
+  if (userId) {
+    userSocketMap.set(userId, socket.id);
+    console.log("✅ User connected:", userId);
+  }
+
+  // Broadcast online users
+  io.emit("onlineUsers", Array.from(userSocketMap.keys()));
+  console.log("Online Users:", Array.from(userSocketMap.keys()));
 
   socket.on("disconnect", () => {
-    delete userSocketMap[userId];
-    console.log("User disconnected:", userId);
+    if (userId) userSocketMap.delete(userId);
+    io.emit("onlineUsers", Array.from(userSocketMap.keys()));
+    console.log("❌ User disconnected:", userId);
   });
-  
 });
 
-// Routes
+// ✅ Routes
 app.use("/api/post", postRouter);
 app.use("/api", userRouter);
-app.use("/api", router)
+app.use("/api/messages", router);
 
+// ✅ Start Server
 server.listen(PORT, () => {
-  console.log(`Server is live at ${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
   connectDb();
 });

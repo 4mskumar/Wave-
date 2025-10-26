@@ -3,7 +3,7 @@ import { getMessages, getUserList, sendMessage } from "../controllers/messages.c
 // import { protectRoute } from "../middleware/auth.js";
 // import { getUserList } from "../controllers/message.controller.js";
 
-const router = express.Router();
+export const router = express.Router();
 
 router.get("/users", getUserList);
 router.get("/:id",  getMessages);
