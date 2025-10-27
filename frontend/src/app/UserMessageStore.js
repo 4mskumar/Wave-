@@ -111,4 +111,34 @@ export const useMessageStore = create((set, get) => ({
 
   // ✅ Select chat
   setSelectedChat: (chat) => set({ selectedChat: chat, messages: [] }),
+
+  // ✅ Mark messages as seen
+  // ✅ Inside useMessageStore
+  markMessagesAsSeen: async (targetId) => {
+    const { user } = useUserStore.getState();
+
+    try {
+      await axios.put(`/messages/seen/${targetId}`,{}, {
+        params: { myId: user.id },
+      });
+
+      // ✅ Update local state (optional)
+      set((state) => ({
+        messages: state.messages.map((m) =>
+          m.senderId === targetId ? { ...m, seen: true } : m
+        ),
+      }));
+
+      console.log("✅ Messages marked as seen in frontend");
+    } catch (err) {
+      console.error("❌ Error marking messages as seen:", err.message);
+    }
+  },
+
+  addMessage: (msg) => set((state) => ({
+    messages: [...state.messages, msg],
+  })),
+  
+
+
 }));
