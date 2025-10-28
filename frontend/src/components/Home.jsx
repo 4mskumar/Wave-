@@ -115,7 +115,7 @@ const Home = () => {
                 </div>
 
                 {post.caption && (
-                  <p className="text-gray-700 text-[14px] sm:text-[15px] mt-2">
+                  <p className="text-gray-700 text-[14px] sm:text-[17px] mt-2">
                     {post.caption}
                   </p>
                 )}
@@ -133,7 +133,7 @@ const Home = () => {
                   {/* Like */}
                   <span
                     onClick={() => handleLikeToggle(post._id)}
-                    className="inline-flex cursor-pointer items-center gap-2"
+                    className="inline-flex cursor-pointer items-center gap-2 text-lg"
                   >
                     {post.likes.includes(userId) ? (
                       <FaHeart color="red" />
@@ -146,9 +146,9 @@ const Home = () => {
                   {/* Comment */}
                   <span
                     onClick={() => handleCommentToggle(post._id)}
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex items-center gap-2 cursor-pointer text-lg"
                   >
-                    <FaRegComment />
+                    <FaRegComment size={20}/>
                     {(localComments[post._id]?.length || 0) +
                       (post.comments?.length ?? 0)}{" "}
                     Comments

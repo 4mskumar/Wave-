@@ -198,16 +198,16 @@ const Profile = () => {
           {/* Posts Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 sm:gap-6 md:gap-8 mt-10 px-6 sm:px-16 md:px-24 lg:px-32">
             {posts.length === 0 ? (
-              <div className="flex flex-col justify-center items-center w-full text-center px-3">
-                <h1 className="text-lg sm:text-2xl text-zinc-800 font-semibold tracking-tight mt-4 mb-1">
+              <div className="col-span-full flex flex-col justify-center items-center w-full text-center px-3 py-10">
+                <h1 className="text-lg sm:text-2xl text-zinc-800 font-semibold tracking-tight">
                   Create your first post
                 </h1>
-                <p className="text-md text-zinc-600 tracking-tight mb-4">
+                <p className="text-md text-zinc-600 tracking-tight">
                   Make people know you
                 </p>
                 <img
                   src="/images/profile.png"
-                  className="w-40 sm:w-60 object-contain mb-3"
+                  className="w-40 sm:w-60 object-contain"
                   alt="Create your first post"
                 />
                 <Button

@@ -37,9 +37,9 @@ const Navbar = () => {
         />
       </div> */}
       {/* temp btn */}
-      <Button onClick={() => setUserData(user.clerkId, user.username, user.fullName, user.imageUrl)}>
+      {/* <Button onClick={() => setUserData(user.clerkId, user.username, user.fullName, user.imageUrl)}>
         Refresh info
-      </Button>
+      </Button> */}
 
       {/* Right side */}
       <div className="flex items-center gap-6">
