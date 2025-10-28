@@ -3,7 +3,6 @@ import { Badge } from "../components/ui/badge";
 import { FaRegComment, FaHeart, FaRegHeart } from "react-icons/fa";
 import Navbar from "./shared/Navbar";
 import Sidebar from "./shared/Sidebar";
-import { IoMdShare } from "react-icons/io";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useUserStore } from "../app/UserStore";
 import useUserPostStore from "../app/UserPostStore";

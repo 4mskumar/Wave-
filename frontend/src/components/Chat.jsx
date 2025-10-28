@@ -23,7 +23,8 @@ const Chat = () => {
     sendMessage,
     followers,
     getFollowers,
-    onlineUsers
+    onlineUsers,
+    markMessagesAsSeen
   } = useMessageStore();
 
   const messageEndRef = useRef(null);
@@ -37,10 +38,12 @@ const Chat = () => {
   useEffect(() => {
     if (selectedChat && userId) {
       fetchMessages(userId, selectedChat.userId);
+      markMessagesAsSeen(selectedChat.userId);
     }
   }, [selectedChat, userId]);
 
-  // console.log(messages);
+  console.log(messages);
+  
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -61,11 +64,6 @@ const Chat = () => {
       setInput("");
     }
   };
-
-  console.log(onlineUsers);
-  
-
-  // console.log(userId, selectedChat.userId);
 
   return (
     <>

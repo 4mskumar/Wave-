@@ -66,3 +66,22 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// ✅ Mark messages as seen
+export const markMessagesAsSeen = async (req, res) => {
+  try {
+    const { myId } = req.query;
+    const { id: targetId } = req.params;
+
+    // Mark all unseen messages from targetId → myId as seen
+    await Message.updateMany(
+      { senderId: targetId, receiverId: myId, seen: false },
+      { $set: { seen: true } }
+    );
+
+    res.json({ success: true, message: "Messages marked as seen" });
+  } catch (error) {
+    console.error("Error marking messages seen:", error.message);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

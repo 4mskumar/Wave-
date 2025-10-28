@@ -6,7 +6,7 @@ import { BiMessageRounded } from "react-icons/bi";
 import { FiUser, FiSettings } from "react-icons/fi";
 import { HiOutlineHome } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import useUserPostStore from "../../app/UserPostStore";
 import { useUserStore } from "../../app/UserStore";
@@ -25,6 +25,7 @@ const Sidebar = () => {
   const [searchedUser, setSearchedUser] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
   const location = useLocation();
   const { posts } = useUserPostStore();
   const { user } = useUser();
@@ -32,7 +33,8 @@ const Sidebar = () => {
   const { following, followers, getFollowers, getGlobalUsers, globalUsers } =
     useUserStore();
 
-    const {messages} = useMessageStore()
+  const { messages } = useMessageStore();
+  let prevLenOfMsg = useRef(0);
 
   useEffect(() => {
     if (userId && user) {
@@ -41,30 +43,33 @@ const Sidebar = () => {
   }, [userId, user]);
 
   useEffect(() => {
+    if (prevLenOfMsg.current < messages.length) {
+      setShowNotification(true);
+    }
+
+    prevLenOfMsg.current = messages.length;
+  }, [messages]);
+
+  useEffect(() => {
     const handleSearch = (input) => {
-      if (input === '') {
+      if (input === "") {
         setFilteredUsers(globalUsers);
         return;
       }
-  
+
       const lower = input.toLowerCase();
-  
+
       const filter = globalUsers.filter((user) => {
-        const username = user?.username?.toLowerCase() || '';
-        const fullName = user?.fullName?.toLowerCase() || '';
+        const username = user?.username?.toLowerCase() || "";
+        const fullName = user?.fullName?.toLowerCase() || "";
         return username.includes(lower) || fullName.includes(lower);
       });
-  
+
       setFilteredUsers(filter);
     };
-  
+
     handleSearch(searchedUser);
   }, [searchedUser]);
-  
-
-  // console.log(filteredUsers);
-
-  const notification = Boolean(messages.length > 0)
 
   const navItems = [
     { label: "Feed", icon: HiOutlineHome, path: "/home" },
@@ -124,12 +129,17 @@ const Sidebar = () => {
                         ? "bg-zinc-200 text-zinc-900"
                         : "text-zinc-600 hover:text-zinc-900"
                     }`}
+                    onClick={
+                      label === "Messages"
+                        ? () => setShowNotification(false)
+                        : null
+                    }
                   >
                     <Icon size={18} />
-                    {label} 
-                    {
-                      label === 'Messages' && notification && <span className="w-1 h-1 rounded-full bg-red-500"></span>
-                    }
+                    {label}
+                    {label === "Messages" && showNotification && (
+                      <span className="w-1 h-1 rounded-full bg-red-500"></span>
+                    )}
                   </Button>
                 </Link>
               ))}
@@ -173,11 +183,9 @@ const Sidebar = () => {
                   <div className="mt-2 space-y-2">
                     {searchedUser ? (
                       <div>
-                      {
-                        filteredUsers.map((val, ind) => (
-                          <p>{val.username}</p>  
-                        ))
-                      }
+                        {filteredUsers.map((val, ind) => (
+                          <p>{val.username}</p>
+                        ))}
                       </div>
                     ) : (
                       <div className="flex ml-18 h-[40vh] justify-center, items-center">
