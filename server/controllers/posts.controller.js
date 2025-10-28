@@ -4,7 +4,13 @@ import { User } from "../models/User.js";
 
 export const postImage = async (req, res) => {
   try {
-    const { userId, caption, userImageUrl, username } = req.body;
+    const userId = req.body.userId
+    const caption = req.body.caption
+    const userImageUrl = req.body.userImageUrl
+    const username = req.body.username
+    console.log('backend : ' + JSON.stringify(req.body));
+
+
 
     if (!userId) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
@@ -41,14 +47,14 @@ export const postImage = async (req, res) => {
       imageUrl: cloudUrl,
       likes: [],
       comments: [],
-      userImageUrl : userImageUrl,
+      userImageUrl: userImageUrl,
       username
     });
 
 
     return res
       .status(200)
-      .json({ success: true, message: "Your post has been uploaded", post: newPost  });
+      .json({ success: true, message: "Your post has been uploaded", post: newPost });
   } catch (error) {
     console.error(error);
     return res
@@ -114,6 +120,7 @@ export const toggleLike = async (req, res) => {
 export const commentToPost = async (req, res) => {
   try {
     const { text, userId, postId } = req.body;
+    console.log('now in back');
 
     if (!userId || !postId) {
       return res.status(400).json({ success: false, message: "UserId or PostId required" });
@@ -134,6 +141,8 @@ export const commentToPost = async (req, res) => {
       { new: true } // ✅ returns updated post with new comment
     );
 
+    
+
     return res.status(200).json({
       success: true,
       message: "You just commented on a post yayy!",
@@ -146,21 +155,21 @@ export const commentToPost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
   try {
-    const {userId, postId} = req.body
-    if(!userId){
-      return res.status(401).json({success : false, message : "userId not found, unauthorized"})
+    const { userId, postId } = req.body
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "userId not found, unauthorized" })
     }
-    if(!postId){
-      return res.status(401).json({success : false, message : "postId not found"})
+    if (!postId) {
+      return res.status(401).json({ success: false, message: "postId not found" })
     }
 
     await postSchema.findByIdAndDelete(postId)
-    
 
-    return res.status(200).json({success : true, message : "You just deleted a post yayyy!"})
-    
+
+    return res.status(200).json({ success: true, message: "You just deleted a post yayyy!" })
+
   } catch (error) {
-    return res.status(500).json({success : false, message : error.message})
-    
+    return res.status(500).json({ success: false, message: error.message })
+
   }
 }

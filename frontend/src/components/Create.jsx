@@ -63,7 +63,7 @@ const Create = ({ onSuccess }) => {
       return;
     }
 
-    const res = await addPost(userId, caption, image);
+    const res = await addPost(userId, caption, image, user.imageUrl, user.username);
 
     if (res.success) {
       toast.success(res.message);

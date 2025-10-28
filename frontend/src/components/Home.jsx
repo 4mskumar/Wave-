@@ -12,7 +12,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
   const { setUserData, feed, getUserFeed, getFollowers } = useUserStore();
-  const { toggleLike } = useUserPostStore();
+  const { toggleLike, addComment } = useUserPostStore();
+  const [comment, setComment] = useState("");
   const { user } = useUser();
   const { userId } = useAuth();
 
@@ -29,6 +30,12 @@ const Home = () => {
     }
   }, [userId, user]);
 
+  const handleCommentSubmision = async (postId) => {
+    if (!commentText.trim()) return;
+    await addComment(userId, commentText, postId);
+    getUserFeed(userId);
+  };
+
   const handleLikeToggle = async (postId) => {
     await toggleLike(userId, postId);
     getUserFeed(userId);
@@ -38,23 +45,34 @@ const Home = () => {
     setOpenComments(openComments === postId ? null : postId);
   };
 
-  const handleCommentSubmit = (postId) => {
-    if (!commentText.trim()) return;
+  const color = [
+    'red-50',     // Very light pink/blush
+    'orange-50',  // Very light peach
+    'amber-50',   // Very light buttery yellow
+    'yellow-50',  // Very pale yellow
+    'lime-50',    // Very light mint green
+    'emerald-50', // Very light seafoam green
+    'teal-50',    // Very light teal
+    'cyan-50',    // Very light aqua/sky blue
+    'sky-50',     // Very pale sky blue
+    'blue-50',    // Very light powder blue
+    'indigo-50',  // Very light lavender
+    'violet-50',  // Very pale violet
+    'purple-50',  // Very light lilac
+    'fuchsia-50', // Very light orchid
+    'pink-50',    // Very pale pink
+    'rose-50',    // Very light rose
+    'gray-100',   // Lightest cool grey (a neutral pastel)
+    'zinc-100',   // Lightest warm grey (a neutral pastel)
+  ];
+  
+  // No longer a console.log of a function definition
+  // You can remove this or keep it as a utility function
+    const randomIndex = () => {
+      let num = Math.floor(Math.random() * color.length)
+      return num
+    }
 
-    const newComment = {
-      id: Date.now(),
-      user: user?.fullName || "You",
-      text: commentText,
-    };
-
-    setLocalComments((prev) => ({
-      ...prev,
-      [postId]: [...(prev[postId] || []), newComment],
-    }));
-
-    setCommentText("");
-    toast.success("Your comment has been posted!");
-  };
 
   return (
     <>
@@ -96,10 +114,10 @@ const Home = () => {
                 key={post._id}
                 className="bg-white shadow rounded-2xl p-4 sm:p-6 flex flex-col gap-3"
               >
-                {/* Post Header */}
+                {/* Post Header (omitted for brevity) */}
                 <div className="flex items-center gap-3">
                   <img
-                    src={post.userImageUrl}
+                    src={post?.userImageUrl}
                     alt="user"
                     className="w-10 h-10 rounded-full object-cover"
                   />
@@ -128,8 +146,8 @@ const Home = () => {
                 )}
 
                 {/* Likes & Comments */}
-                <div className="flex flex-wrap sm:justify-start justify-between items-center text-gray-600 text-sm mt-4 sm:gap-10 px-2 sm:px-4">
-                  {/* Like */}
+                <div className="flex justify-between items-center text-gray-600 text-sm mt-4 sm:gap-10 px-2 sm:px-4">
+                  {/* Like (omitted for brevity) */}
                   <span
                     onClick={() => handleLikeToggle(post._id)}
                     className="inline-flex cursor-pointer items-center gap-2 text-lg"
@@ -143,21 +161,32 @@ const Home = () => {
                   </span>
 
                   {/* Comment */}
-                  <span
-                    onClick={() => handleCommentToggle(post._id)}
-                    className="flex items-center gap-2 cursor-pointer text-lg"
-                  >
-                    <FaRegComment size={20}/>
-                    {(localComments[post._id]?.length || 0) +
-                      (post.comments?.length ?? 0)}{" "}
-                    Comments
-                  </span>
+                  <div className='flex gap-3'>
+                    {post.comments.slice(0, 2).map((val, ind) => (
+                      <div
+                        key={ind}
+                        // 👇 The Fix: Call randomIndex() directly and use a dark text color
+                        className={`bg-${color[randomIndex()]} border rounded-xl text-gray-800 p-2 text-sm`}
+                      >
+                        {/* You might want to display the user's name here if available in val */}
+                        <strong></strong> {val.text} 
+                      </div>
+                    ))}
+                    {post.comments?.length > 2 && (
+                      <button
+                        onClick={() => handleCommentToggle(post._id)}
+                        className="text-gray-500 text-sm hover:underline mt-1"
+                      >
+                        View all {post.comments.length} comments
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Comment Section (appears when clicked) */}
                 {openComments === post._id && (
                   <div className="mt-4 border-t pt-3 space-y-3">
-                    {/* Comment Input */}
+                    {/* Comment Input (omitted for brevity) */}
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -167,7 +196,7 @@ const Home = () => {
                         className="flex-1 border rounded-xl px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300"
                       />
                       <button
-                        onClick={() => handleCommentSubmit(post._id)}
+                        onClick={() => handleCommentSubmision(post._id)}
                         className="bg-gray-900 text-white px-4 py-1 rounded-full text-sm hover:bg-gray-800 cursor-pointer"
                       >
                         Post
@@ -176,12 +205,12 @@ const Home = () => {
 
                     {/* Display Comments */}
                     <div className="space-y-2">
-                      {(localComments[post._id] || []).map((c) => (
+                      {post.comments.map((val, ind) => (
                         <div
-                          key={c.id}
+                          key={ind}
                           className="bg-gray-50 border rounded-xl p-2 text-sm"
                         >
-                          <strong>{c.user}:</strong> {c.text}
+                          <strong></strong> {val.text}
                         </div>
                       ))}
                     </div>

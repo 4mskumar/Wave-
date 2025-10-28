@@ -25,7 +25,7 @@ function App() {
     if (!isLoaded) return; // wait for Clerk
 
     if (isSignedIn && user) {
-      console.log("✅ User logged in:", user.id);
+      // console.log("✅ User logged in:", user.id);
 
       // set user in your Zustand store
       setUser({
@@ -36,12 +36,12 @@ function App() {
 
       // connect socket
       const sock = connectSocket(user.id);
-      console.log("🟢 Socket connected:", sock?.id);
+      // console.log("🟢 Socket connected:", sock?.id);
 
       // cleanup when user logs out or refreshes
       return () => {
         disconnectSocket();
-        console.log("🔴 Socket disconnected");
+        // console.log("🔴 Socket disconnected");
       };
     }
   }, [isLoaded, isSignedIn, user?.id]);

@@ -67,22 +67,20 @@ export const useMessageStore = create((set, get) => ({
   },
 
   // ✅ Send a new message
-  sendMessage: async (text) => {
+  sendMessage: async (text = "", image = "") => {
     const { socket, selectedChat } = get();
     const { user } = useUserStore.getState();
-    if (!selectedChat || !text.trim()) return;
+    if (!selectedChat || (!text.trim() && !image)) return;
 
     try {
       const res = await axios.post(`/messages/send/${selectedChat.userId}`, {
         senderId: user.id,
         text,
+        image, // ✅ include image
       });
 
       const newMsg = res.data.message;
-      if (!newMsg) {
-        console.error("No message returned from server:", res.data);
-        return;
-      }
+      if (!newMsg) return console.error("No message returned from server:", res.data);
 
       set((state) => ({
         messages: [...state.messages, newMsg],
@@ -93,6 +91,7 @@ export const useMessageStore = create((set, get) => ({
       console.error("Error sending message:", err.message);
     }
   },
+
 
   // ✅ Fetch followers (for sidebar)
   getFollowers: async (userId) => {
@@ -118,7 +117,7 @@ export const useMessageStore = create((set, get) => ({
     const { user } = useUserStore.getState();
 
     try {
-      await axios.put(`/messages/seen/${targetId}`,{}, {
+      await axios.put(`/messages/seen/${targetId}`, {}, {
         params: { myId: user.id },
       });
 
@@ -138,7 +137,7 @@ export const useMessageStore = create((set, get) => ({
   addMessage: (msg) => set((state) => ({
     messages: [...state.messages, msg],
   })),
-  
+
 
 
 }));

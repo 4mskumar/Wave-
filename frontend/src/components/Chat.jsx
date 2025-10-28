@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import Navbar from "./shared/Navbar";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useMessageStore } from "../app/UserMessageStore";
+import { Image } from "lucide-react";
+import { Input } from "./ui/input";
 
 const Chat = () => {
   const [input, setInput] = useState("");
@@ -22,7 +24,7 @@ const Chat = () => {
     followers,
     getFollowers,
     onlineUsers,
-    markMessagesAsSeen
+    markMessagesAsSeen,
   } = useMessageStore();
 
   const messageEndRef = useRef(null);
@@ -40,8 +42,7 @@ const Chat = () => {
     }
   }, [selectedChat, userId]);
 
-  console.log(messages);
-  
+  // console.log(messages);
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -49,15 +50,32 @@ const Chat = () => {
 
   const handleSend = () => {
     if (!input.trim()) return;
-      sendMessage(input);
-      setInput("");
-
-
+    sendMessage(input);
+    setInput("");
   };
+
+  const sendImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith("image/")) {
+      toast("Please select a valid image file");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64Image = reader.result;
+
+      // send the image to backend
+      await sendMessage("", base64Image);
+      e.target.value = ""; // reset file input
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   const handleSendEnter = (e) => {
     if (!input.trim()) return;
-    if(e.key === 'Enter'){
-
+    if (e.key === "Enter") {
       sendMessage(input);
       setInput("");
     }
@@ -197,28 +215,73 @@ const Chat = () => {
               </div>
 
               {/* Messages */}
-              <div className="flex-1 p-4 overflow-y-auto space-y-3">
+              <div className="flex-1 p-4 overflow-y-auto space-y-1">
                 {messages.length > 0 ? (
-                  messages.map((msg, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex ${
-                        msg.senderId === userId
-                          ? "justify-end"
-                          : "justify-start"
-                      }`}
-                    >
+                  messages.map((msg, idx) => {
+                    const isSender = msg.senderId === userId;
+                    const nextMsg = messages[idx + 1];
+                    const showAvatar =
+                      !nextMsg || nextMsg.senderId !== msg.senderId;
+
+                    return (
                       <div
-                        className={`max-w-xs sm:max-w-sm px-4 py-2 rounded-2xl text-sm ${
-                          msg.senderId === userId
-                            ? "bg-blue-600 text-white rounded-br-none"
-                            : "bg-gray-200 text-gray-800 rounded-bl-none"
-                        }`}
+                        key={idx}
+                        className={`flex items-end ${
+                          isSender ? "justify-end" : "justify-start"
+                        } space-x-1`}
                       >
-                        {msg.text}
+                        {/* Receiver avatar */}
+                        {!isSender && showAvatar && (
+                          <img
+                            src={selectedChat.imageUrl}
+                            alt="receiver"
+                            className="w-6 h-6 rounded-full object-cover mb-1"
+                          />
+                        )}
+                        {!isSender && !showAvatar && (
+                          <div className="w-6 h-6"></div>
+                        )}
+
+                        <div
+                          className={`relative max-w-[70%] ${
+                            isSender ? "ml-auto" : "mr-auto"
+                          }`}
+                        >
+                          <div
+                            className={`inline-block px-3 py-2 text-sm rounded-2xl ${
+                              msg.image
+                                ? "p-0 bg-transparent"
+                                : isSender
+                                ? "bg-blue-600 text-white rounded-br-none"
+                                : "bg-gray-200 text-gray-800 rounded-bl-none"
+                            }`}
+                          >
+                            {msg.image ? (
+                              <img
+                                src={msg.image}
+                                alt="sent"
+                                className="rounded-2xl max-w-[240px] object-cover"
+                              />
+                            ) : (
+                              msg.text
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Sender avatar */}
+                        {isSender && showAvatar && (
+                          <img
+                            src={user.imageUrl}
+                            alt="sender"
+                            className="w-6 h-6 rounded-full object-cover mb-1"
+                          />
+                        )}
+                        {isSender && !showAvatar && (
+                          <div className="w-6 h-6"></div>
+                        )}
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 ) : (
                   <p className="text-sm text-gray-500 text-center">
                     This is the start of your chat with{" "}
@@ -240,7 +303,13 @@ const Chat = () => {
                   onKeyDown={handleSendEnter}
                   onChange={(e) => setInput(e.target.value)}
                   className="flex-1 border rounded-full px-3 sm:px-4 py-2 outline-none text-sm bg-gray-100 focus:ring-1 focus:ring-gray-300"
-                  />
+                />
+                <Input type={"file"} id="image" hidden onChange={sendImage}>
+                  {/* <Image /> */}
+                </Input>
+                <label htmlFor="image">
+                  <Image />
+                </label>
                 <button
                   onClick={handleSend}
                   // onKeyDown={(e) => e.key === "Enter" && handleSend}

@@ -1,6 +1,7 @@
 // src/app/UserPostStore.js
 import { create } from "zustand";
 import axios from "../api/axiosConfig.js";
+import { toast } from "sonner";
 
 const useUserPostStore = create((set, get) => ({
   posts: [],
@@ -17,37 +18,32 @@ const useUserPostStore = create((set, get) => ({
       formData.append("caption", caption);
       formData.append("image", image);
       formData.append("userImageUrl", userImageUrl);
-      formData.append("username", username)
+      formData.append("username", username);
 
       const res = await axios.post("/post/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (res.data.success) {
-        // ✅ Update local state immediately
         set((state) => ({
           posts: [...state.posts, res.data.post],
           loading: false,
         }));
-
-        // ✅ Return success properly
         return { success: true, message: res.data.message, post: res.data.post };
       } else {
         set({ loading: false });
         return { success: false, message: res.data.message };
       }
-
     } catch (error) {
       console.error("Error in addPost:", error.response?.data || error.message);
       set({ loading: false, error: true });
-
-      // ✅ Return an error instead of throwing (so frontend can handle)
       return {
         success: false,
         message: error.response?.data?.message || "Something went wrong",
       };
     }
   },
+
 
   // ✅ Fetch Posts
   fetchPosts: async (userId) => {
@@ -115,6 +111,28 @@ const useUserPostStore = create((set, get) => ({
       console.error("Error liking post:", error.message);
     }
   },
+
+  addComment: async (userId, text, postId) => {
+    try {
+      const res = await axios.post('/post/comment', { userId, text, postId });
+
+      if (res.data.success) {
+        set((state) => ({
+          posts: state.posts.map((post) =>
+            post._id === postId
+              ? { ...post, comments: res.data.comments }
+              : post
+          ),
+        }));
+
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.error("Error commenting on post:", error.message);
+      toast.error("Failed to add comment");
+    }
+  },
+
 }));
 
 export default useUserPostStore;

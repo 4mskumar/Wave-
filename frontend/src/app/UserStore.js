@@ -47,7 +47,7 @@ export const useUserStore = create((set, get) => ({
                 userId, username, fullName, imageUrl: imageurl
             });
 
-            console.log(res.data);
+            // console.log(res.data);
 
 
             if (res.data.success) {
@@ -113,9 +113,7 @@ export const useUserStore = create((set, get) => ({
 
     getGlobalUsers: async (userId) => {
         try {
-            console.log('called');
             
-            console.log(userId);
             const res = await axios.get('/g/users', { params: { userId } })
             
 
