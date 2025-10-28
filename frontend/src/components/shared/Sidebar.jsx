@@ -11,12 +11,7 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import useUserPostStore from "../../app/UserPostStore";
 import { useUserStore } from "../../app/UserStore";
 import Create from "../Create";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import SearchP from "../SearchP";
 import { Search, Plus } from "lucide-react";
 import { useMessageStore } from "../../app/UserMessageStore";
 
@@ -145,59 +140,8 @@ const Sidebar = () => {
               ))}
 
               {/* Search Button */}
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start gap-3 text-[18px] font-medium ${
-                      open
-                        ? "bg-zinc-200 text-zinc-900"
-                        : "text-zinc-600 hover:text-zinc-900"
-                    }`}
-                  >
-                    <Search className="h-4 w-4" />
-                    Search
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent
-                  align="start"
-                  side="right"
-                  className="w-70 mb-5 bg-gray-100 border  ml-1 h-[600px] shadow-2xl"
-                >
-                  <div className="flex justify-between items-center gap-2 mb-3">
-                    <Search className="h-4 w-4" />
-                    <Input
-                      placeholder="Search..."
-                      autoFocus
-                      value={searchedUser}
-                      onChange={(e) => setSearchedUser(e.target.value)}
-                    />
-                    <button
-                      onClick={() => setOpen(false)}
-                      className="text-xs hover:text-gray-700 cursor-pointer"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                  <div className="text-sm text-1gray-500">Recent</div>
-                  <div className="mt-2 space-y-2">
-                    {searchedUser ? (
-                      <div>
-                        {filteredUsers.map((val, ind) => (
-                          <p>{val.username}</p>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="flex ml-18 h-[40vh] justify-center, items-center">
-                        <p className="text-zinc-600/90 font-light tracking-tight">
-                          search here
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </PopoverContent>
-              </Popover>
-
+              
+              <SearchP />
               {/* CREATE POST */}
               <Button
                 variant="ghost"

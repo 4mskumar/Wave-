@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import Create from "./Create";
 
+
 const Profile = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [showCreate, setShowCreate] = useState(false);

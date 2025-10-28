@@ -6,9 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import Navbar from "./shared/Navbar";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { useUserStore } from "../app/UserStore";
 import { useMessageStore } from "../app/UserMessageStore";
-// import { useMessageStore } from "../app/MessageStore";
 
 const Chat = () => {
   const [input, setInput] = useState("");
