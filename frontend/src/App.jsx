@@ -69,6 +69,7 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
+              
               <Route path="/chat" element={<Chat />} />
               <Route path="/sharepost" element={<SharePost />} />
               <Route path="*" element={<Navigate to="/home" />} />

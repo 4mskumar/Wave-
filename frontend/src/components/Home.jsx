@@ -15,16 +15,12 @@ import Festival from "./shared/Festival";
 const Home = () => {
   const { setUserData, feed, getUserFeed, getFollowers } = useUserStore();
   const { toggleLike, addComment } = useUserPostStore();
-  const [comment, setComment] = useState("");
   const { user } = useUser();
   const { userId } = useAuth();
 
-  const [openComments, setOpenComments] = useState(null);
+  const [openCommentInput, setOpenCommentInput] = useState(null);
+  const [openCommentList, setOpenCommentList] = useState(null);
   const [commentText, setCommentText] = useState("");
-  const [localComments, setLocalComments] = useState({});
-
-  const [greeting, setGreeting] = useState("");
-  const [festival, setFestival] = useState("");
 
   useEffect(() => {
     if (userId && user) {
@@ -34,29 +30,32 @@ const Home = () => {
     }
   }, [userId, user]);
 
-  //GREETINGS
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good Morning");
-    else if (hour < 18) setGreeting("Good Afternoon");
-    else setGreeting("Good Evening");
-
-   
-  }, []);
-
-  const handleCommentSubmision = async (postId) => {
+  // ✅ handle adding comment
+  const handleCommentSubmission = async (postId) => {
     if (!commentText.trim()) return;
     await addComment(userId, commentText, postId);
-    getUserFeed(userId);
+    setCommentText("");
+    setOpenCommentInput(null); // close input after posting
+    await getUserFeed(userId);
+  };
+
+  const handleEmojiComment = async (postId, emoji) => {
+    await addComment(userId, emoji, postId);
+    await getUserFeed(userId);
   };
 
   const handleLikeToggle = async (postId) => {
     await toggleLike(userId, postId);
-    getUserFeed(userId);
+    await getUserFeed(userId);
   };
 
-  const handleCommentToggle = (postId) => {
-    setOpenComments(openComments === postId ? null : postId);
+  // ✅ separate toggles
+  const handleCommentInputToggle = (postId) => {
+    setOpenCommentInput(openCommentInput === postId ? null : postId);
+  };
+
+  const handleViewCommentsToggle = (postId) => {
+    setOpenCommentList(openCommentList === postId ? null : postId);
   };
 
   const color = [
@@ -87,25 +86,12 @@ const Home = () => {
       <Welcome />
       <Navbar />
       <Sidebar />
-      <Festival/>
+      <Festival />
       <ToastContainer position="bottom-right" autoClose={2000} />
-      <main className="pt-15 md:pl-42  min-h-screen pb-20 md:pb-0 transition-all duration-300">
+
+      <main className="pt-15 xl:pl-42 lg:pl-70 min-h-screen pb-20 md:pb-0 transition-all duration-300">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
-          {/*Greeting*/}
-          {greeting && (
-            <div className="bg-gradient-to-b from-orange-50 to-yellow-50 text-orange-800 text-center font-semibold shadow-sm mb-2">
-              {greeting}, {user?.firstName || "friend"}!
-            </div>
-          )}
-
-          {/*Festival*/}
-          {/* {festival && (
-            <div className="bg-gradient-to-r from-orange-200 to-green-200 text-yellow-800 text-center py-3 rounded-xl font-medium mb-6 shadow-sm">
-              {festival}
-            </div>
-          )} */}
-
-          {/* POST CREATE */}
+          {/* Post Create */}
           <div className="bg-gray-100 shadow rounded-2xl p-2 sm:p-6 mb-6 border border-gray-200">
             <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
               <Badge
@@ -136,6 +122,7 @@ const Home = () => {
                 key={post._id}
                 className="bg-white shadow rounded-2xl p-4 sm:p-6 flex flex-col gap-3"
               >
+                {/* Post Header */}
                 <div className="flex items-center gap-3">
                   <img
                     src={post?.userImageUrl}
@@ -152,12 +139,14 @@ const Home = () => {
                   </div>
                 </div>
 
+                {/* Caption */}
                 {post.caption && (
                   <p className="text-gray-700 text-[14px] sm:text-[17px] mt-2">
                     {post.caption}
                   </p>
                 )}
 
+                {/* Image */}
                 {post.imageUrl && (
                   <img
                     src={post.imageUrl}
@@ -166,11 +155,11 @@ const Home = () => {
                   />
                 )}
 
-                {/* Likes & Comments */}
-                <div className="flex justify-between items-center text-gray-600 text-sm mt-4 sm:gap-10 px-2 sm:px-4">
+                {/* Likes and Comment */}
+                <div className="flex justify-between items-center text-gray-600 text-sm mt-4 sm:gap-8 px-2 sm:px-4">
                   <span
                     onClick={() => handleLikeToggle(post._id)}
-                    className="inline-flex cursor-pointer items-center gap-2 text-lg"
+                    className="inline-flex cursor-pointer items-center gap-1 sm:gap-2 sm:text-lg text-sm"
                   >
                     {post.likes.includes(userId) ? (
                       <FaHeart color="red" />
@@ -180,16 +169,28 @@ const Home = () => {
                     {post.likes.length ?? 0} Likes
                   </span>
 
+                  <button
+                    onClick={() => handleCommentInputToggle(post._id)}
+                    className="inline-flex cursor-pointer items-center gap-1 sm:gap-2 sm:text-lg text-sm"
+                  >
+                    <FaRegComment /> Comment
+                  </button>
+
                   <div className="flex gap-3">
-                    <button className="hover:scale-110 transition">🙏</button>
-                    <button className="hover:scale-110 transition">🪔</button>
-                    <button className="hover:scale-110 transition">🔥</button>
-                    <button className="hover:scale-110 transition">🎉</button>
+                    {["🙏", "🔥", "🎉", "🧘🏻"].map((emoji) => (
+                      <button
+                        key={emoji}
+                        onClick={() => handleEmojiComment(post._id, emoji)}
+                        className="hover:scale-110 transition sm:text-lg text-sm"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                {/* Comments Section */}
-                <div className="flex gap-3 flex-wrap">
+                {/* Comments Preview */}
+                <div className="flex gap-3 flex-wrap mt-2">
                   {post.comments.slice(0, 2).map((val, ind) => (
                     <div
                       key={ind}
@@ -202,15 +203,30 @@ const Home = () => {
                   ))}
                   {post.comments?.length > 2 && (
                     <button
-                      onClick={() => handleCommentToggle(post._id)}
+                      onClick={() => handleViewCommentsToggle(post._id)}
                       className="text-gray-500 text-sm hover:underline mt-1"
                     >
                       View all {post.comments.length} comments
                     </button>
                   )}
                 </div>
-                {openComments === post._id && (
-                  <div className="mt-4 border-t pt-3 space-y-3">
+
+                {/* Expanded Comment List */}
+                
+                {openCommentList === post._id && (
+                  <div className="mt-2 border-2 p-2 space-y-2 border-t pt-3">
+                    {post.comments.map((c, i) => (
+                      <p key={i} className="text-md text-gray-700">
+                        <strong>{c.userName}</strong> {c.text}
+                      </p>
+                    ))}
+                  </div>
+                )}
+                
+
+                {/* Comment Input */}
+                {openCommentInput === post._id && (
+                  <div className="mt-4 border-t pt-3">
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -220,22 +236,11 @@ const Home = () => {
                         className="flex-1 border rounded-xl px-3 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300"
                       />
                       <button
-                        onClick={() => handleCommentSubmision(post._id)}
+                        onClick={() => handleCommentSubmission(post._id)}
                         className="bg-gray-900 text-white px-4 py-1 rounded-full text-sm hover:bg-gray-800 cursor-pointer"
                       >
                         Post
                       </button>
-                    </div>
-
-                    <div className="space-y-2">
-                      {post.comments.map((val, ind) => (
-                        <div
-                          key={ind}
-                          className="bg-gray-50 border rounded-xl p-2 text-sm"
-                        >
-                          {val.text}
-                        </div>
-                      ))}
                     </div>
                   </div>
                 )}

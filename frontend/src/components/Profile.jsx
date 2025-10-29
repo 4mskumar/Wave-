@@ -27,7 +27,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import Create from "./Create";
-
+import axios from "axios";
 
 const Profile = () => {
   const [selectedPost, setSelectedPost] = useState(null);
@@ -54,6 +54,26 @@ const Profile = () => {
     toast(res.message);
     await fetchPosts(userId);
   };
+
+  const handleRemoveFollower = async (id) => {
+  try {
+    await axios.delete(`/api/followers/${id}`);
+    setFollowers((prev) => prev.filter((u) => u._id !== id));
+  } catch (err) {
+    console.error("Failed to remove follower:", err);
+  }
+};
+
+const handleUnfollow = async (id) => {
+  try {
+    await axios.delete(`/api/following/${id}`);
+    setFollowing((prev) => prev.filter((u) => u._id !== id));
+  } catch (err) {
+    console.error("Failed to unfollow:", err);
+  }
+};
+
+
   return (
     <>
       <Navbar />
@@ -123,7 +143,7 @@ const Profile = () => {
                 </div>
                 {/* Followers / Following Dialog */}
                 <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className="sm:max-w-md max-w-sm">
                     <DialogHeader>
                       <DialogTitle className="capitalize text-center">
                         {activeTab}
@@ -136,10 +156,10 @@ const Profile = () => {
                       .
                     </DialogDescription> */}
                     </DialogHeader>
-                    <div className="max-h-60 overflow-y-auto mt-3 space-y-3">
+                    <div className="max-h-70 overflow-y-auto mt-3 space-y-3 pr-1">
                       {(activeTab === "followers" ? followers : following)
                         .length === 0 ? (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 text-center py-2">
                           No {activeTab} yet.
                         </p>
                       ) : (
@@ -147,26 +167,46 @@ const Profile = () => {
                           (user, i) => (
                             <div
                               key={i}
-                              className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 transition"
+                              className="flex items-center justify-between gap-3 p-1 rounded-xl border hover:bg-gray-100 transition-all"
                             >
-                              <img
-                                src={
-                                  user.avatar ||
-                                  "https://via.placeholder.com/40"
-                                }
-                                alt={user.name}
-                                className="w-8 h-8 rounded-full object-cover"
-                              />
-                              <div>
-                                <p className="font-medium text-sm">
-                                  {user.name}
-                                </p>
-                                {user.username && (
-                                  <p className="text-xs text-gray-500">
-                                    @{user.username}
+                              {/* Left side: Avatar + Info */}
+                              <div className="flex items-center gap-2">
+                                <img
+                                  src={
+                                    user.avatar ||
+                                    "https://via.placeholder.com/40"
+                                  }
+                                  alt={user.name}
+                                  className="w-8 h-8 rounded-full object-cover border border-gray-300"
+                                />
+                                <div>
+                                  <p className="font-medium text-gray-900 leading-tight">
+                                    {user.name}
                                   </p>
-                                )}
+                                  {user.username && (
+                                    <p className="text-sm text-gray-700">
+                                      @{user.username}
+                                    </p>
+                                  )}
+                                </div>
                               </div>
+
+                              {/* Right side: Action Buttons */}
+                              {activeTab === "followers" ? (
+                                <button
+                                  onClick={() => handleRemoveFollower(user._id)}
+                                  className="text-xs sm:text-sm font-medium text-red-600 hover:text-white hover:bg-red-600 border border-red-600 px-2 py-1 rounded-full transition-all"
+                                >
+                                  Remove
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => handleUnfollow(user._id)}
+                                  className="text-xs sm:text-sm font-medium text-gray-600 hover:text-white hover:bg-gray-600 border border-gray-600 px-2 py-1 rounded-full transition-all"
+                                >
+                                  Unfollow
+                                </button>
+                              )}
                             </div>
                           )
                         )

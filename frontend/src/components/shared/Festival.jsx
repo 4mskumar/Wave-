@@ -76,7 +76,7 @@ export default function Festival() {
     <>
       <button
         onClick={() => setShowSidebar(true)}
-        className="fixed bottom-6 right-6 bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-xl z-50 transition-all duration-300 border-2 border-orange-300"
+        className="fixed bottom-15 sm:bottom-8 right-6 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full shadow-xl z-50 transition-all duration-300 border-2 border-orange-300"
       >
         <FiGift className="text-2xl" />
       </button>
