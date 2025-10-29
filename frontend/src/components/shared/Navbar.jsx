@@ -22,21 +22,12 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-white px-4 sm:px-6 md:px-10 py-3 flex items-center justify-between shadow-md z-50">
-      {/* Logo */}
+      
       <div className="flex items-center flex-shrink-0">
-        <h1 className="text-zinc-900 text-2xl font-medium tracking-tighter">wave</h1>
+        {/* <h1 className="text-zinc-900 text-2xl font-medium tracking-tighter">wave</h1> */}
+        <img src="/images/wave-logo.png" className="w-25" alt="wave" />
       </div>
 
-      {/* Search bar */}
-      {/* <div className="hidden md:flex items-center justify-center border-2 rounded-full px-3 sm:px-4 py-1 sm:py-2 w-[45%] sm:w-[40%] md:w-[35%] lg:w-[40%] xl:ml-109 md:ml-47 mx-auto">
-        <CiSearch className="text-gray-500" size={22} />
-        <input
-          type="text"
-          placeholder="Search"
-          className="ml-2 bg-transparent outline-none w-full text-sm sm:text-base"
-        />
-      </div> */}
-      {/* temp btn */}
       {/* <Button onClick={() => setUserData(user.clerkId, user.username, user.fullName, user.imageUrl)}>
         Refresh info
       </Button> */}

@@ -9,6 +9,7 @@ import useUserPostStore from "../app/UserPostStore";
 import Create from "./Create";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Welcome from "./Welcome";
 
 const Home = () => {
   const { setUserData, feed, getUserFeed, getFollowers } = useUserStore();
@@ -22,6 +23,10 @@ const Home = () => {
   const [commentText, setCommentText] = useState("");
   const [localComments, setLocalComments] = useState({});
 
+  // 🪔 Added states for greeting and festival banner
+  const [greeting, setGreeting] = useState("");
+  const [festival, setFestival] = useState("");
+
   useEffect(() => {
     if (userId && user) {
       setUserData(userId, user.fullName, user.username, user.imageUrl);
@@ -29,6 +34,29 @@ const Home = () => {
       getFollowers(userId);
     }
   }, [userId, user]);
+
+  //GREETINGS
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting("Good Morning");
+    else if (hour < 18) setGreeting("Good Afternoon");
+    else setGreeting("Good Evening");
+
+    //FESTIVAL
+    const month = new Date().getMonth();
+    if (month === 0) setFestival("🎉 Happy New Year from WAVE!");
+    else if (month === 1) setFestival("🌾 Happy Vasant Panchami!");
+    else if (month === 2) setFestival("🎨 Happy Holi from WAVE!");
+    else if (month === 3) setFestival("🌸 Happy Baisakhi & Ram Navami!");
+    else if (month === 4) setFestival("🌙 Happy Eid-ul-Fitr from WAVE!");
+    else if (month === 5) setFestival("🌿 Happy Ganga Dussehra!");
+    else if (month === 6) setFestival("🙏 Happy Guru Purnima!");
+    else if (month === 7) setFestival("HAPPY INDEPENDENCE DAY from WAVE");
+    else if (month === 8) setFestival("Happy Ganesh Chaturthi from WAVE");
+    else if (month === 9) setFestival("🪔 Happy Dussehra & Diwali from WAVE!");
+    else if (month === 10) setFestival("🕉️ Happy Guru Nanak Jayanti!");
+    else if (month === 11) setFestival("🎅 Merry Christmas from WAVE!");
+  }, []);
 
   const handleCommentSubmision = async (postId) => {
     if (!commentText.trim()) return;
@@ -46,44 +74,51 @@ const Home = () => {
   };
 
   const color = [
-    'red-50',     // Very light pink/blush
-    'orange-50',  // Very light peach
-    'amber-50',   // Very light buttery yellow
-    'yellow-50',  // Very pale yellow
-    'lime-50',    // Very light mint green
-    'emerald-50', // Very light seafoam green
-    'teal-50',    // Very light teal
-    'cyan-50',    // Very light aqua/sky blue
-    'sky-50',     // Very pale sky blue
-    'blue-50',    // Very light powder blue
-    'indigo-50',  // Very light lavender
-    'violet-50',  // Very pale violet
-    'purple-50',  // Very light lilac
-    'fuchsia-50', // Very light orchid
-    'pink-50',    // Very pale pink
-    'rose-50',    // Very light rose
-    'gray-100',   // Lightest cool grey (a neutral pastel)
-    'zinc-100',   // Lightest warm grey (a neutral pastel)
+    "red-50",
+    "orange-50",
+    "amber-50",
+    "yellow-50",
+    "lime-50",
+    "emerald-50",
+    "teal-50",
+    "cyan-50",
+    "sky-50",
+    "blue-50",
+    "indigo-50",
+    "violet-50",
+    "purple-50",
+    "fuchsia-50",
+    "pink-50",
+    "rose-50",
+    "gray-100",
+    "zinc-100",
   ];
-  
-  // No longer a console.log of a function definition
-  // You can remove this or keep it as a utility function
-    const randomIndex = () => {
-      let num = Math.floor(Math.random() * color.length)
-      return num
-    }
 
+  const randomIndex = () => Math.floor(Math.random() * color.length);
 
   return (
     <>
+      <Welcome />
       <Navbar />
       <Sidebar />
       <ToastContainer position="bottom-right" autoClose={2000} />
-
-      {/* Main Container */}
-      <main className="pt-20 md:pl-72 bg-gray-50 min-h-screen pb-20 md:pb-0">
+      <main className="pt-20 md:pl-72 bg-gradient-to-b from-orange-100 to-green-100 min-h-screen pb-20 md:pb-0 transition-all duration-300">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
-          {/* Create Post */}
+          {/*Greeting*/}
+          {greeting && (
+            <div className="bg-gradient-to-b from-blue-50 to-gray-100 text-orange-800 text-center py-2 rounded-xl font-semibold mb-4 shadow-sm">
+              {greeting}, {user?.firstName || "friend"}!
+            </div>
+          )}
+
+          {/*Festival*/}
+          {festival && (
+            <div className="bg-gradient-to-r from-orange-200 to-green-200 text-yellow-800 text-center py-3 rounded-xl font-medium mb-6 shadow-sm">
+              {festival}
+            </div>
+          )}
+
+          {/* POST CREATE */}
           <div className="bg-gray-100 shadow rounded-2xl p-2 sm:p-6 mb-6 border border-gray-200">
             <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
               <Badge
@@ -114,7 +149,6 @@ const Home = () => {
                 key={post._id}
                 className="bg-white shadow rounded-2xl p-4 sm:p-6 flex flex-col gap-3"
               >
-                {/* Post Header (omitted for brevity) */}
                 <div className="flex items-center gap-3">
                   <img
                     src={post?.userImageUrl}
@@ -147,7 +181,6 @@ const Home = () => {
 
                 {/* Likes & Comments */}
                 <div className="flex justify-between items-center text-gray-600 text-sm mt-4 sm:gap-10 px-2 sm:px-4">
-                  {/* Like (omitted for brevity) */}
                   <span
                     onClick={() => handleLikeToggle(post._id)}
                     className="inline-flex cursor-pointer items-center gap-2 text-lg"
@@ -160,33 +193,37 @@ const Home = () => {
                     {post.likes.length ?? 0} Likes
                   </span>
 
-                  {/* Comment */}
-                  <div className='flex gap-3'>
-                    {post.comments.slice(0, 2).map((val, ind) => (
-                      <div
-                        key={ind}
-                        // 👇 The Fix: Call randomIndex() directly and use a dark text color
-                        className={`bg-${color[randomIndex()]} border rounded-xl text-gray-800 p-2 text-sm`}
-                      >
-                        {/* You might want to display the user's name here if available in val */}
-                        <strong></strong> {val.text} 
-                      </div>
-                    ))}
-                    {post.comments?.length > 2 && (
-                      <button
-                        onClick={() => handleCommentToggle(post._id)}
-                        className="text-gray-500 text-sm hover:underline mt-1"
-                      >
-                        View all {post.comments.length} comments
-                      </button>
-                    )}
+                  <div className="flex gap-3">
+                    <button className="hover:scale-110 transition">🙏</button>
+                    <button className="hover:scale-110 transition">🪔</button>
+                    <button className="hover:scale-110 transition">🔥</button>
+                    <button className="hover:scale-110 transition">🎉</button>
                   </div>
                 </div>
 
-                {/* Comment Section (appears when clicked) */}
+                {/* Comments Section */}
+                <div className="flex gap-3 flex-wrap">
+                  {post.comments.slice(0, 2).map((val, ind) => (
+                    <div
+                      key={ind}
+                      className={`bg-${
+                        color[randomIndex()]
+                      } border rounded-xl text-gray-800 p-2 text-sm`}
+                    >
+                      {val.text}
+                    </div>
+                  ))}
+                  {post.comments?.length > 2 && (
+                    <button
+                      onClick={() => handleCommentToggle(post._id)}
+                      className="text-gray-500 text-sm hover:underline mt-1"
+                    >
+                      View all {post.comments.length} comments
+                    </button>
+                  )}
+                </div>
                 {openComments === post._id && (
                   <div className="mt-4 border-t pt-3 space-y-3">
-                    {/* Comment Input (omitted for brevity) */}
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -203,14 +240,13 @@ const Home = () => {
                       </button>
                     </div>
 
-                    {/* Display Comments */}
                     <div className="space-y-2">
                       {post.comments.map((val, ind) => (
                         <div
                           key={ind}
                           className="bg-gray-50 border rounded-xl p-2 text-sm"
                         >
-                          <strong></strong> {val.text}
+                          {val.text}
                         </div>
                       ))}
                     </div>
