@@ -12,6 +12,7 @@ import LandingPage from "./pages/LandingPage";
 import SignInPage from "./components/shared/SignInPage";
 import SharePost from "./components/SharePost";
 import { useMessageStore } from "./app/UserMessageStore";
+import UserProfile from "./components/shared/UserProfile";
 
 function App() {
   const { user, isLoaded, isSignedIn } = useUser();
@@ -69,6 +70,7 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/user/:id" element={<UserProfile />} />
               
               <Route path="/chat" element={<Chat />} />
               <Route path="/sharepost" element={<SharePost />} />

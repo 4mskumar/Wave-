@@ -35,7 +35,7 @@ const Profile = () => {
   const { posts, fetchPosts, deletePost } = useUserPostStore();
   const { userId } = useAuth();
   const { user } = useUser();
-  const { followers, following } = useUserStore();
+  const { followers, following, unfollowUser, getFollowing, removeFollower, getFollowers } = useUserStore();
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(""); //for stats
 
@@ -55,23 +55,16 @@ const Profile = () => {
     await fetchPosts(userId);
   };
 
-  const handleRemoveFollower = async (id) => {
-  try {
-    await axios.delete(`/api/followers/${id}`);
-    setFollowers((prev) => prev.filter((u) => u._id !== id));
-  } catch (err) {
-    console.error("Failed to remove follower:", err);
+  const handleUnfollow = async (targetId) => {
+    await unfollowUser(userId, targetId)
+    getFollowing(userId)
   }
-};
 
-const handleUnfollow = async (id) => {
-  try {
-    await axios.delete(`/api/following/${id}`);
-    setFollowing((prev) => prev.filter((u) => u._id !== id));
-  } catch (err) {
-    console.error("Failed to unfollow:", err);
+  const handleRemoveFollower = async (targetId) => {
+    await removeFollower(userId, targetId)
+    getFollowers(userId)
   }
-};
+  
 
 
   return (
@@ -173,7 +166,7 @@ const handleUnfollow = async (id) => {
                               <div className="flex items-center gap-2">
                                 <img
                                   src={
-                                    user.avatar ||
+                                    user.imageUrl ||
                                     "https://via.placeholder.com/40"
                                   }
                                   alt={user.name}
@@ -185,7 +178,7 @@ const handleUnfollow = async (id) => {
                                   </p>
                                   {user.username && (
                                     <p className="text-sm text-gray-700">
-                                      @{user.username}
+                                      {user.username}
                                     </p>
                                   )}
                                 </div>
@@ -194,14 +187,14 @@ const handleUnfollow = async (id) => {
                               {/* Right side: Action Buttons */}
                               {activeTab === "followers" ? (
                                 <button
-                                  onClick={() => handleRemoveFollower(user._id)}
+                                  onClick={() => handleRemoveFollower(user.userId)}
                                   className="text-xs sm:text-sm font-medium text-red-600 hover:text-white hover:bg-red-600 border border-red-600 px-2 py-1 rounded-full transition-all"
                                 >
                                   Remove
                                 </button>
                               ) : (
                                 <button
-                                  onClick={() => handleUnfollow(user._id)}
+                                  onClick={() => handleUnfollow(user.userId)}
                                   className="text-xs sm:text-sm font-medium text-gray-600 hover:text-white hover:bg-gray-600 border border-gray-600 px-2 py-1 rounded-full transition-all"
                                 >
                                   Unfollow

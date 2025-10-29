@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "../api/axiosConfig.js";
 import { io } from 'socket.io-client'
+import { use } from "react";
 
 export const useUserStore = create((set, get) => ({
     followers: [],
@@ -124,6 +125,61 @@ export const useUserStore = create((set, get) => ({
             console.log(error.message);
         }
     },
+
+    getFollowing  :async (userId) => {
+        try {
+            const res = await axios.get('/following',{params : {userId}})            
+            if(res.data.success){                
+                
+                set({following  :res.data.following})
+            }
+        } catch (error) {
+            console.log(error.message);            
+        }
+    },
+
+    unfollowUser :async (userId, targetId) => {
+        try {
+            const res = await axios.post(`/unfollow/${targetId}`, {userId})
+
+            if(res.data.success){
+                set((state) => ({
+                    following : state.following.filter(f => f.userId !== targetId)
+                }))
+            }
+        } catch (error) {
+            console.log(error.message);
+            
+        }
+    },
+
+    removeFollower : async (userId, targetId) => {
+        try {
+            const res = await axios.post('/remove', {myId : userId, targetId})
+
+            if(res.data.succes){
+                set((state) => ({
+                    followers : state.followers.filter(f => f.userId !== targetId)
+                }))
+            }
+        } catch (error) {
+            console.log(error.message);            
+        }
+    },
+
+    fetchUserData : async (userId) => {
+        try {
+          const res = await axios.get(`/get-user`, {params : {userId}});
+          if (res.data.success) {
+            setUserData(res.data.user);
+            setPosts(res.data.posts || []);
+            setFollowers(res.data.user.followers || []);
+            setFollowing(res.data.user.following || []);
+          }
+        } catch (err) {
+          console.error("Error fetching user data:", err);
+        }
+      }
 
 
 }))

@@ -34,10 +34,23 @@ export const setUserData = async (req, res) => {
 
   }
 }
-/**
- * @desc Follow a user
- * @route POST /api/user/follow/:id
- */
+
+export const getUserData = async (req, res) => {
+  try {
+    const {userId} = req.query
+    if(!userId){
+      return res.status(404).json({success : false})      
+    }
+
+    const user = await User.findOne({clerkId : userId})
+    const posts = await postSchema.find({userId})
+
+    return res.status(201).json({success  :true, user, posts})
+  } catch (error) {
+    return res.status(500).json({success  :false, message : error.message})    
+  }
+}
+
 export const followUser = async (req, res) => {
   try {
     const { myId } = req.body; // follower Clerk ID
@@ -96,23 +109,26 @@ export const followUser = async (req, res) => {
 
 export const unfollowUser = async (req, res) => {
   try {
-    const { myId } = req.body
+    const { userId } = req.body;
     const targetId = req.params.id;
 
-    const user = await User.findById(myId);
-    const targetUser = await User.findById(targetId);
+    const user = await User.findOne({ clerkId: userId });
+    const targetUser = await User.findOne({ clerkId: targetId });
 
     if (!targetUser) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    if (!user.following.includes(targetId)) {
+    // ✅ FIX: Check if user is actually following the target
+    const isFollowing = user.following.some(f => f.userId === targetId);
+
+    if (!isFollowing) {
       return res.status(400).json({ success: false, message: "You are not following this user" });
     }
 
-    // Remove follow
-    user.following = user.following.filter(id => id.toString() !== targetId);
-    targetUser.followers = targetUser.followers.filter(id => id.toString() !== myId.toString());
+    // ✅ Remove follow relationship
+    user.following = user.following.filter(f => f.userId !== targetId);
+    targetUser.followers = targetUser.followers.filter(f => f.userId !== userId);
 
     await user.save();
     await targetUser.save();
@@ -122,6 +138,7 @@ export const unfollowUser = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 /**
  * @desc Get list of followers for a user
@@ -154,8 +171,8 @@ export const getFollowers = async (req, res) => {
  */
 export const getFollowing = async (req, res) => {
   try {
-    const { id } = req.query;
-    const user = await User.findById(id).populate("following", "username fullName imageUrl");
+    const { userId } = req.query;
+    const user = await User.findOne({clerkId  :userId})
 
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
@@ -207,7 +224,7 @@ export const removeFollower = async (req, res) => {
     // console.log(target);
 
     const alreadyFollower = user.followers.some(f => targetId === f.userId)
-    console.log(alreadyFollower);
+    // console.log(alreadyFollower);
     
     
     if (!alreadyFollower) {

@@ -13,7 +13,7 @@ import Welcome from "./Welcome";
 import Festival from "./shared/Festival";
 
 const Home = () => {
-  const { setUserData, feed, getUserFeed, getFollowers } = useUserStore();
+  const { setUserData, feed, getUserFeed, getFollowers, getFollowing } = useUserStore();
   const { toggleLike, addComment } = useUserPostStore();
   const { user } = useUser();
   const { userId } = useAuth();
@@ -27,6 +27,7 @@ const Home = () => {
       setUserData(userId, user.fullName, user.username, user.imageUrl);
       getUserFeed(userId);
       getFollowers(userId);
+      getFollowing(userId);
     }
   }, [userId, user]);
 

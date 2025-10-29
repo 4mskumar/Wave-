@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { Search } from "lucide-react";
 import { useUserStore } from "../app/UserStore";
+import { useNavigate } from "react-router-dom";
 
 const SearchP = () => {
   const [open, setOpen] = useState(false);
@@ -26,6 +27,10 @@ const SearchP = () => {
   useEffect(() => {
     getGlobalUsers(); // fetch user list if not already
   }, [getGlobalUsers]);
+
+  // console.log(globalUsers);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleSearch = (input) => {
@@ -75,7 +80,10 @@ const SearchP = () => {
             onChange={(e) => setSearchedUser(e.target.value)}
           />
           <button
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              setOpen(false);
+              navigate(`/user/${val.clerkId}`);
+            }}
             className="text-xs hover:text-gray-700 cursor-pointer"
           >
             ✕
@@ -91,7 +99,13 @@ const SearchP = () => {
               filteredUsers.map((val, ind) => (
                 <HoverCard key={ind}>
                   <HoverCardTrigger asChild>
-                    <div className="flex items-center gap-3 border-gray-200 p-3 hover:bg-gray-200 cursor-pointer">
+                    <div
+                      onClick={() => {
+                        setOpen(false);
+                        navigate(`/user/${val.clerkId}`); // 👈 navigate to that user's profile
+                      }}
+                      className="flex items-center gap-3 border-gray-200 p-3 hover:bg-gray-200 cursor-pointer"
+                    >
                       <Avatar className="h-8 w-8">
                         <AvatarImage
                           src={

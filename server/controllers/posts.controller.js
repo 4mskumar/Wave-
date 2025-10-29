@@ -120,7 +120,7 @@ export const toggleLike = async (req, res) => {
 export const commentToPost = async (req, res) => {
   try {
     const { text, userId, postId } = req.body;
-    console.log('now in back');
+    // console.log('now in back');
 
     if (!userId || !postId) {
       return res.status(400).json({ success: false, message: "UserId or PostId required" });
