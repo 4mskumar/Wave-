@@ -10,6 +10,7 @@ import Create from "./Create";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Welcome from "./Welcome";
+import Festival from "./shared/Festival";
 
 const Home = () => {
   const { setUserData, feed, getUserFeed, getFollowers } = useUserStore();
@@ -18,12 +19,10 @@ const Home = () => {
   const { user } = useUser();
   const { userId } = useAuth();
 
-  // Local states for comments
   const [openComments, setOpenComments] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [localComments, setLocalComments] = useState({});
 
-  // 🪔 Added states for greeting and festival banner
   const [greeting, setGreeting] = useState("");
   const [festival, setFestival] = useState("");
 
@@ -42,20 +41,7 @@ const Home = () => {
     else if (hour < 18) setGreeting("Good Afternoon");
     else setGreeting("Good Evening");
 
-    //FESTIVAL
-    const month = new Date().getMonth();
-    if (month === 0) setFestival("🎉 Happy New Year from WAVE!");
-    else if (month === 1) setFestival("🌾 Happy Vasant Panchami!");
-    else if (month === 2) setFestival("🎨 Happy Holi from WAVE!");
-    else if (month === 3) setFestival("🌸 Happy Baisakhi & Ram Navami!");
-    else if (month === 4) setFestival("🌙 Happy Eid-ul-Fitr from WAVE!");
-    else if (month === 5) setFestival("🌿 Happy Ganga Dussehra!");
-    else if (month === 6) setFestival("🙏 Happy Guru Purnima!");
-    else if (month === 7) setFestival("HAPPY INDEPENDENCE DAY from WAVE");
-    else if (month === 8) setFestival("Happy Ganesh Chaturthi from WAVE");
-    else if (month === 9) setFestival("🪔 Happy Dussehra & Diwali from WAVE!");
-    else if (month === 10) setFestival("🕉️ Happy Guru Nanak Jayanti!");
-    else if (month === 11) setFestival("🎅 Merry Christmas from WAVE!");
+   
   }, []);
 
   const handleCommentSubmision = async (postId) => {
@@ -101,22 +87,23 @@ const Home = () => {
       <Welcome />
       <Navbar />
       <Sidebar />
+      <Festival/>
       <ToastContainer position="bottom-right" autoClose={2000} />
-      <main className="pt-20 md:pl-72 bg-gradient-to-b from-orange-100 to-green-100 min-h-screen pb-20 md:pb-0 transition-all duration-300">
+      <main className="pt-15 md:pl-42  min-h-screen pb-20 md:pb-0 transition-all duration-300">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
           {/*Greeting*/}
           {greeting && (
-            <div className="bg-gradient-to-b from-blue-50 to-gray-100 text-orange-800 text-center py-2 rounded-xl font-semibold mb-4 shadow-sm">
+            <div className="bg-gradient-to-b from-orange-50 to-yellow-50 text-orange-800 text-center font-semibold shadow-sm mb-2">
               {greeting}, {user?.firstName || "friend"}!
             </div>
           )}
 
           {/*Festival*/}
-          {festival && (
+          {/* {festival && (
             <div className="bg-gradient-to-r from-orange-200 to-green-200 text-yellow-800 text-center py-3 rounded-xl font-medium mb-6 shadow-sm">
               {festival}
             </div>
-          )}
+          )} */}
 
           {/* POST CREATE */}
           <div className="bg-gray-100 shadow rounded-2xl p-2 sm:p-6 mb-6 border border-gray-200">
@@ -136,7 +123,7 @@ const Home = () => {
                 placeholder="What's on your mind?"
                 className="flex-1 text-sm bg-gray-200 rounded-full px-4 py-2 outline-none w-full sm:w-auto"
               />
-              <div className="hover:bg-gray-400 w-full sm:w-auto mt-2 sm:mt-0 flex justify-end">
+              <div className="w-full sm:w-auto mt-2 sm:mt-0 flex justify-end">
                 <Create />
               </div>
             </div>
