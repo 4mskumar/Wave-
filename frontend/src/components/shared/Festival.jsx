@@ -76,9 +76,9 @@ export default function Festival() {
     <>
       <button
         onClick={() => setShowSidebar(true)}
-        className="fixed bottom-15 sm:bottom-8 right-6 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full shadow-xl z-50 transition-all duration-300 border-2 border-orange-300"
+        className="fixed bottom-15 sm:bottom-8 right-7  text-white p-2 rounded-full shadow-xl z-50 transition-all duration-300 border-2 border-gray-300 hover:transform-3d hover:scale-105 bg-white"
       >
-        <FiGift className="text-2xl" />
+        <img src="./images/wave.png" alt="" className="w-8 h-8"/>
       </button>
 
       <AnimatePresence>

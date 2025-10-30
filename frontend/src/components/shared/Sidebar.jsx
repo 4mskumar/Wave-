@@ -78,19 +78,19 @@ const Sidebar = () => {
       <aside className="hidden md:flex fixed top-16 left-0 w-80 h-full border-r shadow-sm px-6 py-8 flex-col justify-between z-40 bg-white">
         <Card className="border-none shadow-none">
           {/* Profile Header */}
-          <CardHeader className="flex flex-row items-center gap-3 p-0 mb-6">
-            <Avatar className="h-12 w-12">
+          <CardHeader className="flex flex-col items-center justify-center gap-3 p-0 mb-6">
+            <Avatar className="h-22 w-22">
               <AvatarImage src={user?.imageUrl} alt={user?.fullName} />
               <AvatarFallback>
                 {user?.firstName?.[0]}
                 {user?.lastName?.[0]}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <h2 className="font-semibold text-lg tracking-tight leading-tight">
+            <div className="text-center">
+              <h2 className="font-semibold text-xl tracking-tight leading-tight">
                 {user?.fullName || "User"}
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground">
                 @{user?.username || "username"}
               </p>
             </div>
@@ -104,7 +104,7 @@ const Sidebar = () => {
                 { label: "Followers", value: followers?.length || 0 },
                 { label: "Posts", value: posts?.length || 0 },
               ].map((stat, i) => (
-                <div key={i}>
+                <div key={i} className="">
                   <p className="font-bold text-xl">{stat.value}</p>
                   <p className="text-xs text-muted-foreground">{stat.label}</p>
                 </div>
@@ -140,7 +140,7 @@ const Sidebar = () => {
               ))}
 
               {/* Search Button */}
-              
+
               <SearchP />
               {/* CREATE POST */}
               <Button
