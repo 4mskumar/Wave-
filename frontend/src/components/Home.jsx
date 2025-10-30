@@ -11,6 +11,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Welcome from "./Welcome";
 import Festival from "./shared/Festival";
+import { HiTranslate } from "react-icons/hi";
 
 const Home = () => {
   const { setUserData, feed, getUserFeed, getFollowers, getFollowing } =
@@ -142,11 +143,15 @@ const Home = () => {
 
                 {/* Caption */}
                 {post.caption && (
-                  <div className="mt-2">
+                  <div className="flex justify-between items-center m-2">
                     <p className="text-gray-700 text-[14px] sm:text-[17px]">
                       {post.caption}
                     </p>
-
+                    <div className="flex items-center gap-1">
+                    <HiTranslate size={18} className="hover:text-gray-800"/>
+                    <p className="text-xs">Auto-Translate</p>
+                    </div>
+                    {/* <button className="text-xs border-1 px-2 rounded-full bg-black text-white py-0.5">Auto Translate</button> */}
                     
                   </div>
                 )}

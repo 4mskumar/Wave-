@@ -65,8 +65,6 @@ const Profile = () => {
     getFollowers(userId)
   }
   
-
-
   return (
     <>
       <Navbar />
@@ -224,7 +222,7 @@ const Profile = () => {
           <div className="flex flex-col items-center sm:mt-8">
             <p className="flex items-center gap-2 font-semibold text-black hover:bg-zinc-200/80 cursor-pointer rounded-sm transition-all duration-300 text-lg sm:text-xl p-1">
               <Grid3X3 strokeWidth={1.2} className="text-zinc-800" />
-              Posts
+              Creations
             </p>
             <span className="h-[1px] mt-1 w-full sm:w-80 bg-zinc-800"></span>
           </div>

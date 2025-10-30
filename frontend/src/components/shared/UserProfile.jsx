@@ -61,7 +61,7 @@ const UserProfile = () => {
         <div className="flex-1 px-4 sm:px-6 md:px-10 pt-20 md:pt-20 mb-10">
           {/* Profile Header */}
           <div className="flex flex-col sm:flex-row w-full sm:w-4/5 md:w-2/3 mx-auto items-center sm:items-start justify-center sm:justify-start gap-6 sm:gap-12 mt-4 mb-10">
-            <div className="flex justify-center sm:justify-start">
+            <div className="flex-col justify-center sm:justify-start items-center sm:items-start flex gap-3">
               <img
                 src={
                   userData.imageUrl ||
@@ -70,12 +70,14 @@ const UserProfile = () => {
                 alt="profile"
                 className="w-24 h-24 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full border object-cover"
               />
-            </div>
+              {/* <button className="border-1 px-3 py-0.5 rounded-full ml-11 bg-black text-white">Follow</button> */}
+              </div>
 
             <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
               <h2 className="text-lg sm:text-2xl font-semibold">
                 {userData.username}
               </h2>
+              
               <div className="flex justify-center sm:justify-start gap-5 sm:gap-8 mb-5 mt-3">
                 <div
                   onClick={() => handleOpen("followers")}
@@ -106,6 +108,7 @@ const UserProfile = () => {
                       posts
                     </span>
                   </p>
+                  
                 </div>
               </div>
 
@@ -158,6 +161,7 @@ const UserProfile = () => {
                   {userData.fullName}
                 </p>
                 <p className="text-gray-600 text-sm">{userData.bio || ""}</p>
+                <button className="border-1 px-3 py-0.5 rounded-md bg-black text-white mt-4 hover:bg-gray-800">Follow</button>
               </div>
             </div>
           </div>
