@@ -13,7 +13,8 @@ import Welcome from "./Welcome";
 import Festival from "./shared/Festival";
 
 const Home = () => {
-  const { setUserData, feed, getUserFeed, getFollowers, getFollowing } = useUserStore();
+  const { setUserData, feed, getUserFeed, getFollowers, getFollowing } =
+    useUserStore();
   const { toggleLike, addComment } = useUserPostStore();
   const { user } = useUser();
   const { userId } = useAuth();
@@ -21,6 +22,7 @@ const Home = () => {
   const [openCommentInput, setOpenCommentInput] = useState(null);
   const [openCommentList, setOpenCommentList] = useState(null);
   const [commentText, setCommentText] = useState("");
+
 
   useEffect(() => {
     if (userId && user) {
@@ -31,7 +33,6 @@ const Home = () => {
     }
   }, [userId, user]);
 
-  // ✅ handle adding comment
   const handleCommentSubmission = async (postId) => {
     if (!commentText.trim()) return;
     await addComment(userId, commentText, postId);
@@ -50,7 +51,6 @@ const Home = () => {
     await getUserFeed(userId);
   };
 
-  // ✅ separate toggles
   const handleCommentInputToggle = (postId) => {
     setOpenCommentInput(openCommentInput === postId ? null : postId);
   };
@@ -142,9 +142,13 @@ const Home = () => {
 
                 {/* Caption */}
                 {post.caption && (
-                  <p className="text-gray-700 text-[14px] sm:text-[17px] mt-2">
-                    {post.caption}
-                  </p>
+                  <div className="mt-2">
+                    <p className="text-gray-700 text-[14px] sm:text-[17px]">
+                      {post.caption}
+                    </p>
+
+                    
+                  </div>
                 )}
 
                 {/* Image */}
@@ -213,7 +217,7 @@ const Home = () => {
                 </div>
 
                 {/* Expanded Comment List */}
-                
+
                 {openCommentList === post._id && (
                   <div className="mt-2 border-2 p-2 space-y-2 border-t pt-3">
                     {post.comments.map((c, i) => (
@@ -223,7 +227,6 @@ const Home = () => {
                     ))}
                   </div>
                 )}
-                
 
                 {/* Comment Input */}
                 {openCommentInput === post._id && (

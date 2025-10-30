@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogOverlay
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FaPrayingHands } from "react-icons/fa";
@@ -27,7 +28,9 @@ const Welcome = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-sm text-center rounded-lg shadow-lg border border-orange-200 h-[200px]">
+      <DialogOverlay className="fixed inset-0 bg-black/10 backdrop-blur-xs" /> 
+      <DialogContent className="text-center rounded-lg shadow-lg border border-orange-200 h-[200px] w-[350px]"
+      >
         <DialogHeader>
           <DialogTitle className="text-3xl text-center tracking-wide font-bold flex items-center justify-center gap-2">
             Namaste
@@ -35,14 +38,14 @@ const Welcome = () => {
               <PiHandsPrayingFill />
             </span>
           </DialogTitle>
-          <DialogDescription className="text-sm text-center tracking-wider text-gray-700">
-            Welcome to Wave
+          <DialogDescription className="text-sm text-center tracking-wider text-gray-800">
+            Welcome to WAVE
           </DialogDescription>
         </DialogHeader>
 
         <Button
           onClick={() => setOpen(false)}
-          className="mt-4  text-white rounded-full px-6"
+          className=" text-white rounded-full px-4 py-2 bg-gray-800 hover:bg-gray-800 text-sm flex items-center gap-2 mx-auto"
         >
           Click to explore
         </Button>
