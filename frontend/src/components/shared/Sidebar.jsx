@@ -80,7 +80,7 @@ const Sidebar = () => {
           {/* Profile Header */}
           <CardHeader className="flex flex-col items-center justify-center gap-3 p-0 mb-6">
             <Avatar className="h-22 w-22">
-              <AvatarImage src={user?.imageUrl} alt={user?.fullName} />
+              <AvatarImage className={'object-cover'} src={user?.imageUrl} alt={user?.fullName} />
               <AvatarFallback>
                 {user?.firstName?.[0]}
                 {user?.lastName?.[0]}

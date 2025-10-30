@@ -2,6 +2,7 @@ import { create } from "zustand";
 import axios from "../api/axiosConfig.js";
 import { io } from 'socket.io-client'
 import { use } from "react";
+import { toast } from "sonner";
 
 export const useUserStore = create((set, get) => ({
     followers: [],
@@ -133,6 +134,7 @@ export const useUserStore = create((set, get) => ({
                 
                 set({following  :res.data.following})
             }
+            return res.data
         } catch (error) {
             console.log(error.message);            
         }
@@ -144,8 +146,25 @@ export const useUserStore = create((set, get) => ({
 
             if(res.data.success){
                 set((state) => ({
-                    following : state.following.filter(f => f.userId !== targetId)
+                    following : res.data.following
                 }))
+            }
+            return res.data
+        } catch (error) {
+            console.log(error.message);
+            
+        }
+    },
+
+    followUser :async (myId, targetId) => {
+        try {
+            const res = await axios.post(`/follow/${targetId}`, {myId})
+
+            if(res.data.success){
+                set({
+                    following : res.data.following
+                })
+                toast(res.data.message)
             }
         } catch (error) {
             console.log(error.message);
@@ -179,7 +198,9 @@ export const useUserStore = create((set, get) => ({
         } catch (err) {
           console.error("Error fetching user data:", err);
         }
-      }
+      },
+
+
 
 
 }))

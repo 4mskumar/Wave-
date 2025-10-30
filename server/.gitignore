@@ -3,6 +3,7 @@ node_modules/
 
 # environment files
 .env
+.txt
 
 # build output
 dist/

@@ -97,7 +97,7 @@ export const followUser = async (req, res) => {
     await user.save();
     await targetUser.save();
 
-    res.status(200).json({ success: true, message: "Followed successfully" });
+    res.status(200).json({ success: true, message: "Followed successfully", following : user.following, followers : targetUser.followers});
   } catch (error) {
     console.error("Follow error:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -133,7 +133,7 @@ export const unfollowUser = async (req, res) => {
     await user.save();
     await targetUser.save();
 
-    res.status(200).json({ success: true, message: "User unfollowed successfully" });
+    res.status(200).json({ success: true, message: "User unfollowed successfully", following : user.following, followers : targetUser.follower });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
