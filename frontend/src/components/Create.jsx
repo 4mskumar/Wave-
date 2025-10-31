@@ -63,7 +63,13 @@ const Create = ({ onSuccess }) => {
       return;
     }
 
-    const res = await addPost(userId, caption, image, user.imageUrl, user.username);
+    const res = await addPost(
+      userId,
+      caption,
+      image,
+      user.imageUrl,
+      user.username
+    );
 
     if (res.success) {
       toast.success(res.message);
@@ -86,16 +92,19 @@ const Create = ({ onSuccess }) => {
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="max-w-2xl w-[95vw] sm:w-[90vw] rounded-2xl p-0 overflow-hidden [&>button]:hidden">
+        <DialogContent
+          className={`rounded-2xl p-0 overflow-hidden [&>button]:hidden 
+  ${step === 2 || step === 3 ? "!max-w-3xl !w-[90vw]" : "max-w-4xl w-[90vw]"}`}
+        >
           {/* Close button */}
           <div className="absolute top-3 right-3">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setDiscardOpen(true)}
-              className="rounded-full hover:bg-gray-100"
+              className="rounded-full hover:bg-gray-300 bg-white "
             >
-              <X className="h-6 w-6 text-black" />
+              <X className="h-6 w-6 text-black " />
             </Button>
           </div>
 
@@ -136,17 +145,20 @@ const Create = ({ onSuccess }) => {
 
           {/* Step 2: Preview */}
           {step === 2 && preview && (
-            <div className="flex flex-col items-center justify-center">
-              <img
-                src={preview}
-                alt="Preview"
-                className="max-h-[60vh] object-contain w-full"
-              />
-              <div className="flex justify-between items-center w-full p-3">
+            <div className="flex flex-col items-center justify-center w-full bg-black">
+              <div className="flex justify-center items-center w-full h-[60vh]">
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="max-h-[75vh] max-w-full object-contain shadow-md"
+                />
+              </div>
+
+              <div className="flex justify-between items-center w-full px-5 py-3">
                 <Button
                   variant="ghost"
                   onClick={() => setStep(1)}
-                  className="text-gray-800"
+                  className=" text-white"
                 >
                   Back
                 </Button>
@@ -162,7 +174,7 @@ const Create = ({ onSuccess }) => {
 
           {/* Step 3: Caption + Share */}
           {step === 3 && (
-            <div className="flex flex-col sm:flex-row h-auto sm:h-[70vh]">
+            <div className="flex flex-col sm:flex-row h-auto sm:h-[80vh]">
               {/* Left side: image */}
               <div className="sm:w-1/2 w-full flex items-center justify-center bg-black">
                 <img
@@ -219,7 +231,7 @@ const Create = ({ onSuccess }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Discard post?</AlertDialogTitle>
             <AlertDialogDescription>
-              If you leave, your edits won’t be saved.
+              If you leave, your edits won't be saved.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

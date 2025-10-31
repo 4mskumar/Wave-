@@ -275,8 +275,8 @@ const Profile = () => {
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
-                            variant="outline"
-                            className="cursor-pointer hover:bg-red-500/90 hover:text-white flex gap-2 items-center"
+                            variant=""
+                            className="cursor-pointer hover:bg-red-600 hover:text-white flex gap-2 items-center"
                           >
                             <Trash2 className="w-4 h-4" /> Delete
                           </Button>
@@ -348,7 +348,7 @@ const Profile = () => {
 
                   {/* Likes + Input */}
                   <div className="border-t pt-3 mt-2">
-                    <p className="text-sm font-semibold">
+                    <p className="font-semibold">
                       {selectedPost.likes || 120} likes
                     </p>
                     <div className="flex items-center mt-2">
@@ -357,7 +357,7 @@ const Profile = () => {
                         placeholder="Add a comment..."
                         className="flex-1 border-none outline-none text-sm sm:text-base"
                       />
-                      <button className="text-blue-500 font-semibold text-sm hover:text-blue-700">
+                      <button className="text-black font-semibold text-md cursor-pointer transition-all hover:bg-black rounded-sm px-2 py-1 hover:text-white">
                         Wave
                       </button>
                     </div>

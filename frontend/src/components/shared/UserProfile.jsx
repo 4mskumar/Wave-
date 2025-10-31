@@ -7,7 +7,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Grid3X3 } from "lucide-react";
 import { useUserStore } from "../../app/UserStore.js";
 import { useAuth } from "@clerk/clerk-react";
-import { getUserData } from "../../../../server/controllers/user.controller.js";
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -17,8 +16,8 @@ const UserProfile = () => {
   const [following, setFollowing] = useState([]);
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("followers");
-  const { followUser, unfollowUser, getFollowers, getUserdata } =
-    useUserStore();
+  const [selectedPost, setSelectedPost] = useState(null); // ✅ added for post modal
+  const { followUser, unfollowUser } = useUserStore();
   const { userId } = useAuth();
 
   const handleOpen = (tab) => {
@@ -60,8 +59,6 @@ const UserProfile = () => {
     fetchUserData();
   }, [id, followers]);
 
-  // console.log(followers);
-
   if (!userData) {
     return (
       <div className="flex items-center justify-center h-screen text-zinc-700">
@@ -81,9 +78,7 @@ const UserProfile = () => {
         <div className="flex-1 px-4 sm:px-6 md:px-10 pt-20 md:pt-20 mb-20">
           {/* Profile Header */}
           <div className="flex flex-col items-center justify-center text-center w-full max-w-5xl mx-auto mt-5 sm:mt-10 mb-10">
-            {/* Profile Picture + Info */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-12 w-full">
-              {/* Profile Image */}
               <img
                 src={
                   userData.imageUrl ||
@@ -93,21 +88,19 @@ const UserProfile = () => {
                 className="w-28 h-28 sm:w-46 sm:h-46 rounded-full object-cover shadow-md mx-auto sm:mx-0"
               />
 
-              {/* User Info */}
               <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-1">
-                <h2 className="text-2xl font-bold mt-[-25px] sm:mt-0">{userData.username}</h2>
+                <h2 className="text-2xl font-bold mt-[-25px] sm:mt-0">
+                  {userData.username}
+                </h2>
                 <p className="font-semibold text-base tracking-wide mb-2">
                   {userData.fullName || "User"}
                 </p>
                 <p className="text-gray-600 text-sm">
                   {userData.bio || "Developer"}
                 </p>
-                {/* <p className="text-gray-500 text-sm flex items-center justify-center sm:justify-start gap-1">
-                  📍 India, Delhi
-                </p> */}
 
-                {/* Follow Button */}
-                {Array.isArray(followers) && followers.some((f) => f.userId === userId) ? (
+                {Array.isArray(followers) &&
+                followers.some((f) => f.userId === userId) ? (
                   <button
                     onClick={() => handleUnfollow(userData.clerkId)}
                     className="border border-black px-4 py-1.5 rounded-md bg-black text-white text-sm mt-3 hover:bg-gray-800 transition"
@@ -218,6 +211,7 @@ const UserProfile = () => {
               posts.map((val, ind) => (
                 <div
                   key={ind}
+                  onClick={() => setSelectedPost(val)} // ✅ open modal
                   className="relative w-full aspect-[10/15] overflow-hidden group cursor-pointer border border-gray-300 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300"
                 >
                   <img
@@ -229,6 +223,67 @@ const UserProfile = () => {
               ))
             )}
           </div>
+
+          {/* ✅ Post Modal */}
+          {selectedPost && (
+            <div
+              className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-2 sm:px-6"
+              onClick={() => setSelectedPost(null)}
+            >
+              <div
+                className="bg-white rounded-md overflow-hidden flex flex-col md:flex-row w-full sm:w-[90%] md:w-[80%] lg:w-[70%] h-[85vh] max-h-[90vh] relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Left: Image */}
+                <div className="flex-1 bg-black flex justify-center items-center">
+                  <img
+                    src={selectedPost.imageUrl}
+                    alt={selectedPost.caption || "post"}
+                    className="object-contain max-h-full"
+                  />
+                </div>
+
+                {/* Right: Post Details */}
+                <div className="w-full md:w-[45%] flex flex-col justify-between p-3 sm:p-5 overflow-y-auto">
+                  <div className="flex items-center gap-3 border-b pb-3">
+                    <img
+                      src={userData.imageUrl}
+                      alt="profile"
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+                    />
+                    <p className="font-semibold text-sm sm:text-base">
+                      {userData.username}
+                    </p>
+                  </div>
+
+                  <div className="mt-3 flex-1 overflow-y-auto text-sm sm:text-base">
+                    <p>
+                      <span className="font-semibold mr-1">
+                        {userData.username}
+                      </span>
+                      {selectedPost.caption || "No caption"}
+                    </p>
+                  </div>
+
+                  <div className="border-t pt-3 mt-2">
+                    <p className="text-sm font-semibold">
+                      {selectedPost.likes || 0} likes
+                    </p>
+                    <div className="flex items-center mt-2">
+                      <input
+                        type="text"
+                        placeholder="Add a comment..."
+                        className="flex-1 border-none outline-none text-sm sm:text-base"
+                      />
+                      <button className="text-blue-500 font-semibold text-sm hover:text-blue-700">
+                        Wave
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

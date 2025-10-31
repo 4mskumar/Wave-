@@ -32,20 +32,20 @@ const Welcome = () => {
       <DialogContent className="text-center rounded-lg shadow-lg border border-orange-200 h-[200px] w-[350px]"
       >
         <DialogHeader>
-          <DialogTitle className="text-3xl text-center tracking-wide font-bold flex items-center justify-center gap-2">
+          <DialogTitle className="text-4xl text-center tracking-wide font-bold flex items-center justify-center gap-2">
             Namaste
             <span className="">
               <PiHandsPrayingFill />
             </span>
           </DialogTitle>
-          <DialogDescription className="text-sm text-center tracking-wider text-gray-800">
+          <DialogDescription className="text-md tracking-tight text-center text-gray-800">
             Welcome to WAVE
           </DialogDescription>
         </DialogHeader>
 
         <Button
           onClick={() => setOpen(false)}
-          className=" text-white rounded-full px-4 py-2 bg-gray-800 hover:bg-gray-800 text-sm flex items-center gap-2 mx-auto"
+          className="text-white rounded-full px-4 py-2 bg-gray-800 hover:bg-gray-800 text-sm flex items-center gap-2 mx-auto"
         >
           Click to explore
         </Button>
