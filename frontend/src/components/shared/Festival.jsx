@@ -29,15 +29,15 @@ const festivals = [
   },
   {
     month: 7,
-    name: "Raksha Bandhan 🪢",
+    name: "Happy Independence Day 🇮🇳",
     message: "A bond of love and protection between siblings!",
-    img: "https://www.drikpanchang.com/images/events/diwali/lakshmipuja/diwali_celebration.jpg",
+    img: "https://bsmedia.business-standard.com/_media/bs/img/article/2025-08/15/full/1755223534-7955.png",
   },
   {
     month: 8,
-    name: "Ganesh Chaturthi 🐘",
+    name: "Happy Ganesh Chaturthi 🐘",
     message: "May Lord Ganesha bless you with wisdom and prosperity!",
-    img: "https://www.drikpanchang.com/images/events/diwali/lakshmipuja/diwali_celebration.jpg",
+    img: "https://www.vibesofindia.com/wp-content/uploads/2023/09/image-45.png",
   },
   {
     month: 9,
@@ -56,7 +56,7 @@ const festivals = [
     month: 11,
     name: "Christmas 🎄",
     message: "Wishing you peace, love, and joy this Christmas season!",
-    img: "https://www.drikpanchang.com/images/events/diwali/lakshmipuja/diwali_celebration.jpg",
+    img: "https://images.ctfassets.net/sjxdiqjbm079/1kMBMnl4SNKCMfIRxzxD5B/6e91af244b266e0e34bbb4d2a1fb66f3/Big-Christmas-Energy-1500x500_V2.jpg?f=faces&w=1600&h=900&fm=webp&q=70&fit=fill",
   },
 ];
 

@@ -140,8 +140,14 @@ const Sidebar = () => {
               ))}
 
               {/* Search Button */}
+              <Button
+                variant="ghost"
+                onClick={() => setShowCreate(true)}
+                className="w-full justify-start gap-3 text-[18px] font-medium text-zinc-600 hover:text-zinc-900 ml-[-18px]"
+              >
+                <SearchP />
+              </Button>
 
-              <SearchP />
               {/* CREATE POST */}
               <Button
                 variant="ghost"
@@ -188,8 +194,9 @@ const Sidebar = () => {
           onClick={() => setOpen(true)}
           className="flex flex-col items-center gap-1"
         >
-          <Search size={22} className="text-zinc-500 hover:text-zinc-800" />
-          <span className="text-[11px] text-zinc-500">Search</span>
+          {/* <Search size={22} className="text-zinc-500 hover:text-zinc-800" />
+          <span className="text-[11px] text-zinc-500">Search</span> */}
+          <SearchP/>
         </button>
         {/* Create */}
         <button

@@ -81,7 +81,6 @@ export const followUser = async (req, res) => {
       return res.status(400).json({ success: false, message: "Already following" });
     }
 
-    // ✅ Push correctly structured objects
     user.following.push({
       userId: targetUser.clerkId,
       username: targetUser.username,
@@ -104,9 +103,6 @@ export const followUser = async (req, res) => {
   }
 };
 
-
-
-
 export const unfollowUser = async (req, res) => {
   try {
     const { userId } = req.body;
@@ -119,14 +115,12 @@ export const unfollowUser = async (req, res) => {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // ✅ FIX: Check if user is actually following the target
     const isFollowing = user.following.some(f => f.userId === targetId);
 
     if (!isFollowing) {
       return res.status(400).json({ success: false, message: "You are not following this user" });
     }
 
-    // ✅ Remove follow relationship
     user.following = user.following.filter(f => f.userId !== targetId);
     targetUser.followers = targetUser.followers.filter(f => f.userId !== userId);
 

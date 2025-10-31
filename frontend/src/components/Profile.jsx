@@ -99,9 +99,7 @@ const Profile = () => {
 
               {/* User Info */}
               <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-1">
-                <h2 className="text-2xl font-bold mb-2">
-                  {user.username}
-                </h2>
+                <h2 className="text-2xl font-bold mb-2">{user.username}</h2>
                 <p className="font-semibold text-base tracking-wide mb-2">
                   {user.fullName || "User"}
                 </p>
@@ -120,9 +118,7 @@ const Profile = () => {
               >
                 <p className="font-semibold text-base sm:text-lg">
                   {followers.length}
-                  <span className="ml-1 text-zinc-600">
-                    Followers
-                  </span>
+                  <span className="ml-1 text-zinc-600">Followers</span>
                 </p>
               </div>
 
@@ -132,18 +128,14 @@ const Profile = () => {
               >
                 <p className="font-semibold text-base sm:text-lg">
                   {following.length}
-                  <span className="ml-1 text-zinc-600">
-                    Following
-                  </span>
+                  <span className="ml-1 text-zinc-600">Following</span>
                 </p>
               </div>
 
               <div>
                 <p className="font-semibold text-base sm:text-lg">
                   {posts.length}
-                  <span className="ml-1  text-zinc-600">
-                    Posts
-                  </span>
+                  <span className="ml-1  text-zinc-600">Posts</span>
                 </p>
               </div>
             </div>

@@ -29,14 +29,14 @@ const UserProfile = () => {
   const handleFollow = async (targetId) => {
     const res = await followUser(userId, targetId);
     if (res?.success) {
-      setFollowers(res.followers);
+      setFollowers(res.followers || []);
     }
   };
 
   const handleUnfollow = async (targetId) => {
     const res = await unfollowUser(userId, targetId);
     if (res?.success) {
-      setFollowers(res.followers);
+      setFollowers(res.followers || []);
     }
   };
 
@@ -78,9 +78,9 @@ const UserProfile = () => {
           <Sidebar />
         </div>
 
-        <div className="flex-1 px-4 sm:px-6 md:px-10 pt-20 md:pt-20 mb-10">
+        <div className="flex-1 px-4 sm:px-6 md:px-10 pt-20 md:pt-20 mb-20">
           {/* Profile Header */}
-          <div className="flex flex-col items-center justify-center text-center w-full max-w-5xl mx-auto mt-10 mb-16 px-6">
+          <div className="flex flex-col items-center justify-center text-center w-full max-w-5xl mx-auto mt-5 sm:mt-10 mb-10">
             {/* Profile Picture + Info */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-12 w-full">
               {/* Profile Image */}
@@ -95,7 +95,7 @@ const UserProfile = () => {
 
               {/* User Info */}
               <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-1">
-                <h2 className="text-2xl font-bold mb-2">{userData.username}</h2>
+                <h2 className="text-2xl font-bold mt-[-25px] sm:mt-0">{userData.username}</h2>
                 <p className="font-semibold text-base tracking-wide mb-2">
                   {userData.fullName || "User"}
                 </p>
@@ -200,6 +200,7 @@ const UserProfile = () => {
             </Dialog>
           </div>
 
+          {/* POSTS */}
           <div className="flex flex-col items-center sm:mt-8">
             <p className="flex items-center gap-2 font-semibold text-black text-lg sm:text-xl p-1">
               <Grid3X3 strokeWidth={1.2} className="text-zinc-800" />
