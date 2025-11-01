@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import Create from "./Create";
 import axios from "axios";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const Profile = () => {
   const [selectedPost, setSelectedPost] = useState(null);
@@ -328,6 +329,7 @@ const Profile = () => {
 
                   {/* Caption + Comments */}
                   <div className="mt-3 flex-1 overflow-y-auto text-sm sm:text-base">
+                    {/* Caption */}
                     <p>
                       <span className="font-semibold mr-1">
                         {user.username}
@@ -335,23 +337,48 @@ const Profile = () => {
                       {selectedPost.caption || "No caption"}
                     </p>
 
-                    <div className="mt-4 space-y-1">
-                      <p>
-                        <span className="font-semibold mr-1">aditya</span>🔥🔥
-                      </p>
-                      <p>
-                        <span className="font-semibold mr-1">muskan_k</span>Love
-                        this!
-                      </p>
+                    {/* Comments Section */}
+                    <div className="mt-4 space-y-3 ">
+                      {selectedPost.comments &&
+                      selectedPost.comments.length > 0 ? (
+                        selectedPost.comments.map((comment, index) => (
+                          <p key={index}>
+                            <span className="font-semibold mr-1">
+                              {comment.username || "Unknown"}
+                            </span>
+                            {comment.text}
+                          </p>
+                        ))
+                      ) : (
+                        <p className="text-gray-500 text-center text-xs">
+                          No comments yet
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   {/* Likes + Input */}
                   <div className="border-t pt-3 mt-2">
+                    <div className="flex items-center gap-2"> 
+                    <FaHeart  className="text-red-500"/>
                     <p className="font-semibold">
-                      {selectedPost.likes || 120} likes
+                      {selectedPost.likes?.length > 0
+                        ? `${selectedPost.likes.length} ${
+                            selectedPost.likes.length === 1 ? "like" : "likes"
+                          }`
+                        : "0 likes"}
                     </p>
-                    <div className="flex items-center mt-2">
+                    </div>
+                    <p className="mt-2 text-sm sm:text-base">
+                      <span className="font-semibold mr-1">
+                        {selectedPost.user?.username ||
+                          user.username ||
+                          "Unknown"}
+                      </span>
+                    </p>
+
+                    {/* Comment input section */}
+                    <div className="flex items-center mt-3">
                       <input
                         type="text"
                         placeholder="Add a comment..."

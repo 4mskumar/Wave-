@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Grid3X3 } from "lucide-react";
 import { useUserStore } from "../../app/UserStore.js";
 import { useAuth } from "@clerk/clerk-react";
+import { FaHeart } from "react-icons/fa";
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -266,16 +267,24 @@ const UserProfile = () => {
                   </div>
 
                   <div className="border-t pt-3 mt-2">
-                    <p className="text-sm font-semibold">
-                      {selectedPost.likes || 0} likes
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <FaHeart className="text-red-500" />
+                      <p className="font-semibold">
+                        {selectedPost.likes?.length > 0
+                          ? `${selectedPost.likes.length} ${
+                              selectedPost.likes.length === 1 ? "like" : "likes"
+                            }`
+                          : "0 likes"}
+                      </p>
+                    </div>
+
                     <div className="flex items-center mt-2">
                       <input
                         type="text"
                         placeholder="Add a comment..."
                         className="flex-1 border-none outline-none text-sm sm:text-base"
                       />
-                      <button className="text-blue-500 font-semibold text-sm hover:text-blue-700">
+                      <button className="text-black font-semibold text-md cursor-pointer transition-all hover:bg-black rounded-sm px-2 py-1 hover:text-white">
                         Wave
                       </button>
                     </div>
