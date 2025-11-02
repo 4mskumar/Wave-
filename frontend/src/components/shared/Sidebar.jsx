@@ -167,7 +167,7 @@ const Sidebar = () => {
           <Link
             key={index}
             to={path}
-            className="flex flex-col items-center gap-1"
+            className="flex flex-col items-center gap-1 ml-3"
           >
             <Icon
               size={22}
@@ -194,11 +194,8 @@ const Sidebar = () => {
           onClick={() => setOpen(true)}
           className="flex flex-col items-center gap-1"
         >
-          {/* <Search size={22} className="text-zinc-500 hover:text-zinc-800" />
-          <span className="text-[11px] text-zinc-500">Search</span> */}
           <SearchP/>
         </button>
-        {/* Create */}
         <button
           onClick={() => setShowCreate(true)}
           className="flex flex-col items-center gap-1"

@@ -6,36 +6,42 @@ const festivals = [
   {
     month: 0,
     name: "New Year 🎉",
+    des: "from WAVE",
     message: "Wishing you a joyful and prosperous new year!",
     img: "https://www.drikpanchang.com/images/events/diwali/lakshmipuja/diwali_celebration.jpg",
   },
   {
     month: 1,
     name: "Vasant Panchami 🌼",
+    des: "from WAVE",
     message: "Celebrate the goddess of wisdom and learning — Saraswati Puja!",
     img: "https://www.drikpanchang.com/images/events/diwali/lakshmipuja/diwali_celebration.jpg",
   },
   {
     month: 3,
     name: "Ram Navami 🕉️",
+    des: "from WAVE",
     message: "Celebrate the birth of Lord Rama — may his blessings be with you!",
     img: "https://www.drikpanchang.com/images/events/diwali/lakshmipuja/diwali_celebration.jpg",
   },
   {
     month: 4,
     name: "Eid-ul-Fitr 🌙",
+    des: "from WAVE",
     message: "Eid Mubarak! Wishing peace and blessings to all!",
     img: "https://www.drikpanchang.com/images/events/diwali/lakshmipuja/diwali_celebration.jpg",
   },
   {
     month: 7,
     name: "Happy Independence Day 🇮🇳",
+    des: "from WAVE",
     message: "A bond of love and protection between siblings!",
     img: "https://bsmedia.business-standard.com/_media/bs/img/article/2025-08/15/full/1755223534-7955.png",
   },
   {
     month: 8,
     name: "Happy Ganesh Chaturthi 🐘",
+    des: "from WAVE",
     message: "May Lord Ganesha bless you with wisdom and prosperity!",
     img: "https://www.vibesofindia.com/wp-content/uploads/2023/09/image-45.png",
   },
@@ -48,13 +54,15 @@ const festivals = [
   },
   {
     month: 10,
-    name: "Guru Nanak Jayanti 🙏",
+    name: "Happy Guru Nanak Jayanti 🙏",
+    des: "from WAVE",
     message: "Remember the teachings of Guru Nanak Dev Ji!",
-    img: "https://www.drikpanchang.com/images/events/diwali/lakshmipuja/diwali_celebration.jpg",
+    img: "https://media.assettype.com/theceo%2F2023-09%2F77b39296-b5d3-413e-8765-0b00c48425f5%2FTCM___Guru_Nanak_Jayanti.jpg?w=480&auto=format%2Ccompress",
   },
   {
     month: 11,
     name: "Christmas 🎄",
+    des: "from WAVE",
     message: "Wishing you peace, love, and joy this Christmas season!",
     img: "https://images.ctfassets.net/sjxdiqjbm079/1kMBMnl4SNKCMfIRxzxD5B/6e91af244b266e0e34bbb4d2a1fb66f3/Big-Christmas-Energy-1500x500_V2.jpg?f=faces&w=1600&h=900&fm=webp&q=70&fit=fill",
   },
@@ -76,9 +84,9 @@ export default function Festival() {
     <>
       <button
         onClick={() => setShowSidebar(true)}
-        className="fixed bottom-15 sm:bottom-8 right-7  text-white p-2 rounded-full shadow-xl z-50 transition-all duration-300 border-2 border-gray-300 hover:transform-3d hover:scale-105 bg-white"
+        className="fixed bottom-18 sm:bottom-8 right-5  text-white p-2 rounded-full shadow-xl z-50 transition-all duration-300 border-2 border-gray-300 hover:transform-3d hover:scale-105 bg-white"
       >
-        <img src="./images/wave.png" alt="" className="w-8 h-8"/>
+        <img src="./images/wave.png" alt="" className="w-5 h-5 sm:w-8 sm:h-8"/>
       </button>
 
       <AnimatePresence>
