@@ -125,7 +125,7 @@ const useUserPostStore = create((set, get) => ({
           ),
         }));
 
-        toast.success(res.data.message);
+        // toast.success(res.data.message);
       }
     } catch (error) {
       console.error("Error commenting on post:", error.message);

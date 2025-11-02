@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Settings } from "lucide-react";
 import { Button } from "../ui/button";
 import { useUserStore } from "../../app/UserStore";
+import NotificationDropdown from "./NotificationDropdown";
 
 const Navbar = () => {
   const { user } = useUser();
@@ -55,6 +56,7 @@ const Navbar = () => {
               {greeting}, {user?.firstName || "friend"}!
             </div>
           )}
+          <NotificationDropdown />
           <Button
             onClick={openUserSettings}
             className="border-gray-300 bg-gray-300 h-8 w-8 rounded-full p-0 flex items-center justify-center hover:bg-black hover:text-white"

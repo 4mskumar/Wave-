@@ -1,6 +1,7 @@
 import cloud from "../utils/cloud.js";
 import postSchema from '../models/postModel.js'
 import { User } from "../models/User.js";
+import { createNotification } from "./notification.controller.js";
 
 export const postImage = async (req, res) => {
   try {
@@ -108,6 +109,8 @@ export const toggleLike = async (req, res) => {
       )
     }
 
+    // await createNotification('like', myId, targetId)
+
     return res.status(200).json({ success: true, message: 'U just liked a post yayy!', post: updatedPost })
 
   } catch (error) {
@@ -135,10 +138,12 @@ export const commentToPost = async (req, res) => {
       return res.status(404).json({ success: false, message: "Post not found" });
     }
 
+    const user = await User.findOne({clerkId : userId})
+
     const updatedPost = await postSchema.findByIdAndUpdate(
       postId,
-      { $push: { comments: { text, userId } } },
-      { new: true } // ✅ returns updated post with new comment
+      { $push: { comments: { text, userId, username : user.username, userImageUrl : user.imageUrl } } },
+      { new: true }
     );
 
     

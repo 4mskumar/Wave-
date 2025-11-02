@@ -12,25 +12,29 @@ import "react-toastify/dist/ReactToastify.css";
 import Welcome from "./Welcome";
 import Festival from "./shared/Festival";
 import { HiTranslate } from "react-icons/hi";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const { setUserData, feed, getUserFeed, getFollowers, getFollowing } =
+  const { setUserData, feed, getUserFeed, getFollowers, getFollowing, following } =
     useUserStore();
   const { toggleLike, addComment } = useUserPostStore();
   const { user } = useUser();
   const { userId } = useAuth();
-
+  const navigate = useNavigate()
   const [openCommentInput, setOpenCommentInput] = useState(null);
   const [openCommentList, setOpenCommentList] = useState(null);
   const [commentText, setCommentText] = useState("");
 
-
   useEffect(() => {
     if (userId && user) {
       setUserData(userId, user.fullName, user.username, user.imageUrl);
-      getUserFeed(userId);
       getFollowers(userId);
       getFollowing(userId);
+
+      
+      getUserFeed(userId);
     }
   }, [userId, user]);
 
@@ -133,7 +137,7 @@ const Home = () => {
                   />
                   <div>
                     <p className="font-semibold text-[16px] sm:text-[18px]">
-                      {post.name}
+                      {post.username}
                     </p>
                     <p className="text-[12px] sm:text-[13px] text-gray-500">
                       {post.createdAt}
@@ -148,11 +152,10 @@ const Home = () => {
                       {post.caption}
                     </p>
                     <div className="flex items-center gap-1">
-                    <HiTranslate size={18} className="hover:text-gray-800"/>
-                    <p className="text-xs">Auto-Translate</p>
+                      <HiTranslate size={18} className="hover:text-gray-800" />
+                      <p className="text-xs">Auto-Translate</p>
                     </div>
                     {/* <button className="text-xs border-1 px-2 rounded-full bg-black text-white py-0.5">Auto Translate</button> */}
-                    
                   </div>
                 )}
 
@@ -206,17 +209,28 @@ const Home = () => {
                       key={ind}
                       className={`bg-${
                         color[randomIndex()]
-                      } border rounded-xl text-gray-800 p-2 text-sm`}
+                      } border rounded-xl flex items-center gap-2 text-gray-800 p-2 text-sm`}
                     >
-                      {val.text}
+                      <Avatar>
+                        <AvatarImage
+                          className={"object-cover"}
+                          src={val.userImageUrl}
+                        />
+                        <AvatarFallback>
+                          {val.username[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      {/* <p className= 'text-md font-semibold text-zinc-900'>{val.username}</p> */}
+                      <p className="text-sm text-zinc-800">{val.text}</p>
                     </div>
                   ))}
                   {post.comments?.length > 2 && (
                     <button
                       onClick={() => handleViewCommentsToggle(post._id)}
-                      className="text-gray-500 text-sm hover:underline mt-1"
+                      className="text-gray-500 flex items-center gap-1 text-sm hover:underline mt-1"
                     >
-                      View all {post.comments.length} comments
+                      {!openCommentList ? `View all ${post.comments.length} comments` : `View less ${post.comments.length} comments`}
+                      <ChevronDown rotate={openCommentList ? 180 : 0} className="w-4 h-4" />
                     </button>
                   )}
                 </div>
@@ -225,10 +239,20 @@ const Home = () => {
 
                 {openCommentList === post._id && (
                   <div className="mt-2 border-2 p-2 space-y-2 border-t pt-3">
-                    {post.comments.map((c, i) => (
-                      <p key={i} className="text-md text-gray-700">
-                        <strong>{c.userName}</strong> {c.text}
-                      </p>
+                    {post.comments.map((val, i) => (
+                      <div key ={i} className="flex items-center gap-2">
+                        <Avatar className={'size-6'}>
+                          <AvatarImage
+                            className={"object-cover size-6"}
+                            src={val.userImageUrl}
+                          />
+                          <AvatarFallback>
+                            {val.username[0].toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <a onClick={() => navigate(`/user/${val.userId}`)} className= 'text-sm hover:underline cursor-pointer tracking-tight font-semibold text-zinc-900'>{val.username}</a>
+                        <p className="text-sm text-zinc-800">{val.text}</p>
+                      </div>
                     ))}
                   </div>
                 )}

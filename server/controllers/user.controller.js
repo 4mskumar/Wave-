@@ -1,5 +1,6 @@
 import postSchema from "../models/postModel.js"
 import { User } from "../models/User.js"
+import { createNotification } from "./notification.controller.js"
 
 export const setUserData = async (req, res) => {
   try {
@@ -95,6 +96,8 @@ export const followUser = async (req, res) => {
 
     await user.save();
     await targetUser.save();
+
+    await createNotification('follow', myId, targetId)
 
     res.status(200).json({ success: true, message: "Followed successfully", following : user.following, followers : targetUser.followers});
   } catch (error) {
@@ -234,5 +237,20 @@ export const removeFollower = async (req, res) => {
     res.status(200).json({ success: true, message: "User removed successfully", userF : user.followers });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+export const updateBio = async (req, res) => {
+  try {
+    const {userId, bio} = req.body
+    if(!userId){
+      return res.status(404).json({success : false})
+    }
+    
+    const user = await User.findOneAndUpdate({userId}, {bio}, {new : true})
+    return res.status(200).json({success : true, message : 'Bio updated successfully', bio})
+  } catch (error) {
+    return res.status(500).json({success : false, message : error.message})
+    
   }
 }

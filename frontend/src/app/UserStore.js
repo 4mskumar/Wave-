@@ -13,6 +13,7 @@ export const useUserStore = create((set, get) => ({
     globalUsers: [],
     socket: null,
     user: null,
+    bio: '',
 
     connectSocket: (userId) => {
         if (get().socket) return; // ✅ prevent multiple connections
@@ -115,9 +116,9 @@ export const useUserStore = create((set, get) => ({
 
     getGlobalUsers: async (userId) => {
         try {
-            
+
             const res = await axios.get('/g/users', { params: { userId } })
-            
+
 
             if (res.data.success) {
                 set({ globalUsers: res.data.gUsers })
@@ -127,80 +128,95 @@ export const useUserStore = create((set, get) => ({
         }
     },
 
-    getFollowing  :async (userId) => {
+    getFollowing: async (userId) => {
         try {
-            const res = await axios.get('/following',{params : {userId}})            
-            if(res.data.success){                
-                
-                set({following  :res.data.following})
+            const res = await axios.get('/following', { params: { userId } })
+            if (res.data.success) {
+
+                set({ following: res.data.following })
             }
             return res.data
         } catch (error) {
-            console.log(error.message);            
+            console.log(error.message);
         }
     },
 
-    unfollowUser :async (userId, targetId) => {
+    unfollowUser: async (userId, targetId) => {
         try {
-            const res = await axios.post(`/unfollow/${targetId}`, {userId})
+            const res = await axios.post(`/unfollow/${targetId}`, { userId })
 
-            if(res.data.success){
+            if (res.data.success) {
                 set((state) => ({
-                    following : res.data.following
+                    following: res.data.following
                 }))
             }
             return res.data
         } catch (error) {
             console.log(error.message);
-            
+
         }
     },
 
-    followUser :async (myId, targetId) => {
+    followUser: async (myId, targetId) => {
         try {
-            const res = await axios.post(`/follow/${targetId}`, {myId})
+            const res = await axios.post(`/follow/${targetId}`, { myId })
 
-            if(res.data.success){
+            if (res.data.success) {
                 set({
-                    following : res.data.following
+                    following: res.data.following
                 })
                 toast(res.data.message)
             }
         } catch (error) {
             console.log(error.message);
-            
+
         }
     },
 
-    removeFollower : async (userId, targetId) => {
+    removeFollower: async (userId, targetId) => {
         try {
-            const res = await axios.post('/remove', {myId : userId, targetId})
+            const res = await axios.post('/remove', { myId: userId, targetId })
 
-            if(res.data.succes){
+            if (res.data.succes) {
                 set((state) => ({
-                    followers : state.followers.filter(f => f.userId !== targetId)
+                    followers: state.followers.filter(f => f.userId !== targetId)
                 }))
             }
         } catch (error) {
-            console.log(error.message);            
+            console.log(error.message);
         }
     },
 
-    fetchUserData : async (userId) => {
+    fetchUserData: async (userId) => {
         try {
-          const res = await axios.get(`/get-user`, {params : {userId}});
-          if (res.data.success) {
-            setUserData(res.data.user);
-            setPosts(res.data.posts || []);
-            setFollowers(res.data.user.followers || []);
-            setFollowing(res.data.user.following || []);
-          }
+            const res = await axios.get(`/get-user`, { params: { userId } });
+            if (res.data.success) {
+                setUserData(res.data.user);
+                setPosts(res.data.posts || []);
+                setFollowers(res.data.user.followers || []);
+                setFollowing(res.data.user.following || []);
+            }
         } catch (err) {
-          console.error("Error fetching user data:", err);
+            console.error("Error fetching user data:", err);
         }
-      },
+    },
 
-
+    updateBio : async (userId, bio) => {
+        try {
+            console.log('called in store');
+            
+            const res = await axios.post('/update/bio', {userId, bio})
+            if(res.data.success){
+                set({bio : res.data.bio})
+                toast(res.data.message)
+            }
+            console.log('updated bio : ' + bio);
+            
+        } catch (error) {
+            console.log(error.message);
+            
+        }
+    }
 
 
 }))

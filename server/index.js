@@ -8,6 +8,7 @@ import { router as userRouter } from "./routes/user.route.js";
 // import { router } from "./routes/messages.route.js";
 import { Server } from "socket.io";
 import router from "./routes/messages.route.js";
+import { notificationRouter } from "./routes/notification.route.js";
 
 config();
 
@@ -56,6 +57,7 @@ io.on("connection", (socket) => {
 app.use("/api/post", postRouter);
 app.use("/api", userRouter);
 app.use("/api/messages", router);
+app.use('/api/notifications', notificationRouter)
 
 // ✅ Start Server
 server.listen(PORT, () => {

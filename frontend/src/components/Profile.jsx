@@ -4,7 +4,12 @@ import Navbar from "./shared/Navbar";
 import Sidebar from "./shared/Sidebar";
 import { toast } from "sonner";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { Grid3X3, MoreHorizontalIcon, Trash2 } from "lucide-react";
+import {
+  Grid3X3,
+  MoreHorizontalIcon,
+  MoreVertical,
+  Trash2,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
@@ -29,6 +34,8 @@ import {
 import Create from "./Create";
 import axios from "axios";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import CommentsSection from "./shared/CommentsSection";
+import BioDialog from "./BioDialog";
 
 const Profile = () => {
   const [selectedPost, setSelectedPost] = useState(null);
@@ -43,6 +50,7 @@ const Profile = () => {
     getFollowing,
     removeFollower,
     getFollowers,
+    bio
   } = useUserStore();
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(""); //for stats
@@ -99,15 +107,26 @@ const Profile = () => {
               />
 
               {/* User Info */}
-              <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-1">
-                <h2 className="text-2xl font-bold mb-2">{user.username}</h2>
-                <p className="font-semibold text-base tracking-wide mb-2">
-                  {user.fullName || "User"}
-                </p>
-                <p className="text-gray-600 text-sm">Developer</p>
-                <p className="text-gray-500 text-sm flex items-center justify-center sm:justify-start gap-1">
-                  📍 India, Delhi
-                </p>
+              <div className="flex items-start sm:items-start text-center sm:text-left space-y-1">
+                <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-1">
+                  <h2 className="text-2xl font-bold mb-2">{user.username}</h2>
+                  <p className="font-semibold text-base tracking-wide mb-2">
+                    {user.fullName || "User"}
+                  </p>
+                  <p className="text-gray-600 text-sm">{bio}</p>
+
+                </div>
+                <div>
+                  <Popover>
+                    <PopoverTrigger>
+                      <MoreVertical />
+                    </PopoverTrigger>
+                    <PopoverContent className={'w-fit'}>
+                      <BioDialog />
+                    </PopoverContent>
+
+                  </Popover>
+                </div>
               </div>
             </div>
 
@@ -338,7 +357,7 @@ const Profile = () => {
                     </p>
 
                     {/* Comments Section */}
-                    <div className="mt-4 space-y-3 ">
+                    {/* <div className="mt-4 space-y-3 ">
                       {selectedPost.comments &&
                       selectedPost.comments.length > 0 ? (
                         selectedPost.comments.map((comment, index) => (
@@ -354,20 +373,21 @@ const Profile = () => {
                           No comments yet
                         </p>
                       )}
-                    </div>
+                    </div> */}
+                    <CommentsSection selectedPost={selectedPost} />
                   </div>
 
                   {/* Likes + Input */}
                   <div className="border-t pt-3 mt-2">
-                    <div className="flex items-center gap-2"> 
-                    <FaHeart  className="text-red-500"/>
-                    <p className="font-semibold">
-                      {selectedPost.likes?.length > 0
-                        ? `${selectedPost.likes.length} ${
-                            selectedPost.likes.length === 1 ? "like" : "likes"
-                          }`
-                        : "0 likes"}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <FaHeart className="text-red-500" />
+                      <p className="font-semibold">
+                        {selectedPost.likes?.length > 0
+                          ? `${selectedPost.likes.length} ${
+                              selectedPost.likes.length === 1 ? "like" : "likes"
+                            }`
+                          : "0 likes"}
+                      </p>
                     </div>
                     <p className="mt-2 text-sm sm:text-base">
                       <span className="font-semibold mr-1">

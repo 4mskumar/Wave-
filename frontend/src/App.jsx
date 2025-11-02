@@ -13,8 +13,10 @@ import SignInPage from "./components/shared/SignInPage";
 import SharePost from "./components/SharePost";
 import { useMessageStore } from "./app/UserMessageStore";
 import UserProfile from "./components/shared/UserProfile";
+import useNotificationsSocket from "./api/NotificationSocket";
 
 function App() {
+  useNotificationsSocket()
   const { user, isLoaded, isSignedIn } = useUser();
   const {userId} = useAuth()
       

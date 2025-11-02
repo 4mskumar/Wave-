@@ -20,6 +20,7 @@ const UserProfile = () => {
   const [selectedPost, setSelectedPost] = useState(null); // ✅ added for post modal
   const { followUser, unfollowUser } = useUserStore();
   const { userId } = useAuth();
+  const loggedInUser = id === userId ? true : false;
 
   const handleOpen = (tab) => {
     setActiveTab(tab);
@@ -104,16 +105,20 @@ const UserProfile = () => {
                 followers.some((f) => f.userId === userId) ? (
                   <button
                     onClick={() => handleUnfollow(userData.clerkId)}
-                    className="border border-black px-4 py-1.5 rounded-md bg-black text-white text-sm mt-3 hover:bg-gray-800 transition"
+                    className={`${
+                      loggedInUser && "hidden"
+                    } border px-4 py-1.5 rounded-md bg-zinc-900 cursor-pointer text-white text-sm mt-3 hover:bg-gray-800 transition`}
                   >
-                    Unfollow
+                    {!loggedInUser && "Unfollow"}
                   </button>
                 ) : (
                   <button
                     onClick={() => handleFollow(userData.clerkId)}
-                    className="border border-black px-4 py-1.5 rounded-md bg-black text-white text-sm mt-3 hover:bg-gray-800 transition"
+                    className={`${
+                      loggedInUser && "hidden"
+                    } border px-4 py-1.5 rounded-md bg-zinc-900 cursor-pointer text-white text-sm mt-3 hover:bg-gray-800 transition`}
                   >
-                    Follow
+                    {!loggedInUser && "Follow"}
                   </button>
                 )}
               </div>

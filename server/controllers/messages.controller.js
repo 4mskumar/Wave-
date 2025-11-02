@@ -3,6 +3,7 @@
 import { io, userSocketMap } from "../index.js";
 import { Message } from "../models/Message.js";
 import { User } from "../models/User.js";
+import { decrypt, encrypt } from "../utils/crypto.js";
 
 export const getUserList = async (req, res) => {
   try {
@@ -41,7 +42,12 @@ export const getMessages = async (req, res) => {
       ],
     }).sort({ createdAt: 1 });
 
-    res.json({ success: true, messages });
+     const decryptedMessages = messages.map((msg) => ({
+      ...msg._doc,
+      text: msg.text ? decrypt(msg.text) : "",
+    }));
+
+    res.json({ success: true, messages : decryptedMessages });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -52,19 +58,26 @@ export const sendMessage = async (req, res) => {
     const { text, senderId, image } = req.body; // ✅ include image
     const { id: receiverId } = req.params;
 
+    const encryptedText = encrypt(text || '')
+
     const newMsg = await Message.create({
       senderId,
       receiverId,
-      text,
+      text : encryptedText,
       image, // ✅ store base64 or URL
     });
 
-    const receiverSocket = userSocketMap.get(receiverId);
-    if (receiverSocket) {
-      io.to(receiverSocket).emit("newMessage", newMsg);
+    const decryptedText = {
+      ...newMsg._doc, text : text || ''
     }
 
-    res.json({ success: true, message: newMsg });
+
+    const receiverSocket = userSocketMap.get(receiverId);
+    if (receiverSocket) {
+      io.to(receiverSocket).emit("newMessage", decryptedText);
+    }
+
+    res.json({ success: true, message: decryptedText });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: error.message });

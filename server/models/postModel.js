@@ -4,6 +4,8 @@ const CommentSchema = new mongoose.Schema(
   {
     userId: { type: String, required: true }, // Clerk userId
     text: { type: String, required: true },
+    username : {type : String, required: true},
+    userImageUrl : {type : String, required: true},
   },
   { timestamps: true }
 );
