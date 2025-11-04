@@ -42,8 +42,6 @@ const Chat = () => {
     }
   }, [selectedChat, userId]);
 
-  // console.log(messages);
-
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -64,22 +62,26 @@ const Chat = () => {
     const reader = new FileReader();
     reader.onloadend = async () => {
       const base64Image = reader.result;
-
-      // send the image to backend
       await sendMessage("", base64Image);
-      e.target.value = ""; // reset file input
+      e.target.value = "";
     };
 
     reader.readAsDataURL(file);
   };
 
   const handleSendEnter = (e) => {
-    if (!input.trim()) return;
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && input.trim()) {
       sendMessage(input);
       setInput("");
     }
   };
+
+  // ✅ Sort followers by latest message timestamp
+  const sortedFollowers = [...followers].sort((a, b) => {
+    const aTime = a.lastMessageTime || 0;
+    const bTime = b.lastMessageTime || 0;
+    return bTime - aTime; // latest on top
+  });
 
   return (
     <>
@@ -96,7 +98,7 @@ const Chat = () => {
         >
           {/* Header */}
           <div className="flex sm:mt-16 mt-1 items-center justify-between p-2 sm:p-4 border-b">
-            <Link to="/home" className="">
+            <Link to="/home">
               <GoArrowLeft className="cursor-pointer" size={24} />
             </Link>
             <h2 className="font-semibold tracking-tighter text-lg sm:text-2xl">
@@ -122,8 +124,8 @@ const Chat = () => {
 
           {/* Chat List */}
           <div className="flex-1 overflow-y-auto ml-2">
-            {followers.length > 0 ? (
-              followers.map((f, i) => {
+            {sortedFollowers.length > 0 ? (
+              sortedFollowers.map((f, i) => {
                 const isOnline = onlineUsers.includes(f.userId);
                 return (
                   <div
@@ -230,7 +232,6 @@ const Chat = () => {
                           isSender ? "justify-end" : "justify-start"
                         } space-x-1`}
                       >
-                        {/* Receiver avatar */}
                         {!isSender && showAvatar && (
                           <img
                             src={selectedChat.imageUrl}
@@ -268,7 +269,6 @@ const Chat = () => {
                           </div>
                         </div>
 
-                        {/* Sender avatar */}
                         {isSender && showAvatar && (
                           <img
                             src={user.imageUrl}
@@ -304,15 +304,12 @@ const Chat = () => {
                   onChange={(e) => setInput(e.target.value)}
                   className="flex-1 border rounded-full px-3 sm:px-4 py-2 outline-none text-sm bg-gray-100 focus:ring-1 focus:ring-gray-300"
                 />
-                <Input type={"file"} id="image" hidden onChange={sendImage}>
-                  {/* <Image /> */}
-                </Input>
+                <Input type={"file"} id="image" hidden onChange={sendImage} />
                 <label htmlFor="image">
                   <Image />
                 </label>
                 <button
                   onClick={handleSend}
-                  // onKeyDown={(e) => e.key === "Enter" && handleSend}
                   className="bg-black text-white px-4 sm:px-5 py-2 rounded-full text-sm hover:bg-gray-800 transition"
                 >
                   Send

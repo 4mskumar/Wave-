@@ -28,9 +28,9 @@ const features = [
 
 const Features = () => {
   return (
-    <div className="py-12 px-4 sm:px-6 md:px-12 bg-gradient-to-b from-white via-slate-50 to-blue-50">
+    <div className="mb-6 sm:mb-0 py-0 sm:py-12 px-4 sm:px-6 md:px-12 bg-gradient-to-b from-white via-slate-50 to-blue-50">
       {/* Header */}
-      <div className="text-center mb-12 md:mb-16 mt-2">
+      <div className="text-center mb-12 md:mb-16 sm:mt-2">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
           Everything You Need to <span className="text-orange-500">Connect</span>
         </h1>

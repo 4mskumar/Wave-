@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import gsap from "gsap";
+import { SignedOut, SignInButton } from "@clerk/clerk-react";
 
 const Hero = () => {
   useEffect(() => {
@@ -83,15 +84,16 @@ const Hero = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center sm:gap-3 gap-2 z-10">
-          <Button
-            id="bt1"
-            className="rounded-[0.6rem] text-sm px-3 py-1.5 cursor-pointer w-full sm:w-auto"
-          >
-            Wave now{" "}
-            <span>
-              <ArrowRight className="-rotate-45 w-4 h-4" />
-            </span>
-          </Button>
+          <SignedOut>
+          <SignInButton forceRedirectUrl={"/home"}>
+            <Button className="rounded-2xl font-semibold tracking-tight">
+              Wave now{" "}
+              <span>
+                <ArrowRight className="-rotate-45 ml-1" size={18} />
+              </span>
+            </Button>
+          </SignInButton>
+        </SignedOut>
           <Button
             id="bt2"
             className="rounded-[0.6rem] text-sm px-3 py-1.5 cursor-pointer border-zinc-800 w-full sm:w-auto"

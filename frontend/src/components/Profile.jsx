@@ -37,12 +37,14 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import CommentsSection from "./shared/CommentsSection";
 import BioDialog from "./BioDialog";
 
+
 const Profile = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
   const { posts, fetchPosts, deletePost } = useUserPostStore();
   const { userId } = useAuth();
   const { user } = useUser();
+
   const {
     followers,
     following,
@@ -52,7 +54,9 @@ const Profile = () => {
     getFollowers,
     bio
   } = useUserStore();
+
   const [open, setOpen] = useState(false);
+
   const [activeTab, setActiveTab] = useState(""); //for stats
 
   const handleOpen = (type) => {
@@ -93,7 +97,7 @@ const Profile = () => {
         {/* Main Content */}
         <div className="flex-1 px-4 sm:px-6 md:px-10 pt-20 md:pt-20 mb-10">
           {/* Profile Header */}
-          <div className="flex flex-col items-center justify-center text-center w-full max-w-5xl mx-auto mt-10 mb-16 px-6">
+          <div className="flex flex-col items-center justify-center text-center w-full max-w-5xl mx-auto mt-8 mb-10 px-6">
             {/* Profile Picture + Info */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-12 w-full">
               {/* Profile Image */}
@@ -107,15 +111,15 @@ const Profile = () => {
               />
 
               {/* User Info */}
-              <div className="flex items-start sm:items-start text-center sm:text-left space-y-1">
+              <div className="flex items-start sm:items-start text-center ml-20 sm:ml-0 sm:text-left space-y-1">
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-1">
                   <h2 className="text-2xl font-bold mb-2">{user.username}</h2>
                   <p className="font-semibold text-base tracking-wide mb-2">
                     {user.fullName || "User"}
                   </p>
-                  <p className="text-gray-600 text-sm">{bio}</p>
-
+                  <p className="text-gray-600 text-sm">{user.bio}</p>
                 </div>
+
                 <div>
                   <Popover>
                     <PopoverTrigger>
@@ -131,7 +135,7 @@ const Profile = () => {
             </div>
 
             {/* Stats Section */}
-            <div className="flex justify-center items-center gap-10 sm:gap-16 mt-6">
+            <div className="flex justify-center items-center gap-10 sm:gap-15 mt-5">
               <div
                 onClick={() => handleOpen("followers")}
                 className="cursor-pointer hover:opacity-80 transition"
@@ -226,9 +230,8 @@ const Profile = () => {
             </Dialog>
           </div>
 
-          {/* Section Title */}
-          <div className="flex flex-col items-center sm:mt-8">
-            <p className="flex items-center gap-2 font-semibold text-black hover:bg-zinc-200/80 cursor-pointer rounded-sm transition-all duration-300 text-lg sm:text-xl p-1">
+          <div className="flex flex-col items-center mt-2">
+            <p className="flex items-center gap-2 font-semibold text-black hover:bg-zinc-200/80 cursor-pointer rounded-sm transition-all duration-300 text-lg sm:text-xl">
               <Grid3X3 strokeWidth={1.2} className="text-zinc-800" />
               Creations
             </p>
@@ -236,9 +239,9 @@ const Profile = () => {
           </div>
 
           {/* Posts Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 sm:gap-6 md:gap-8 mt-10 px-6 sm:px-16 md:px-24 lg:px-32">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 sm:gap-6 md:gap-8 mt-10 px-6 sm:px-16 md:px-24 lg:px-32 mb-10 sm:mb-0">
             {posts.length === 0 ? (
-              <div className="col-span-full flex flex-col justify-center items-center w-full text-center px-3 py-10">
+              <div className="col-span-full flex flex-col justify-center items-center w-full text-center px-3 ">
                 <h1 className="text-lg sm:text-2xl text-zinc-800 font-semibold tracking-tight">
                   Create your first post
                 </h1>

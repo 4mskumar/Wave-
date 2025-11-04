@@ -9,7 +9,6 @@ const NavBar = () => {
   const navRefs = useRef([]);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Desktop underline animation
   useEffect(() => {
     navRefs.current.forEach((el) => {
       if (!el) return;
@@ -68,7 +67,7 @@ const NavBar = () => {
         </SignedOut>
       </div>
 
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu */}
       <div className="md:hidden">
         <button
           onClick={() => setMenuOpen(true)}
