@@ -5,13 +5,17 @@ import { useNotificationStore } from "../../app/notifyStore";
 
 const NotificationDropdown = () => {
   const { userId } = useAuth();
-  const { notifications, fetchNotifications } = useNotificationStore();
+  const { notifications, fetchNotifications, markAsRead } = useNotificationStore();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     if (userId) fetchNotifications(userId);
   }, [userId]);
+
+  const markAsReadNotification = async (userId) => {
+    await markAsRead(userId)
+  }
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -26,7 +30,7 @@ const NotificationDropdown = () => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <div className="relative cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+      <div className="relative cursor-pointer" onClick={() => {setIsOpen(!isOpen); markAsReadNotification(userId)}}>
         <Bell className="w-6 h-6" />
         {notifications.some((n) => !n.isRead) && (
           <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>

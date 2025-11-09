@@ -24,6 +24,7 @@ const UserProfile = () => {
   const { followUser, unfollowUser } = useUserStore();
   const { userId } = useAuth();
   const loggedInUser = id === userId ? true : false;
+  const isFollowing = followers.some((f) => f.userId === userId);
 
   const handleOpen = (tab) => {
     setActiveTab(tab);
@@ -212,41 +213,42 @@ const UserProfile = () => {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 sm:gap-6 md:gap-8 mt-10 px-6 sm:px-16 md:px-24 lg:px-32 mb-10 sm:mb-0">
-            {posts.length === 0 ? (
-              <div className="col-span-full flex flex-col justify-center items-center w-full text-center px-3">
-                <h1 className="text-lg sm:text-2xl text-zinc-800 font-semibold tracking-tight">
-                  Create your first post
-                </h1>
-                <p className="text-md text-zinc-600 tracking-tight">
-                  Make people know you
-                </p>
-                <img
-                  src="/images/profile.png"
-                  className="w-40 sm:w-60 object-contain"
-                  alt="Create your first post"
-                />
-                <Button
-                  className="mb-10 h-8 text-md tracking-tight"
-                  onClick={() => setShowCreate(true)}
-                >
-                  <Create/>
-                </Button>
-              </div>
-            ) : (
-              [...posts].reverse().map((val, ind) => (
-                <div
-                  key={ind}
-                  onClick={() => setSelectedPost(val)} // open modal
-                  className="relative w-full aspect-[10/15] overflow-hidden group cursor-pointer border border-gray-300 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300"
-                >
-                  <img
-                    src={val.imageUrl}
-                    alt={val.caption || "post"}
-                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            {loggedInUser || isFollowing ? (
+              posts.length === 0 ? (
+                <div className="col-span-full flex flex-col justify-center items-center w-full text-center px-3">
+                  <h1 className="text-lg sm:text-2xl text-zinc-800 font-semibold tracking-tight">
+                    No post available
+                  </h1>
                 </div>
-              ))
+              ) : (
+                [...posts].reverse().map((val, ind) => (
+                  <div
+                    key={ind}
+                    onClick={() => setSelectedPost(val)} // open modal
+                    className="relative w-full aspect-[10/15] overflow-hidden group cursor-pointer border border-gray-300 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300"
+                  >
+                    <img
+                      src={val.imageUrl}
+                      alt={val.caption || "post"}
+                      className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                ))
+              )
+            ) : (
+              <div className="w-full flex flex-col justify-center items-center text-center py-20">
+                <div className="relative w-60 h-60 mb-4">
+                  <div className="absolute inset-0 bg-gray-300 rounded-lg blur-sm"></div>
+                  <div className="absolute inset-0 bg-gray-200 opacity-80 rounded-lg"></div>
+                </div>
+                <p className="text-lg sm:text-xl font-semibold text-gray-800">
+                  You cannot see this user’s posts
+                </p>
+                <p className="text-sm text-gray-500">
+                  Follow them to unlock their content
+                </p>
+              </div>
             )}
           </div>
 
@@ -297,9 +299,7 @@ const UserProfile = () => {
                       <p className="font-semibold">
                         {selectedPost.likes?.length > 0
                           ? `${selectedPost.likes.length} ${
-                              selectedPost.likes.length === 1
-                                ? "like"
-                                : "likes"
+                              selectedPost.likes.length === 1 ? "like" : "likes"
                             }`
                           : "0 likes"}
                       </p>

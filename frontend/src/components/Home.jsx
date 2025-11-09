@@ -13,19 +13,27 @@ import Welcome from "./Welcome";
 import Festival from "./shared/Festival";
 import { HiTranslate } from "react-icons/hi";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { setUserData, feed, getUserFeed, getFollowers, getFollowing, following } =
     useUserStore();
-  const { toggleLike, addComment } = useUserPostStore();
+  const { toggleLike, addComment, translate, translatedCaptions,loading } = useUserPostStore();
   const { user } = useUser();
   const { userId } = useAuth();
   const navigate = useNavigate()
   const [openCommentInput, setOpenCommentInput] = useState(null);
   const [openCommentList, setOpenCommentList] = useState(null);
   const [commentText, setCommentText] = useState("");
+
+  const handleAutoTranslate = async (postId) => {
+    await translate(postId)
+    await getUserFeed(userId)
+  }
+
+  // console.log(translatedCaptions);
+  
 
   useEffect(() => {
     if (userId && user) {
@@ -51,8 +59,8 @@ const Home = () => {
     await getUserFeed(userId);
   };
 
-  const handleLikeToggle = async (postId) => {
-    await toggleLike(userId, postId);
+  const handleLikeToggle = async (postId, targetId) => {
+    await toggleLike(userId, targetId,postId );
     await getUserFeed(userId);
   };
 
@@ -149,11 +157,11 @@ const Home = () => {
                 {post.caption && (
                   <div className="flex justify-between items-center m-2">
                     <p className="text-gray-700 text-[14px] sm:text-[17px]">
-                      {post.caption}
+                      {translatedCaptions[post._id] || post.caption}
                     </p>
-                    <div className="flex items-center gap-1">
+                    <div onClick = {() => handleAutoTranslate(post._id)} className="flex cursor-pointer items-center gap-1">
                       <HiTranslate size={18} className="hover:text-gray-800" />
-                      <p className="text-xs">Auto-Translate</p>
+                      <p className="text-xs">{!loading ? 'Auto-Translate' : <Loader2 />}</p>
                     </div>
                     {/* <button className="text-xs border-1 px-2 rounded-full bg-black text-white py-0.5">Auto Translate</button> */}
                   </div>
@@ -171,7 +179,7 @@ const Home = () => {
                 {/* Likes and Comment */}
                 <div className="flex justify-between items-center text-gray-600 text-sm mt-4 sm:gap-8 px-2 sm:px-4">
                   <span
-                    onClick={() => handleLikeToggle(post._id)}
+                    onClick={() => handleLikeToggle(post._id, post.userId)}
                     className="inline-flex cursor-pointer items-center gap-1 sm:gap-2 sm:text-lg text-sm"
                   >
                     {post.likes.includes(userId) ? (

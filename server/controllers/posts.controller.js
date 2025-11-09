@@ -84,7 +84,7 @@ export const getPosts = async (req, res) => {
 
 export const toggleLike = async (req, res) => {
   try {
-    const { userId, postId } = req.body
+    const { userId, postId, targetId } = req.body
     if (!userId || !postId) {
       return res.status(404).json({ success: false, message: 'UserId or PostId required' })
     }
@@ -109,7 +109,7 @@ export const toggleLike = async (req, res) => {
       )
     }
 
-    // await createNotification('like', myId, targetId)
+    await createNotification('like', userId ,targetId, postId )
 
     return res.status(200).json({ success: true, message: 'U just liked a post yayy!', post: updatedPost })
 

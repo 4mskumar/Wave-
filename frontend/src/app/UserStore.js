@@ -146,9 +146,9 @@ export const useUserStore = create((set, get) => ({
             const res = await axios.post(`/unfollow/${targetId}`, { userId })
 
             if (res.data.success) {
-                set((state) => ({
+                set({
                     following: res.data.following
-                }))
+                })
             }
             return res.data
         } catch (error) {

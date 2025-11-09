@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/genai": "^1.29.0",
     "cloudinary": "^1.30.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

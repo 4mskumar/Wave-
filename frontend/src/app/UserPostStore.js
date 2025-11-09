@@ -7,6 +7,7 @@ const useUserPostStore = create((set, get) => ({
   posts: [],
   loading: false,
   error: false,
+  translatedCaptions : {},
 
   // ✅ Add Post
   addPost: async (userId, caption, image, userImageUrl, username) => {
@@ -96,9 +97,11 @@ const useUserPostStore = create((set, get) => ({
 
 
   // ✅ Toggle Like (template)
-  toggleLike: async (userId, postId) => {
+  toggleLike: async (userId, targetId, postId) => {
+    // console.log(userId, targetId,postId);
+    
     try {
-      const res = await axios.put("/post/like", { userId, postId });
+      const res = await axios.put("/post/like", { userId, targetId, postId });
       if (res.data.success) {
         // Update local post like count
         set((state) => ({
@@ -130,6 +133,27 @@ const useUserPostStore = create((set, get) => ({
     } catch (error) {
       console.error("Error commenting on post:", error.message);
       toast.error("Failed to add comment");
+    }
+  },
+
+  translate: async (postId) => {
+    try {
+      const res = await axios.post(`/ai/translate`, { postId });
+      if (res.data.success) {
+        set({loading : true})
+        set((state) => ({
+          translatedCaptions: {
+            ...state.translatedCaptions,
+            [postId]: res.data.caption, // ✅ store translation under post ID
+          },
+        }));
+        set({loading : false})
+      } else {
+        console.warn("Translation failed:", res.data.message);
+      }
+      set({loading : false})
+    } catch (error) {
+      console.error("Error translating caption:", error.message);
     }
   },
 

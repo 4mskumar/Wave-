@@ -52,7 +52,7 @@ export const getNotifications = async (req, res) => {
 export const markAsRead = async (req, res) => {
     try {
         const { id } = req.params;
-        await Notification.findByIdAndUpdate(id, { isRead: true });
+        await Notification.findByIdAndUpdate({receiverId : id}, { isRead: true });
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

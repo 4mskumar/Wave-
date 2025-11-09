@@ -5,6 +5,7 @@ import { config } from "dotenv";
 import { connectDb } from "./utils/db.js";
 import { router as postRouter } from "./routes/posts.route.js";
 import { router as userRouter } from "./routes/user.route.js";
+import { router as aiRouter } from "./routes/ai.routes.js";
 // import { router } from "./routes/messages.route.js";
 import { Server } from "socket.io";
 import router from "./routes/messages.route.js";
@@ -58,6 +59,7 @@ app.use("/api/post", postRouter);
 app.use("/api", userRouter);
 app.use("/api/messages", router);
 app.use('/api/notifications', notificationRouter)
+app.use('/api/ai', aiRouter)
 
 // ✅ Start Server
 server.listen(PORT, () => {
