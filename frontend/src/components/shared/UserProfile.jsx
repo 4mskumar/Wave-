@@ -217,7 +217,7 @@ const UserProfile = () => {
               posts.length === 0 ? (
                 <div className="col-span-full flex flex-col justify-center items-center w-full text-center px-3">
                   <h1 className="text-lg sm:text-2xl text-zinc-800 font-semibold tracking-tight">
-                    No post available
+                    No posts available
                   </h1>
                 </div>
               ) : (
@@ -237,16 +237,17 @@ const UserProfile = () => {
                 ))
               )
             ) : (
-              <div className="w-full flex flex-col justify-center items-center text-center py-20">
+              <div className="w-full flex flex-col justify-center items-center text-center px-3 col-span-full">
                 <div className="relative w-60 h-60 mb-4">
-                  <div className="absolute inset-0 bg-gray-300 rounded-lg blur-sm"></div>
-                  <div className="absolute inset-0 bg-gray-200 opacity-80 rounded-lg"></div>
+                  {/* <div className="absolute inset-0 bg-gray-300 rounded-lg blur-sm"></div>
+                  <div className="absolute inset-0 bg-gray-200 opacity-80 rounded-lg"></div> */}
+                  <img src="/images/blur.jpg" alt="blur" className="rounded-xl" />
                 </div>
-                <p className="text-lg sm:text-xl font-semibold text-gray-800">
-                  You cannot see this user’s posts
+                <p className="text-md sm:text-2xl max-w-80 font-bold text-gray-800">
+                  You cannot see this user's posts
                 </p>
-                <p className="text-sm text-gray-500">
-                  Follow them to unlock their content
+                <p className="sm:text-md text-xs mt-1 text-gray-500">
+                  Follow them to unlock their creations.
                 </p>
               </div>
             )}
