@@ -9,6 +9,8 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import { useMessageStore } from "../app/UserMessageStore";
 import { Image } from "lucide-react";
 import { Input } from "./ui/input";
+import { IoMdColorPalette } from "react-icons/io";
+import ThemePopover from "./ThemePopover";
 
 const Chat = () => {
   const [input, setInput] = useState("");
@@ -193,7 +195,9 @@ const Chat = () => {
           ) : (
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center gap-4 border-b bg-gray-200 p-3 sm:p-2">
+              <div className="flex items-center justify-between gap-4 border-b p-2 mt-2 sm:mt-0 sm:p-3">
+                <div className="flex items-center gap-4">
+
                 <button
                   onClick={() => setSelectedChat(null)}
                   className="md:hidden text-gray-600"
@@ -214,10 +218,15 @@ const Chat = () => {
                     {selectedChat.username}
                   </p>
                 </div>
+                </div>
+                <div className="mr-5">
+                  {/* <IoMdColorPalette size={30} className="text-gray-700"/> */}
+                  <ThemePopover/>
+                </div>
               </div>
 
               {/* Messages */}
-              <div className="flex-1 p-4 overflow-y-auto space-y-1">
+              <div className="flex-1 p-4 mt-2 overflow-y-auto space-y-1">
                 {messages.length > 0 ? (
                   messages.map((msg, idx) => {
                     const isSender = msg.senderId === userId;
