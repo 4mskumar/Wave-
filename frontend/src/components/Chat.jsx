@@ -9,11 +9,12 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import { useMessageStore } from "../app/UserMessageStore";
 import { Image } from "lucide-react";
 import { Input } from "./ui/input";
-import { IoMdColorPalette } from "react-icons/io";
 import ThemePopover from "./ThemePopover";
 
 const Chat = () => {
   const [input, setInput] = useState("");
+  const [theme, setTheme] = useState("default"); 
+
   const { userId } = useAuth();
   const { user } = useUser();
 
@@ -78,16 +79,25 @@ const Chat = () => {
     }
   };
 
-  // ✅ Sort followers by latest message timestamp
   const sortedFollowers = [...followers].sort((a, b) => {
     const aTime = a.lastMessageTime || 0;
     const bTime = b.lastMessageTime || 0;
-    return bTime - aTime; // latest on top
+    return bTime - aTime;
   });
+
+  // THEME LOGIC 
+  const themeClasses = {
+    default: "bg-gray-50",
+    // dark: "bg-black text-white",
+    neon: "bg-linear-to-r from bg-purple-100 to bg-purple-200 text-black",
+    bubble: "bg-linear-to-r from-cyan-200 to-blue-300 text-black",
+    orange: "bg-linear-to-r from-yellow-100 to-yellow-200 text-black",
+  };
 
   return (
     <>
       <Navbar />
+
       <div className="flex pt-15 sm:pt-0 overflow-hidden bg-white">
         {/* CHAT LIST */}
         <div
@@ -106,13 +116,10 @@ const Chat = () => {
             <h2 className="font-semibold tracking-tighter text-lg sm:text-2xl">
               Messages
             </h2>
-            <RxDotsHorizontal
-              className="cursor-pointer text-gray-600"
-              size={20}
-            />
+            <RxDotsHorizontal className="cursor-pointer text-gray-600" size={20} />
           </div>
 
-          {/* Search Bar */}
+          {/* Search */}
           <div className="px-4 py-2">
             <div className="flex items-center bg-gray-200 rounded-full px-3 py-2">
               <CiSearch className="text-gray-500" size={20} />
@@ -149,9 +156,7 @@ const Chat = () => {
                         {f.imageUrl ? (
                           <AvatarImage src={f.imageUrl} />
                         ) : (
-                          <AvatarFallback>
-                            {f.username?.charAt(0)}
-                          </AvatarFallback>
+                          <AvatarFallback>{f.username?.charAt(0)}</AvatarFallback>
                         )}
                       </Avatar>
                       <div>
@@ -167,24 +172,21 @@ const Chat = () => {
                 );
               })
             ) : (
-              <p className="text-center text-gray-500 py-20">
-                No followers yet
-              </p>
+              <p className="text-center text-gray-500 py-20">No followers yet</p>
             )}
           </div>
         </div>
 
         {/* CHAT AREA */}
         <div
-          className={`sm:mt-17 mt-14 fixed top-0 right-0 bottom-0 flex flex-col w-full md:w-[70%] transition-all duration-300 bg-gray-50 ${
-            selectedChat ? "flex" : "hidden md:flex"
-          }`}
+          className={`sm:mt-16 mt-14 fixed top-0 right-0 bottom-0 flex flex-col w-full md:w-[70%] transition-all duration-300 
+          ${selectedChat ? "flex" : "hidden md:flex"}
+          ${themeClasses[theme]}            //THEMES
+        `}
         >
           {!selectedChat ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-              <div className="bg-gray-100 p-4 rounded-full text-3xl mb-4">
-                💬
-              </div>
+              <div className="bg-gray-100 p-4 rounded-full text-3xl mb-4">💬</div>
               <h2 className="font-semibold tracking-tighter text-xl sm:text-2xl">
                 Your Messages
               </h2>
@@ -197,31 +199,32 @@ const Chat = () => {
               {/* Header */}
               <div className="flex items-center justify-between gap-4 border-b p-2 mt-2 sm:mt-0 sm:p-3">
                 <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setSelectedChat(null)}
+                    className="md:hidden text-gray-600"
+                  >
+                    <GoArrowLeft size={22} />
+                  </button>
 
-                <button
-                  onClick={() => setSelectedChat(null)}
-                  className="md:hidden text-gray-600"
-                >
-                  <GoArrowLeft size={22} />
-                </button>
-                <Avatar>
-                  {selectedChat.imageUrl ? (
-                    <AvatarImage src={selectedChat.imageUrl} />
-                  ) : (
-                    <AvatarFallback>
-                      {selectedChat.username?.charAt(0)}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                <div>
-                  <p className="font-semibold text-base sm:text-lg">
-                    {selectedChat.username}
-                  </p>
+                  <Avatar>
+                    {selectedChat.imageUrl ? (
+                      <AvatarImage src={selectedChat.imageUrl} />
+                    ) : (
+                      <AvatarFallback>
+                        {selectedChat.username?.charAt(0)}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+
+                  <div>
+                    <p className="font-semibold text-base sm:text-lg">
+                      {selectedChat.username}
+                    </p>
+                  </div>
                 </div>
-                </div>
+
                 <div className="mr-5">
-                  {/* <IoMdColorPalette size={30} className="text-gray-700"/> */}
-                  <ThemePopover/>
+                  <ThemePopover onThemeChange={setTheme} /> {/* 🎨 APPLY THEME HANDLER */}
                 </div>
               </div>
 
@@ -247,9 +250,6 @@ const Chat = () => {
                             alt="receiver"
                             className="w-6 h-6 rounded-full object-cover mb-1"
                           />
-                        )}
-                        {!isSender && !showAvatar && (
-                          <div className="w-6 h-6"></div>
                         )}
 
                         <div
@@ -285,9 +285,6 @@ const Chat = () => {
                             className="w-6 h-6 rounded-full object-cover mb-1"
                           />
                         )}
-                        {isSender && !showAvatar && (
-                          <div className="w-6 h-6"></div>
-                        )}
                       </div>
                     );
                   })
@@ -303,7 +300,7 @@ const Chat = () => {
                 <div ref={messageEndRef}></div>
               </div>
 
-              {/* Message Input */}
+              {/* Input */}
               <div className="border-t bg-white p-2 sm:p-3 flex items-center gap-2">
                 <input
                   type="text"
@@ -324,6 +321,7 @@ const Chat = () => {
                   Send
                 </button>
               </div>
+
             </div>
           )}
         </div>
