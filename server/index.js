@@ -21,28 +21,30 @@ const server = http.createServer(app);
 app.use(
   cors({
     origin: [
-  "https://wave-sm-live.onrender.com",
-  "http://localhost:5173",
-  "http://localhost:3000"
-]
-
+      "https://wave-sm-live.onrender.com",
+      "http://localhost:5173",
+      "http://localhost:3000",
+    ],
     credentials: true,
   })
 );
 
-// ✅ Middleware
-app.use(express.json({limit : '4mb'}));
-app.use(express.urlencoded({ extended: true }));
-
-// ✅ Socket.io setup
 export const io = new Server(server, {
   cors: {
-    origin: "https://wave-sm-live.onrender.com",
+    origin: [
+      "https://wave-sm-live.onrender.com",
+      "http://localhost:5173",
+      "http://localhost:3000",
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
+
+// ✅ Middleware
+app.use(express.json({limit : '4mb'}));
+app.use(express.urlencoded({ extended: true }));
 
 export const userSocketMap = new Map(); // userId -> socketId
 
@@ -73,6 +75,7 @@ app.use('/api/ai', aiRouter)
 
 await connectDb();
 server.listen(PORT, () => console.log("Running"));
+
 
 
 
