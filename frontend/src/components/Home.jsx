@@ -159,9 +159,26 @@ const Home = () => {
                     <p className="text-gray-700 text-[14px] sm:text-[17px]">
                       {translatedCaptions[post._id] || post.caption}
                     </p>
-                    <div onClick = {() => handleAutoTranslate(post._id)} className="flex cursor-pointer items-center gap-1">
+                    <div
+                      onClick={() => {
+                        if (!translatedCaptions[post._id])
+                          handleAutoTranslate(post._id);
+                      }}
+                      className={`flex cursor-pointer items-center gap-1
+    ${translatedCaptions[post._id] ? "opacity-40 cursor-not-allowed" : ""}
+  `}
+                    >
                       <HiTranslate size={18} className="hover:text-gray-800" />
-                      <p className="text-xs">{!loading ? 'Auto-Translate' : <Loader2 />}</p>
+
+                      {loading?.[post._id] ? (
+                        <Loader2 className="animate-spin w-4 h-4" />
+                      ) : (
+                        <p className="text-xs">
+                          {translatedCaptions[post._id]
+                            ? "Translated"
+                            : "Auto-Translate"}
+                        </p>
+                      )}
                     </div>
                     {/* <button className="text-xs border-1 px-2 rounded-full bg-black text-white py-0.5">Auto Translate</button> */}
                   </div>
