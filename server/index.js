@@ -20,7 +20,7 @@ const server = http.createServer(app);
 // ✅ CORS setup
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://wave-sm-live.onrender.com",
     credentials: true,
   })
 );
@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ✅ Socket.io setup
 export const io = new Server(server, {
-  cors: { origin: "http://localhost:5173" },
+  cors: { origin: "https://wave-sm-live.onrender.com" },
 });
 
 export const userSocketMap = new Map(); // userId -> socketId
@@ -66,3 +66,4 @@ server.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
   connectDb();
 });
+
