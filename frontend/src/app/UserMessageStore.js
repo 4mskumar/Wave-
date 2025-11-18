@@ -3,7 +3,7 @@ import axios from "../api/axiosConfig.js";
 import { io } from "socket.io-client";
 import { useUserStore } from "./UserStore";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "https://wave-sm-backend.onrender.com";
 
 export const useMessageStore = create((set, get) => ({
   socket: null,
