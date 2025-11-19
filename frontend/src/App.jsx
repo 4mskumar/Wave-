@@ -64,7 +64,7 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/sign-in" element={<SignInPage />} />
               <Route path="/sign-in/*" element={<SignInPage />} />
-              <Route path="*" element={<Navigate to="/sign-in" />} />
+              {/* <Route path="*" element={<Navigate to="/sign-in" />} /> */}
             </>
           ) : (
             <>

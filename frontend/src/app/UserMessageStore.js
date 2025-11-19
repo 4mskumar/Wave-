@@ -13,7 +13,7 @@ export const useMessageStore = create((set, get) => ({
   selectedChat: null,
   loading: false,
 
-  // ✅ Connect to socket server
+  //  Connect to socket server
   connectSocket: (userId) => {
     if (get().socket) return; // prevent duplicate connections
     const socket = io(SOCKET_URL, {
@@ -25,7 +25,7 @@ export const useMessageStore = create((set, get) => ({
     socket.on("connect", () => console.log("✅ Socket connected:", socket.id));
     socket.on("disconnect", () => console.log("❌ Socket disconnected"));
 
-    // ✅ Handle new incoming messages
+    //  Handle new incoming messages
     socket.on("newMessage", (msg) => {
       set((state) => ({
         messages: Array.isArray(state.messages)
@@ -34,7 +34,7 @@ export const useMessageStore = create((set, get) => ({
       }));
     });
 
-    // ✅ Track online users
+    //  Track online users
     socket.on("onlineUsers", (userList) => {
       set({ onlineUsers: userList });
     });
@@ -48,7 +48,7 @@ export const useMessageStore = create((set, get) => ({
     }
   },
 
-  // ✅ Fetch messages between two users
+  //  Fetch messages between two users
   fetchMessages: async (userId, targetId) => {
     set({ loading: true });
     try {
@@ -66,7 +66,7 @@ export const useMessageStore = create((set, get) => ({
     }
   },
 
-  // ✅ Send a new message
+  //  Send a new message
   sendMessage: async (text = "", image = "") => {
     const { socket, selectedChat } = get();
     const { user } = useUserStore.getState();
@@ -76,7 +76,7 @@ export const useMessageStore = create((set, get) => ({
       const res = await axios.post(`/messages/send/${selectedChat.userId}`, {
         senderId: user.id,
         text,
-        image, // ✅ include image
+        image, //  include image
       });
 
       const newMsg = res.data.message;
@@ -93,7 +93,7 @@ export const useMessageStore = create((set, get) => ({
   },
 
 
-  // ✅ Fetch followers (for sidebar)
+  //  Fetch followers (for sidebar)
   getFollowers: async (userId) => {
     try {
       const res = await axios.get("/followers", { params: { userId } });
@@ -108,11 +108,11 @@ export const useMessageStore = create((set, get) => ({
     }
   },
 
-  // ✅ Select chat
+  //  Select chat
   setSelectedChat: (chat) => set({ selectedChat: chat, messages: [] }),
 
-  // ✅ Mark messages as seen
-  // ✅ Inside useMessageStore
+  //  Mark messages as seen
+  //  Inside useMessageStore
   markMessagesAsSeen: async (targetId) => {
     const { user } = useUserStore.getState();
 
