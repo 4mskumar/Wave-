@@ -136,27 +136,32 @@ const useUserPostStore = create((set, get) => ({
     }
   },
 
-  translate: async (postId) => {
+translate: async (postId) => {
     try {
+      set((state) => ({
+        loading: { ...state.loading, [postId]: true }
+      }));
+
       const res = await axios.post(`/ai/translate`, { postId });
+
       if (res.data.success) {
-        set({loading : true})
         set((state) => ({
           translatedCaptions: {
             ...state.translatedCaptions,
-            [postId]: res.data.caption, // ✅ store translation under post ID
+            [postId]: res.data.caption,
           },
         }));
-        set({loading : false})
-      } else {
-        console.warn("Translation failed:", res.data.message);
       }
-      set({loading : false})
     } catch (error) {
-      console.error("Error translating caption:", error.message);
+      console.error(error.message);
+    } finally {
+      set((state) => ({
+        loading: { ...state.loading, [postId]: false }
+      }));
     }
-  },
+  }
 
 }));
 
 export default useUserPostStore;
+
