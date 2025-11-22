@@ -20,7 +20,7 @@ export const useUserStore = create((set, get) => ({
 
         const socket = io(import.meta.env.VITE_API_URL || "http://localhost:5000", {
             query: { userId },
-            transports: ["websocket"],
+            // transports: ["websocket"],
         });
 
         socket.on("connect", () => console.log("✅ Socket connected:", socket.id));
