@@ -15,6 +15,7 @@ import { HiTranslate } from "react-icons/hi";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ChevronDown, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toDDMMYYYY } from "../api/timeFormat.js";
 
 const Home = () => {
   const { setUserData, feed, getUserFeed, getFollowers, getFollowing, following } =
@@ -148,7 +149,7 @@ const Home = () => {
                       {post.username}
                     </p>
                     <p className="text-[12px] sm:text-[13px] text-gray-500">
-                      {post.createdAt}
+                      {toDDMMYYYY(post.createdAt)} 
                     </p>
                   </div>
                 </div>
