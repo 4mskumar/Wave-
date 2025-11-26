@@ -17,6 +17,18 @@ createRoot(document.getElementById("root")).render(
     <ClerkProvider
       signInUrl={import.meta.env.VITE_CLERK_SIGN_IN_URL}
       publishableKey={PUBLISHABLE_KEY}
+      localization={{
+        signIn: {
+          start: {
+            title: "Sign in to Wave",
+          },
+        },
+        signUp: {
+          start: {
+            title: "Create your Wave account",
+          },
+        }
+      }}
     >
       {/* <BrowserRouter> */}
         <App />

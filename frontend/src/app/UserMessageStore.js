@@ -3,8 +3,10 @@ import axios from "../api/axiosConfig.js";
 import { io } from "socket.io-client";
 import { useUserStore } from "./UserStore";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "https://wave-sm-backend.onrender.com";
 
+
+// const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "https://wave-sm-backend.onrender.com";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
 export const useMessageStore = create((set, get) => ({
   socket: null,
   messages: [],
@@ -22,8 +24,8 @@ export const useMessageStore = create((set, get) => ({
     });
     set({ socket });
 
-    socket.on("connect", () => console.log("✅ Socket connected:", socket.id));
-    socket.on("disconnect", () => console.log("❌ Socket disconnected"));
+    // socket.on("connect", () => console.log("✅ Socket connected:", socket.id));
+    // socket.on("disconnect", () => console.log("❌ Socket disconnected"));
 
     //  Handle new incoming messages
     socket.on("newMessage", (msg) => {
@@ -61,7 +63,7 @@ export const useMessageStore = create((set, get) => ({
         loading: false,
       });
     } catch (err) {
-      console.error("Error fetching messages:", err.message);
+      // console.error("Error fetching messages:", err.message);
       set({ loading: false });
     }
   },
@@ -88,7 +90,7 @@ export const useMessageStore = create((set, get) => ({
 
       if (socket) socket.emit("sendMessage", newMsg);
     } catch (err) {
-      console.error("Error sending message:", err.message);
+      // console.error("Error sending message:", err.message);
     }
   },
 

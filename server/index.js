@@ -21,9 +21,9 @@ const server = http.createServer(app);
 app.use(
   cors({
     origin: [
-      "https://wave-sm-live.onrender.com",
       "http://localhost:5173",
       "http://localhost:3000",
+      "https://wave-sm-live.onrender.com",
     ],
     credentials: true,
   })

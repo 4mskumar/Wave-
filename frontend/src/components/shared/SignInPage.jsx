@@ -15,7 +15,13 @@ const SignInPage = () => {
     await setActive({ session: result.createdSessionId });
   };
   return (
-    <div className='w-[100%] h-screen flex justify-center items-center'><SignIn path='/sign-in' routing='path' signInUrl='/sign-in'/></div>
+    <div className='w-[100%] h-screen flex justify-center items-center'><SignIn   localization={{
+      signIn: {
+        start: {
+          title: "Sign in to Wave"
+        }
+      }
+    }} path='/sign-in' routing='path' signInUrl='/sign-in'/></div>
   )
 }
 

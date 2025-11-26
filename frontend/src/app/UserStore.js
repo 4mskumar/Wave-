@@ -18,9 +18,9 @@ export const useUserStore = create((set, get) => ({
     connectSocket: (userId) => {
         if (get().socket) return; // ✅ prevent multiple connections
 
-        const socket = io("http://localhost:5000", {
+        const socket = io(import.meta.env.VITE_API_URL || "http://localhost:5000", {
             query: { userId },
-            transports: ["websocket"],
+            // transports: ["websocket"],
         });
 
         socket.on("connect", () => console.log("✅ Socket connected:", socket.id));

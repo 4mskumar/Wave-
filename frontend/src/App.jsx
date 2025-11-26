@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useEffect } from "react";
 import { useUserStore } from "./app/UserStore";
-
 import Home from "./components/Home";
 import Chat from "./components/Chat";
 import Profile from "./components/Profile";
@@ -64,7 +63,7 @@ function App() {
               <Route path="/" element={<LandingPage />} />
               <Route path="/sign-in" element={<SignInPage />} />
               <Route path="/sign-in/*" element={<SignInPage />} />
-              {/* <Route path="*" element={<Navigate to="/sign-in" />} /> */}
+              <Route path="*" element={<Navigate to="/sign-in" />} />
             </>
           ) : (
             <>
