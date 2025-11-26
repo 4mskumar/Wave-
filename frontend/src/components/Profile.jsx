@@ -172,7 +172,7 @@ const Profile = () => {
                     {activeTab}
                   </DialogTitle>
                 </DialogHeader>
-                <div className="max-h-70 overflow-y-auto mt-3 space-y-3 pr-1">
+                <div className="max-h-70 overflow-y-auto mt-3 space-y-3">
                   {(activeTab === "followers" ? followers : following)
                     .length === 0 ? (
                     <p className="text-sm text-gray-500 text-center py-2">
@@ -183,7 +183,7 @@ const Profile = () => {
                       (user, i) => (
                         <div
                           key={i}
-                          className="flex items-center justify-between gap-3 p-1 rounded-xl border hover:bg-gray-100 transition-all"
+                          className="flex items-center justify-between gap-3 p-1 rounded-full hover:bg-gray-200 transition-all"
                         >
                           <div className="flex items-center gap-2">
                             <img
@@ -192,7 +192,7 @@ const Profile = () => {
                                 "https://via.placeholder.com/40"
                               }
                               alt={user.name}
-                              className="w-8 h-8 rounded-full object-cover border border-gray-300"
+                              className="w-9 h-9 rounded-full object-cover border border-gray-300"
                             />
                             <div>
                               <p className="font-medium text-gray-900 leading-tight">
@@ -216,7 +216,7 @@ const Profile = () => {
                           ) : (
                             <button
                               onClick={() => handleUnfollow(user.userId)}
-                              className="text-xs sm:text-sm font-medium text-gray-600 hover:text-white hover:bg-gray-600 border border-gray-600 px-2 py-1 rounded-full transition-all"
+                              className="text-xs font-medium text-gray-600 hover:text-white hover:bg-gray-600 border border-gray-600 px-2 py-1 rounded-full transition-all"
                             >
                               Unfollow
                             </button>
@@ -301,7 +301,7 @@ const Profile = () => {
                             variant=""
                             className="cursor-pointer hover:bg-red-600 hover:text-white flex gap-2 items-center"
                           >
-                            <Trash2 className="w-4 h-4" /> Delete
+                            <Trash2 className="w-4 h-4" /> Delete Post
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
@@ -350,13 +350,15 @@ const Profile = () => {
                   </div>
 
                   {/* Caption + Comments */}
-                  <div className="mt-3 flex-1 overflow-y-auto text-sm sm:text-base">
+                  <div className="mt-3 flex-1 items-center overflow-y-auto text-sm sm:text-base ">
                     {/* Caption */}
-                    <p>
-                      <span className="font-semibold mr-1">
-                        {user.username}
+                    <p className="bg-gray-200 rounded-full p-1 border-1 border-yellow-100">
+                      <span className="font-semibold text-lg ml-3 mr-2">
+                        {user.username || "Unknown"}
                       </span>
+                      <span className="text-sm">
                       {selectedPost.caption || "No caption"}
+                      </span>
                     </p>
 
                     {/* Comments Section */}

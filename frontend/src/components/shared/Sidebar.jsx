@@ -41,7 +41,6 @@ const Sidebar = () => {
     if (prevLenOfMsg.current < messages.length) {
       setShowNotification(true);
     }
-
     prevLenOfMsg.current = messages.length;
   }, [messages]);
 

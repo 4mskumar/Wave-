@@ -109,14 +109,14 @@ const Chat = () => {
             }`}
         >
           {/* Header */}
-          <div className="flex sm:mt-16 mt-1 items-center justify-between p-2 sm:p-4 border-b">
+          <div className="flex sm:mt-16 mt-1 items-center gap-30 sm:gap-40 p-2 sm:p-4 border-b">
             <Link to="/home">
               <GoArrowLeft className="cursor-pointer" size={24} />
             </Link>
             <h2 className="font-semibold tracking-tighter text-lg sm:text-2xl">
               Messages
             </h2>
-            <RxDotsHorizontal className="cursor-pointer text-gray-600" size={20} />
+            {/* <RxDotsHorizontal className="cursor-pointer text-gray-600" size={20} /> */}
           </div>
 
           {/* Search */}
