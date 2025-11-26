@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useAuth, useUser } from "@clerk/clerk-react";
+import { useAuth, useUser, SignUp } from "@clerk/clerk-react";
 import { useEffect } from "react";
 import { useUserStore } from "./app/UserStore";
 import Home from "./components/Home";
@@ -64,6 +64,7 @@ function App() {
               <Route path="/sign-in" element={<SignInPage />} />
               <Route path="/sign-in/*" element={<SignInPage />} />
               <Route path="*" element={<Navigate to="/sign-in" />} />
+<Route path="/sign-up/*" element={<SignUp />} />
             </>
           ) : (
             <>
