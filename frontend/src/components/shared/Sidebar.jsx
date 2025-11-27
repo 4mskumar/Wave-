@@ -131,9 +131,9 @@ const Sidebar = () => {
                   >
                     <Icon size={18} />
                     {label}
-                    {label === "Messages" && showNotification && (
+                    {/* {label === "Messages" && showNotification && (
                       <span className="w-1 h-1 rounded-full bg-red-500"></span>
-                    )}
+                    )} */}
                   </Button>
                 </Link>
               ))}
